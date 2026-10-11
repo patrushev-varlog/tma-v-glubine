@@ -2,7 +2,7 @@ extends SceneTree
 ## Грубая оценка баланса боя 3 пролога: обе стороны ведёт ИИ.
 ## godot --headless --path prototypes/combat -s res://tools/simulate.gd
 
-const RUNS := 300
+const RUNS := 200
 
 
 func _init() -> void:

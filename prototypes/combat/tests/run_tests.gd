@@ -18,6 +18,8 @@ func _init() -> void:
 	test_story_scaling()
 	test_darkness_cap()
 	test_trial_enemies_pick_fragile()
+	test_line_of_sight_and_range()
+	test_column_map()
 	test_trap()
 	test_save_roundtrip()
 	test_simulation_terminates()
@@ -193,6 +195,34 @@ func test_trial_enemies_pick_fragile() -> void:
 	check(CombatAI._pick_target(b, o) == w, "на «Испытании» враг идёт к хрупкому волшебнику")
 	b.difficulty = "story"
 	check(CombatAI._pick_target(b, o) == g, "на «Истории» враг бьёт ближайшего")
+
+
+func test_line_of_sight_and_range() -> void:
+	var a := Content.make_enemy("skeleton_archer", 1)
+	var w := Content.make_hero("wizard")
+	a.cell = Vector2i(0, 5)
+	w.cell = Vector2i(6, 5)
+	var b := arena([a, w])
+	check(b.in_weapon_range(a, w), "лучник стреляет на 6 клеток по открытому полю")
+	b.obstacles[Vector2i(3, 5)] = true
+	check(not b.in_weapon_range(a, w), "стена между лучником и целью перекрывает выстрел")
+	check(not b.ability_targets(w, "fire_bolt").has(a.cell), "стена перекрывает и заклинание")
+	b.obstacles.erase(Vector2i(3, 5))
+	b.obstacles[Vector2i(3, 6)] = true
+	check(b.in_weapon_range(a, w), "стена сбоку от линии выстрела не мешает")
+	w.cell = Vector2i(9, 5)
+	check(not b.in_weapon_range(a, w), "дальше 8 клеток лук не достаёт")
+
+
+func test_column_map() -> void:
+	var trial := Battle.new()
+	trial.setup(Content.scenario_column("wizard", false, "trial"), 1, "trial")
+	var story := Battle.new()
+	story.setup(Content.scenario_column("wizard", false, "story"), 1, "story")
+	check(trial.width == 18 and trial.height == 14, "поле боя 18×14")
+	check(trial.enemies().size() == 7 and story.enemies().size() == 5, "на «Истории» врагов меньше")
+	var walk := trial.walk_distances(Vector2i(0, 6))
+	check(walk.has(Vector2i(16, 6)), "до ворот рудника есть проход")
 
 
 func test_trap() -> void:
