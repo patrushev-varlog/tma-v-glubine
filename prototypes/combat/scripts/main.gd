@@ -124,6 +124,14 @@ func _show_menu() -> void:
 	vel.toggled.connect(func(on: bool) -> void: with_velior = on)
 	box.add_child(vel)
 
+	var gear := OptionButton.new()
+	gear.add_item("Без экипировки")
+	gear.add_item("Гарантированный набор уровня")
+	gear.add_item("Набор и всё, что можно найти")
+	gear.select(["none", "kit", "full"].find(Items.mode))
+	gear.item_selected.connect(func(i: int) -> void: Items.mode = ["none", "kit", "full"][i])
+	box.add_child(_row("Экипировка", gear))
+
 	var start := _button("Начать бой", func() -> void: _start_new())
 	box.add_child(start)
 	var cont := _button("Продолжить с начала последнего хода", func() -> void: _load_turn())
@@ -244,7 +252,7 @@ func _show_result() -> void:
 	for h in battle.heroes():
 		if not h.conscious():
 			down += 1
-	box.add_child(_label("Раундов: %d. Выбыло героев: %d. Тьма за бой: +%d." % [battle.round_num, down, battle.darkness_gained], 16, 420))
+	box.add_child(_label("Раундов: %d. Выбыло героев: %d. Тьма за бой: +%d." % [battle.round_num, down, battle.darkness_gained + battle.item_darkness], 16, 420))
 	if not won and battle.difficulty == "story":
 		box.add_child(_button("Переиграть с начала хода", func() -> void: _load_turn()))
 	box.add_child(_button("Новый бой", func() -> void: _show_menu()))
@@ -548,6 +556,8 @@ func _refresh_portraits() -> void:
 			marks.append("лежит")
 		if not marks.is_empty():
 			box.add_child(_label(" · ".join(marks), 12, 200))
+		if not h.items.is_empty():
+			panel.tooltip_text = "Экипировка: " + ", ".join(Items.names_of(h))
 		var cell := h.cell
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:

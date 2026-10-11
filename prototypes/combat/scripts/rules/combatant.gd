@@ -77,6 +77,19 @@ var slow_spell := false
 ## Парализован гулем: пропускает ход.
 var stunned := false
 
+## Экипировка (см. Items): надетые предметы и то, что они дают в бою.
+var items: Array[String] = []
+var heal_bonus := 0
+var dr := 0
+var undead_dice := ""
+var drain_dice := ""
+var rally := false
+var rally_used := false
+var rescue := false
+var rescue_used := false
+var ring := false
+var item_dark := 0
+
 ## Простые поля состояния, которые сохраняются как есть.
 const STATE := ["id", "name", "team", "kind", "letter", "level", "archetype", "max_hp", "hp", "ac", "speed", "init_mod",
 	"slots", "max_slots", "spell_attack", "spell_dc", "attacks_per_action", "str_mod", "undead", "sneak_dice",
@@ -84,7 +97,8 @@ const STATE := ["id", "name", "team", "kind", "letter", "level", "archetype", "m
 	"attacks_left", "bonus_used", "sneak_used", "cleave_used", "disengaged", "hidden", "dodging", "ac_bonus",
 	"taunted_by", "taunt_turns", "acted", "guided_by", "slowed_by", "turned", "raging", "reckless",
 	"relentless_used", "poison_ready", "shadow_ready", "poisoned", "uncanny_used", "spirit_weapon", "guardians", "restrained",
-	"slow_spell", "stunned"]
+	"slow_spell", "stunned", "heal_bonus", "dr", "undead_dice", "drain_dice", "rally", "rally_used", "rescue",
+	"rescue_used", "ring", "item_dark"]
 
 
 func conscious() -> bool:
@@ -135,6 +149,7 @@ func to_dict() -> Dictionary:
 	d["ranged_weapon"] = ranged_weapon
 	d["abilities"] = Array(abilities)
 	d["traits"] = Array(traits)
+	d["items"] = Array(items)
 	d["uses"] = uses
 	d["cell"] = [cell.x, cell.y]
 	return d
@@ -160,6 +175,8 @@ static func from_dict(d: Dictionary) -> Combatant:
 		c.abilities.append(String(a))
 	for t in d.get("traits", []):
 		c.traits.append(String(t))
+	for it in d.get("items", []):
+		c.items.append(String(it))
 	c.uses = _ints(d.uses)
 	c.cell = Vector2i(int(d.cell[0]), int(d.cell[1]))
 	return c
