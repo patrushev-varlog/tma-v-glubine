@@ -21,6 +21,14 @@ func _init() -> void:
 	test_line_of_sight_and_range()
 	test_column_map()
 	test_trap()
+	test_basic_actions()
+	test_shove()
+	test_fighter_surge_and_cleave()
+	test_rogue_hide_and_bow()
+	test_turn_undead()
+	test_guiding_bolt_and_ray()
+	test_grease()
+	test_hold_the_line()
 	test_save_roundtrip()
 	test_simulation_terminates()
 	print("Тесты: прошло %d, упало %d" % [passed, failed])
@@ -239,11 +247,157 @@ func test_trap() -> void:
 	check(z.cell == Vector2i(3, 0) and z.hp < z.max_hp, "зомби застрял в ловушке")
 
 
+## Враг, который никогда не проходит спасброски и по которому не промахнуться (кроме 1 на кубике).
+func helpless(kind: String, idx: int, cell: Vector2i) -> Combatant:
+	var e := Content.make_enemy(kind, idx)
+	e.cell = cell
+	e.ac = -50
+	for k in ["str", "dex", "con", "wis"]:
+		e.saves[k] = -30
+	return e
+
+
+func test_basic_actions() -> void:
+	for cls in Content.HERO_CLASSES:
+		var h := Content.make_hero(cls)
+		check(h.abilities.has("dodge") and h.abilities.has("shove"), "у героя-%s есть уклонение и толчок" % cls)
+	check(Content.make_companion("irena").abilities.has("dodge"), "у спутников тоже есть уклонение")
+	var h2 := Content.make_hero("wizard")
+	var o := Content.make_enemy("overseer", 1)
+	o.cell = Vector2i(1, 0)
+	var b := arena([h2, o])
+	check(b.use_ability(h2, "dodge", h2.cell), "уклонение сработало")
+	check(b.attack_preview(o, h2).adv == -1, "по уклоняющемуся атаки с помехой")
+	b.end_turn()
+	b.end_turn()
+	check(not h2.dodging, "уклонение кончается в начале своего хода")
+
+
+func test_shove() -> void:
+	var f := Content.make_hero("fighter")
+	f.cell = Vector2i(2, 2)
+	var v := Content.make_companion("velior")
+	v.cell = Vector2i(9, 9)
+	var z := helpless("zombie", 1, Vector2i(3, 2))
+	var b := arena([f, v, z])
+	b.traps[Vector2i(4, 2)] = v.id
+	check(b.use_ability(f, "shove", z.cell), "толчок применён")
+	check(z.cell == Vector2i(4, 2) and z.hp < z.max_hp and not b.traps.has(Vector2i(4, 2)), "толчок в ловушку")
+	b.obstacles[Vector2i(5, 2)] = true
+	f.cell = Vector2i(3, 2)
+	f.action_used = false
+	b.use_ability(f, "shove", z.cell)
+	check(z.cell == Vector2i(4, 2) and z.prone, "у стены враг не отлетает, а падает")
+
+
+func test_fighter_surge_and_cleave() -> void:
+	var f := Content.make_hero("fighter")
+	f.cell = Vector2i(5, 5)
+	var z1 := helpless("zombie", 1, Vector2i(6, 5))
+	var z2 := helpless("zombie", 2, Vector2i(6, 6))
+	z1.max_hp = 99
+	z1.hp = 99
+	z2.max_hp = 99
+	z2.hp = 99
+	var b := arena([f, z1, z2])
+	check(not b.can_use(f, "action_surge"), "всплеск только после потраченного действия")
+	b.attack(f, z1)
+	check(f.cleave_used and z2.hp < 99, "рассечение задевает второго врага рядом")
+	check(b.can_use(f, "action_surge") and b.use_ability(f, "action_surge", f.cell), "всплеск действий")
+	check(not f.action_used and not f.bonus_used and f.uses_left("action_surge") == 0, "всплеск вернул действие, бонус цел")
+	b.attack(f, z1)
+	check(f.action_used and not b.can_use(f, "action_surge"), "второй всплеск за бой нельзя")
+
+
+func test_rogue_hide_and_bow() -> void:
+	var r := Content.make_hero("rogue")
+	r.cell = Vector2i(0, 5)
+	var a := Content.make_enemy("skeleton_archer", 1)
+	a.cell = Vector2i(7, 5)
+	var b := arena([r, a])
+	check(b.ability_targets(r, "shoot").has(a.cell), "плут достаёт луком на 7 клеток")
+	b.obstacles[Vector2i(1, 5)] = true
+	check(not b.seen_by_foes(r) and b.use_ability(r, "hide", r.cell) and r.hidden, "за стеной плут прячется наверняка")
+	check(b.use_ability(r, "dash", r.cell) == false, "рывок и прятки делят одно бонусное действие")
+	b.obstacles.erase(Vector2i(1, 5))
+	var p := b.attack_preview(r, a, "", r.ranged_weapon)
+	check(p.adv == 1 and p.max == 9 + 6, "из укрытия выстрел с преимуществом и скрытой атакой")
+	var z := Content.make_enemy("zombie", 1)
+	z.cell = Vector2i(1, 4)
+	b.units.append(z)
+	r.bonus_used = false
+	check(not b.can_use(r, "hide"), "рядом с врагом не спрятаться")
+
+
+func test_turn_undead() -> void:
+	var c := Content.make_hero("cleric")
+	c.cell = Vector2i(5, 5)
+	var z := helpless("zombie", 1, Vector2i(6, 5))
+	var o := helpless("overseer", 1, Vector2i(4, 5))
+	var b := arena([c, z, o])
+	check(b.use_ability(c, "turn_undead", c.cell), "изгнание нежити")
+	check(z.turned and not o.turned, "бежит только нежить")
+	b.end_turn()
+	CombatAI.take_turn(b, z)
+	check(Battle.dist(z.cell, c.cell) > 1 and c.hp == c.max_hp, "изгнанный зомби убегает и не бьёт")
+	b.deal_damage(z, 1, "test")
+	check(not z.turned, "урон снимает изгнание")
+
+
+func test_guiding_bolt_and_ray() -> void:
+	var c := Content.make_hero("cleric")
+	var w := Content.make_hero("wizard")
+	var o := Content.make_enemy("overseer", 1)
+	o.cell = Vector2i(4, 0)
+	w.cell = Vector2i(0, 2)
+	var b := arena([c, o, w])
+	o.guided_by = c.id
+	check(b.attack_preview(w, o).adv == 1, "по меченой цели — преимущество")
+	b._spell_attack(w, o, "1d4", false)
+	check(o.guided_by == "", "метка снимается первой атакой")
+	o.guided_by = c.id
+	o.slowed_by = w.id
+	b.end_turn()
+	check(b.current() == o and o.speed_left == o.speed - 2, "луч холода отнимает 2 клетки")
+	b.end_turn()
+	check(o.slowed_by == "", "замедление кончается в начале хода волшебника")
+	b.end_turn()
+	check(o.guided_by == "", "метка кончается в начале хода жреца")
+
+
+func test_grease() -> void:
+	var w := Content.make_hero("wizard")
+	var z := helpless("zombie", 1, Vector2i(6, 0))
+	var z2 := helpless("zombie", 2, Vector2i(9, 0))
+	var b := arena([w, z, z2])
+	check(b.use_ability(w, "grease", Vector2i(6, 0)), "жир разлит")
+	check(z.prone and b.grease.has(Vector2i(7, 1)), "враг в жиру падает, зона остаётся")
+	b.order = [w.id, z2.id, z.id]
+	b.turn_index = 0
+	b.end_turn()
+	b.move_along(z2, b.path_to(z2, Vector2i(5, 0), b.reachable(z2)))
+	check(z2.prone and z2.cell == Vector2i(7, 0), "входящий в жир падает и останавливается")
+
+
+func test_hold_the_line() -> void:
+	var g := Content.make_companion("garret")
+	g.cell = Vector2i(5, 5)
+	var z := helpless("zombie", 1, Vector2i(6, 5))
+	z.max_hp = 99
+	z.hp = 99
+	var b := arena([z, g])
+	b.move_along(z, b.path_to(z, Vector2i(9, 5), b.reachable(z)))
+	check(z.cell == Vector2i(6, 5) and z.speed_left == 0, "Гаррет удерживает проход")
+
+
 func test_save_roundtrip() -> void:
 	var b := Battle.new()
 	b.setup(Content.scenario_column("rogue", true), 42, "story")
 	CombatAI.take_turn(b, b.current())
 	b.end_turn()
+	b.grease[Vector2i(3, 3)] = true
+	b.units[0].guided_by = "x"
+	b.units[1].turned = true
 	var text1 := JSON.stringify(b.to_dict())
 	var b2 := Battle.from_dict(JSON.parse_string(text1))
 	var text2 := JSON.stringify(b2.to_dict())

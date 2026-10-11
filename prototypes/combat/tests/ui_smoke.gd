@@ -40,7 +40,7 @@ func _process(_delta: float) -> bool:
 func _play_hero_turn(b: Battle, u: Combatant) -> void:
 	for aid in u.abilities:
 		var a: Dictionary = b.ability(aid)
-		if a.target == "self" or not b.can_use(u, aid):
+		if a.target == "self" or not b.can_use(u, aid) or Content.BASIC_ACTIONS.has(aid):
 			continue
 		var targets := b.ability_targets(u, aid)
 		if targets.is_empty() or a.target == "cell" or a.target == "empty_cell":

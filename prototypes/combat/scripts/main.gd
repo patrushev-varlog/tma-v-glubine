@@ -482,6 +482,17 @@ func _refresh_portraits() -> void:
 			res += " · %s %d" % [Content.ABILITIES[k].name, h.uses[k]]
 		var res_l := _label(res, 12, 200)
 		box.add_child(res_l)
+		var marks := []
+		for tr in h.traits:
+			marks.append(Content.TRAITS[tr].name)
+		if h.dodging:
+			marks.append("уклоняется")
+		if h.hidden:
+			marks.append("спрятан")
+		if h.prone and not h.down:
+			marks.append("лежит")
+		if not marks.is_empty():
+			box.add_child(_label(" · ".join(marks), 12, 200))
 		var cell := h.cell
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:
@@ -509,7 +520,7 @@ func _refresh_buttons(u: Combatant) -> void:
 			elif a.resource == "use":
 				text += "\nосталось %d" % u.uses_left(aid)
 			else:
-				text += "\n" + ("бонусное" if a.cost == "bonus" else "действие")
+				text += "\n" + {"bonus": "бонусное", "free": "без действия"}.get(a.cost, "действие")
 			var b := _button(text, func() -> void: _select_mode(aid))
 			b.toggle_mode = true
 			b.button_pressed = mode == aid

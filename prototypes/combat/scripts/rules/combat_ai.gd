@@ -15,6 +15,9 @@ static func take_turn(b: Battle, u: Combatant, use_dark := false) -> void:
 # --- Враги ----------------------------------------------------------------
 
 static func _enemy_turn(b: Battle, u: Combatant) -> void:
+	if u.turned:
+		_flee(b, u)
+		return
 	var target := _pick_target(b, u)
 	if target == null:
 		return
@@ -79,6 +82,25 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 			best_score = score
 			best = f
 	return best
+
+
+## Изгнанная нежить уходит как можно дальше от героев и не атакует.
+static func _flee(b: Battle, u: Combatant) -> void:
+	var reach := b.reachable(u)
+	var best_cell := u.cell
+	var best_score := -1
+	for c in reach:
+		if c is String:
+			continue
+		var nearest := 99
+		for f in b.foes_of(u):
+			nearest = mini(nearest, Battle.dist(c, f.cell))
+		var score := nearest * 10 - b.count_opportunity(u, b.path_to(u, c, reach)) * 15
+		if score > best_score:
+			best_score = score
+			best_cell = c
+	if best_cell != u.cell:
+		b.move_along(u, b.path_to(u, best_cell, reach))
 
 
 static func _foes_in_range(b: Battle, u: Combatant, r: int) -> Array[Combatant]:
@@ -149,11 +171,26 @@ static func _hero_turn(b: Battle, u: Combatant, use_dark: bool) -> void:
 		if spot2.score >= 2:
 			b.use_ability(u, "bomb", spot2.cell)
 			return
+	if u.abilities.has("turn_undead") and b.can_use(u, "turn_undead"):
+		var undead := 0
+		for f in b.foes_of(u):
+			if f.undead and not f.turned and Battle.dist(f.cell, u.cell) <= 3:
+				undead += 1
+		if undead >= 2:
+			b.use_ability(u, "turn_undead", u.cell)
+			return
 	if u.abilities.has("fire_bolt"):
 		_caster_turn(b, u, target, use_dark)
 		return
+	if u.abilities.has("shoot") and Battle.dist(u.cell, target.cell) > 1:
+		_rogue_ranged(b, u, target)
+		if u.action_used:
+			return
 	if u.abilities.has("sacred_flame") and Battle.dist(u.cell, target.cell) > 1:
 		var spell := "wither" if use_dark and b.can_use(u, "wither") else "sacred_flame"
+		# Направляющий снаряд — пока остаётся ячейка на лечение.
+		if spell == "sacred_flame" and u.abilities.has("guiding_bolt") and u.slots >= 2 and b.can_use(u, "guiding_bolt"):
+			spell = "guiding_bolt"
 		if b.ability_targets(u, spell).has(target.cell):
 			b.use_ability(u, spell, target.cell)
 			return
@@ -167,6 +204,22 @@ static func _hero_turn(b: Battle, u: Combatant, use_dark: bool) -> void:
 			b.use_ability(u, aid, target.cell)
 		else:
 			b.attack(u, target))
+	# Всплеск действий: ещё одна атака, если враг рядом.
+	if u.action_used and b.can_use(u, "action_surge"):
+		for f in b.foes_of(u):
+			if Battle.dist(f.cell, u.cell) <= u.reach():
+				b.use_ability(u, "action_surge", u.cell)
+				b.attack(u, f)
+				break
+
+
+## Плут издали: прячется, если рядом нет врагов, и стреляет из лука.
+static func _rogue_ranged(b: Battle, u: Combatant, target: Combatant) -> void:
+	if not b.ability_targets(u, "shoot").has(target.cell):
+		return
+	if b.can_use(u, "hide"):
+		b.use_ability(u, "hide", u.cell)
+	b.use_ability(u, "shoot", target.cell)
 
 
 static func _bonus_actions(b: Battle, u: Combatant, use_dark: bool) -> void:
@@ -199,7 +252,15 @@ static func _caster_turn(b: Battle, u: Combatant, target: Combatant, use_dark: b
 	if adjacent >= 2 and b.can_use(u, "thunderwave"):
 		b.use_ability(u, "thunderwave", u.cell)
 		return
+	if b.can_use(u, "grease") and u.slots >= 2:
+		var spot := _best_area(b, u, "grease", false)
+		if spot.score >= 3:
+			b.use_ability(u, "grease", spot.cell)
+			return
 	var spell := "fire_bolt"
+	# Луч холода — по бойцу ближнего боя, который ещё идёт к нам.
+	if not target.is_ranged() and Battle.dist(u.cell, target.cell) > 1:
+		spell = "ray_of_frost"
 	if use_dark and b.can_use(u, "life_drain"):
 		spell = "life_drain"
 	elif b.can_use(u, "magic_missile") and target.hp > 6:

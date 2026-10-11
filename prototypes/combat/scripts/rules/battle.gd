@@ -27,6 +27,8 @@ var darkness := 0
 var darkness_gained := 0
 var dark_gifts_used := 0
 var traps := {}
+## Клетки, залитые «Жиром», до конца боя.
+var grease := {}
 var outcome := ""
 var log_lines: Array[String] = []
 ## События для интерфейса: всплывающий урон и т. п. Интерфейс забирает их через take_events().
@@ -222,7 +224,7 @@ func count_opportunity(u: Combatant, path: Array[Vector2i]) -> int:
 	var from := u.cell
 	for step in path:
 		for e in foes_of(u):
-			if used.has(e.id) or e.reaction_used or e.is_ranged():
+			if used.has(e.id) or not e.can_react():
 				continue
 			if dist(from, e.cell) <= e.reach() and dist(step, e.cell) > e.reach():
 				used[e.id] = true
@@ -237,23 +239,48 @@ func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 			break
 		if not u.disengaged:
 			for e in foes_of(u):
-				if e.reaction_used or e.is_ranged():
+				if not e.can_react():
 					continue
 				if dist(u.cell, e.cell) <= e.reach() and dist(step, e.cell) > e.reach():
 					e.reaction_used = true
 					log_line("%s атакует при возможности." % e.name)
-					_weapon_attack(e, u, {})
+					var hit := _weapon_attack(e, u, {})
 					if not u.conscious():
+						return
+					if hit > 0 and e.has_trait("hold_the_line"):
+						log_line("%s удерживает проход: %s останавливается." % [e.name, u.name])
+						u.speed_left = 0
 						return
 		u.cell = step
 		u.speed_left -= 1
-		if traps.has(step) and u.team == 1:
-			traps.erase(step)
-			var dmg := Dice.roll(rng, "2d6")
-			log_line("%s попадает в ловушку!" % u.name)
-			deal_damage(u, dmg, "trap")
-			u.speed_left = 0
+		if _enter_cell(u, step):
 			return
+
+
+## Ловушка и жир на клетке, куда участник вошёл. Возвращает true, если он остановился.
+func _enter_cell(u: Combatant, c: Vector2i) -> bool:
+	if traps.has(c) and u.team == 1:
+		traps.erase(c)
+		var dmg := Dice.roll(rng, "2d6")
+		log_line("%s попадает в ловушку!" % u.name)
+		deal_damage(u, dmg, "trap")
+		u.speed_left = 0
+		return true
+	if grease.has(c) and u.conscious() and _grease_check(u):
+		u.speed_left = 0
+		return true
+	return false
+
+
+## Спасбросок Ловкости в жиру; при провале участник падает. Возвращает true при падении.
+func _grease_check(u: Combatant) -> bool:
+	if u.prone or not u.conscious():
+		return false
+	if saving_throw(u, "dex", Content.SPELL_DC):
+		return false
+	u.prone = true
+	log_line("%s поскальзывается на жиру и падает." % u.name)
+	return true
 
 
 # --- Атаки ----------------------------------------------------------------
@@ -263,6 +290,10 @@ func advantage_for(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 	var dis := 0
 	if attacker.hidden:
 		adv += 1
+	if target.guided_by != "":
+		adv += 1
+	if target.dodging:
+		dis += 1
 	if target.prone:
 		if ranged:
 			dis += 1
@@ -296,11 +327,13 @@ func enemy_damage_scale(attacker: Combatant) -> float:
 
 
 ## Прогноз атаки оружием для интерфейса и ИИ.
-func attack_preview(attacker: Combatant, target: Combatant, extra_dice := "") -> Dictionary:
-	var ranged := attacker.is_ranged()
+func attack_preview(attacker: Combatant, target: Combatant, extra_dice := "", weapon := {}) -> Dictionary:
+	if weapon.is_empty():
+		weapon = attacker.weapon
+	var ranged: bool = weapon.get("kind", "melee") == "ranged"
 	var adv := advantage_for(attacker, target, ranged)
-	var chance := Dice.hit_chance(int(attacker.weapon.to_hit), target.total_ac(), adv)
-	var dmg_expr: String = attacker.weapon.damage
+	var chance := Dice.hit_chance(int(weapon.to_hit), target.total_ac(), adv)
+	var dmg_expr: String = weapon.damage
 	var lo := Dice.min_of(dmg_expr)
 	var hi := Dice.max_of(dmg_expr)
 	var avg := Dice.avg_of(dmg_expr)
@@ -326,7 +359,8 @@ func in_weapon_range(attacker: Combatant, target: Combatant) -> bool:
 
 ## Атака оружием. Возвращает нанесённый урон (0 при промахе).
 func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) -> int:
-	var ranged := attacker.is_ranged()
+	var weapon: Dictionary = opts.get("weapon", attacker.weapon)
+	var ranged: bool = weapon.get("kind", "melee") == "ranged"
 	var adv := advantage_for(attacker, target, ranged)
 	var r1 := Dice.d20(rng)
 	var r2 := Dice.d20(rng)
@@ -336,13 +370,14 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	elif adv < 0:
 		roll = mini(r1, r2)
 	attacker.hidden = false
-	var total := roll + int(attacker.weapon.to_hit)
+	target.guided_by = ""
+	var total := roll + int(weapon.to_hit)
 	var crit := roll == 20
 	if roll == 1 or (not crit and total < target.total_ac()):
 		log_line("%s → %s: промах (%d против КД %d)." % [attacker.name, target.name, total, target.total_ac()])
 		events.append({"type": "miss", "unit": target.id})
 		return 0
-	var dmg := Dice.roll(rng, attacker.weapon.damage, crit)
+	var dmg := Dice.roll(rng, weapon.damage, crit)
 	if can_sneak(attacker, target, adv):
 		attacker.sneak_used = true
 		dmg += Dice.roll(rng, attacker.sneak_dice, crit)
@@ -355,13 +390,30 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	deal_damage(target, dmg, "weapon")
 	if opts.has("drain_extra") and extra > 0:
 		heal(attacker, extra / 2)
+	if not ranged and attacker.has_trait("cleave") and not attacker.cleave_used:
+		_cleave(attacker, target)
 	return dmg
+
+
+## «Рассечение»: второй удар по врагу рядом с первой целью и в досягаемости, урон без модификатора.
+func _cleave(attacker: Combatant, first: Combatant) -> void:
+	for f in foes_of(attacker):
+		if f == first or dist(f.cell, first.cell) > 1 or dist(f.cell, attacker.cell) > attacker.reach():
+			continue
+		attacker.cleave_used = true
+		var expr: String = attacker.weapon.damage.split("+")[0].split("-")[0]
+		log_line("%s: рассечение." % attacker.name)
+		_weapon_attack(attacker, f, {"weapon": {"to_hit": attacker.weapon.to_hit, "damage": expr, "kind": "melee"}})
+		return
 
 
 func deal_damage(target: Combatant, amount: int, _kind: String) -> void:
 	if amount <= 0 or target.dead:
 		return
 	target.hp = maxi(target.hp - amount, 0)
+	if target.turned:
+		target.turned = false
+		log_line("%s больше не бежит." % target.name)
 	events.append({"type": "damage", "unit": target.id, "amount": amount})
 	if target.hp == 0:
 		if target.team == 0:
@@ -414,6 +466,10 @@ func can_use(u: Combatant, aid: String) -> bool:
 	var a := ability(aid)
 	if a.cost == "action" and u.action_used:
 		return false
+	if aid == "action_surge" and not u.action_used:
+		return false
+	if aid == "hide" and _foe_adjacent(u):
+		return false
 	if a.cost == "bonus" and u.bonus_used:
 		return false
 	if a.resource == "slot" and u.slots <= 0:
@@ -423,6 +479,23 @@ func can_use(u: Combatant, aid: String) -> bool:
 	if a.get("dark", false) and dark_gifts_left() <= 0:
 		return false
 	return true
+
+
+func _foe_adjacent(u: Combatant) -> bool:
+	for f in foes_of(u):
+		if dist(f.cell, u.cell) <= 1:
+			return true
+	return false
+
+
+## Видит ли участника хоть один враг (в сознании и по линии обзора).
+func seen_by_foes(u: Combatant) -> bool:
+	for f in foes_of(u):
+		if f.turned:
+			continue
+		if has_los(f.cell, u.cell):
+			return true
+	return false
 
 
 func dark_gifts_left() -> int:
@@ -478,13 +551,14 @@ func ability_preview(u: Combatant, aid: String, target: Vector2i) -> String:
 	var a := ability(aid)
 	var t := occupant(target)
 	match aid:
-		"cursed_blade", "trip":
+		"cursed_blade", "trip", "shoot":
 			if t != null:
-				var p := attack_preview(u, t, "1d8" if aid == "cursed_blade" else "")
-				return "%s: шанс %d%%, урон %d–%d" % [a.name, roundi(p.chance * 100), p.min, p.max]
-		"fire_bolt", "life_drain":
+				var p := attack_preview(u, t, "1d8" if aid == "cursed_blade" else "", u.ranged_weapon if aid == "shoot" else {})
+				return "%s: шанс %d%%, урон %d–%d%s" % [a.name, roundi(p.chance * 100), p.min, p.max,
+					" (со скрытой атакой)" if can_sneak(u, t, p.adv) else ""]
+		"fire_bolt", "life_drain", "guiding_bolt", "ray_of_frost":
 			if t != null:
-				var expr := "1d10" if aid == "fire_bolt" else "3d6"
+				var expr: String = SPELL_DAMAGE[aid]
 				var ch := Dice.hit_chance(Content.SPELL_ATTACK, t.total_ac(), advantage_for(u, t, true))
 				return "%s: шанс %d%%, урон %d–%d" % [a.name, roundi(ch * 100), Dice.min_of(expr), Dice.max_of(expr)]
 		"sacred_flame", "wither":
@@ -495,6 +569,28 @@ func ability_preview(u: Combatant, aid: String, target: Vector2i) -> String:
 				return "%s: провал спасброска %d%%, урон %d–%d" % [a.name, roundi(fail * 100), Dice.min_of(expr2), Dice.max_of(expr2)]
 		"magic_missile":
 			return "%s: без промаха, урон 6–15" % a.name
+		"shove":
+			if t != null:
+				var bonus := maxi(t.save_bonus("str"), t.save_bonus("dex"))
+				var fail2 := 1.0 - Dice.hit_chance(bonus, u.shove_dc(), 0, false)
+				var dest := _shove_dest(u, t)
+				return "%s: провал спасброска %d%%, %s" % [a.name, roundi(fail2 * 100),
+					"отлетит на клетку" if dest.x >= 0 else "некуда отлететь — упадёт"]
+		"hide":
+			if not seen_by_foes(u):
+				return "%s: враги тебя не видят, спрячешься наверняка." % a.name
+			var ch2 := 1.0 - Dice.hit_chance(u.save_bonus("dex"), 15, 0, false)
+			return "%s: тебя видят, шанс спрятаться %d%%." % [a.name, roundi((1.0 - ch2) * 100)]
+		"turn_undead":
+			var names := []
+			for f in foes_of(u):
+				if f.undead and not f.turned and dist(f.cell, u.cell) <= int(a.radius):
+					names.append(f.name)
+			if names.is_empty():
+				return "%s: рядом нет нежити." % a.name
+			return "%s: изгоняет %s" % [a.name, ", ".join(names)]
+		"dodge", "dash", "action_surge":
+			return "%s: %s" % [a.name, a.desc]
 	var hit := []
 	for c in ability_area(u, aid, target):
 		var o := occupant(c)
@@ -513,7 +609,7 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 	var a := ability(aid)
 	if a.cost == "action":
 		u.action_used = true
-	else:
+	elif a.cost == "bonus":
 		u.bonus_used = true
 	if a.resource == "slot":
 		u.slots -= 1
@@ -581,9 +677,76 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 			var d2 := _spell_attack(u, t, "3d6", false)
 			if d2 > 0:
 				heal(u, d2 / 2)
+		"dodge":
+			u.dodging = true
+		"shove":
+			_shove(u, t)
+		"action_surge":
+			u.action_used = false
+		"dash":
+			u.speed_left += u.speed
+		"hide":
+			if not seen_by_foes(u) or Dice.d20(rng) + u.save_bonus("dex") >= 15:
+				u.hidden = true
+				log_line("%s прячется." % u.name)
+			else:
+				log_line("%s не удаётся спрятаться." % u.name)
+		"shoot":
+			_weapon_attack(u, t, {"weapon": u.ranged_weapon})
+		"turn_undead":
+			for f in foes_of(u):
+				if f.undead and not f.turned and dist(f.cell, u.cell) <= int(a.radius):
+					if saving_throw(f, "wis", Content.SPELL_DC):
+						log_line("%s устоял." % f.name)
+					else:
+						f.turned = true
+						log_line("%s бежит в страхе." % f.name)
+		"guiding_bolt":
+			if _spell_attack(u, t, "4d6", false) > 0 and t.conscious():
+				t.guided_by = u.id
+		"ray_of_frost":
+			if _spell_attack(u, t, "1d8", false) > 0 and t.conscious():
+				t.slowed_by = u.id
+		"grease":
+			for c in ability_area(u, aid, target):
+				grease[c] = true
+			for c in ability_area(u, aid, target):
+				var o := occupant(c)
+				if o != null and o.conscious():
+					_grease_check(o)
 	if a.get("dark", false):
 		_add_darkness()
 	return true
+
+
+const SPELL_DAMAGE := {"fire_bolt": "1d10", "life_drain": "3d6", "guiding_bolt": "4d6", "ray_of_frost": "1d8"}
+
+
+## Клетка, куда отлетит цель толчка, или (-1, -1), если некуда.
+func _shove_dest(u: Combatant, t: Combatant) -> Vector2i:
+	var d := Vector2i(signi(t.cell.x - u.cell.x), signi(t.cell.y - u.cell.y))
+	var dest := t.cell + d
+	if not in_bounds(dest) or is_obstacle(dest) or occupant(dest) != null:
+		return Vector2i(-1, -1)
+	if d.x != 0 and d.y != 0 and (is_obstacle(t.cell + Vector2i(d.x, 0)) or is_obstacle(t.cell + Vector2i(0, d.y))):
+		return Vector2i(-1, -1)
+	return dest
+
+
+func _shove(u: Combatant, t: Combatant) -> void:
+	u.hidden = false
+	var bonus := maxi(t.save_bonus("str"), t.save_bonus("dex"))
+	if Dice.d20(rng) + bonus >= u.shove_dc():
+		log_line("%s устоял на месте." % t.name)
+		return
+	var dest := _shove_dest(u, t)
+	if dest.x < 0:
+		t.prone = true
+		log_line("%s падает." % t.name)
+		return
+	t.cell = dest
+	log_line("%s отлетает назад." % t.name)
+	_enter_cell(t, dest)
 
 
 func _spell_attack(u: Combatant, t: Combatant, expr: String, _half: bool) -> int:
@@ -592,6 +755,7 @@ func _spell_attack(u: Combatant, t: Combatant, expr: String, _half: bool) -> int
 	var r2 := Dice.d20(rng)
 	var roll := r1 if adv == 0 else (maxi(r1, r2) if adv > 0 else mini(r1, r2))
 	u.hidden = false
+	t.guided_by = ""
 	if roll == 1 or (roll != 20 and roll + Content.SPELL_ATTACK < t.total_ac()):
 		log_line("Промах по %s." % t.name)
 		events.append({"type": "miss", "unit": t.id})
@@ -647,15 +811,26 @@ func _start_turn() -> void:
 	u.sneak_used = false
 	u.disengaged = false
 	u.reaction_used = false
+	u.dodging = false
+	u.cleave_used = false
+	for o in units:
+		if o.guided_by == u.id:
+			o.guided_by = ""
+		if o.slowed_by == u.id:
+			o.slowed_by = ""
 	if u.prone and u.conscious():
 		u.prone = false
 		u.speed_left = u.speed / 2
+	if u.slowed_by != "":
+		u.speed_left = maxi(u.speed_left - 2, 0)
 
 
 func end_turn() -> void:
 	if outcome != "":
 		return
 	var u := current()
+	if grease.has(u.cell) and u.conscious():
+		_grease_check(u)
 	if u.taunt_turns > 0:
 		u.taunt_turns -= 1
 		if u.taunt_turns == 0:
@@ -708,6 +883,7 @@ func to_dict() -> Dictionary:
 		"order": Array(order), "turn_index": turn_index, "round": round_num,
 		"rng_seed": str(rng.seed), "rng_state": str(rng.state), "difficulty": difficulty,
 		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "traps": tr, "outcome": outcome,
+		"grease": grease.keys().map(func(c: Vector2i) -> Array: return [c.x, c.y]),
 	}
 
 
@@ -732,6 +908,8 @@ static func from_dict(d: Dictionary) -> Battle:
 	b.dark_gifts_used = int(d.get("dark_gifts_used", 0))
 	for t in d.traps:
 		b.traps[Vector2i(int(t[0]), int(t[1]))] = String(t[2])
+	for g in d.get("grease", []):
+		b.grease[Vector2i(int(g[0]), int(g[1]))] = true
 	b.outcome = d.outcome
 	return b
 

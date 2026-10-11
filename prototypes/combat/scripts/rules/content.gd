@@ -42,40 +42,79 @@ const ABILITIES := {
 		"desc": "Тёмный дар. Спасбросок Телосложения, 2d8 некротикой; столько же лечит самого раненого союзника."},
 	"life_drain": {"name": "Высасывание жизни", "cost": "action", "resource": "none", "target": "enemy", "range": 8, "dark": true,
 		"desc": "Тёмный дар. Атака заклинанием, 3d6 некротикой, лечит себя на половину."},
+	# Базовые действия: есть у всех героев и спутников.
+	"dodge": {"name": "Уклонение", "cost": "action", "resource": "none", "target": "self", "range": 0,
+		"desc": "До начала следующего хода атаки по тебе с помехой."},
+	"shove": {"name": "Толчок", "cost": "action", "resource": "none", "target": "enemy", "range": 1,
+		"desc": "Спасбросок Силы или Ловкости врага: отлетает на клетку назад, а если некуда — падает. Можно столкнуть в ловушку или жир."},
+	# Воин.
+	"action_surge": {"name": "Всплеск действий", "cost": "free", "resource": "use", "target": "self", "range": 0,
+		"desc": "Ещё одно действие в этот ход. Раз за бой."},
+	# Плут: хитрое действие.
+	"dash": {"name": "Рывок", "cost": "bonus", "resource": "none", "target": "self", "range": 0,
+		"desc": "Хитрое действие: ещё столько же движения в этот ход."},
+	"hide": {"name": "Спрятаться", "cost": "bonus", "resource": "none", "target": "self", "range": 0,
+		"desc": "Хитрое действие, если рядом нет врагов. Вне их обзора — сразу, иначе проверка Ловкости против 15. Спрятавшийся бьёт с преимуществом и скрытой атакой."},
+	"shoot": {"name": "Выстрел из лука", "cost": "action", "resource": "none", "target": "enemy", "range": 8,
+		"desc": "Атака коротким луком, 1d6+3. Скрытая атака работает и издали."},
+	# Жрец.
+	"turn_undead": {"name": "Изгнание нежити", "cost": "action", "resource": "use", "target": "self", "range": 0, "radius": 3,
+		"desc": "Нежить в 3 клетках: спасбросок Мудрости или бежит и не атакует, пока не получит урон."},
+	"guiding_bolt": {"name": "Направляющий снаряд", "cost": "action", "resource": "slot", "target": "enemy", "range": 10,
+		"desc": "Атака заклинанием, 4d6 светом; следующая атака по цели до твоего хода — с преимуществом."},
+	# Волшебник.
+	"ray_of_frost": {"name": "Луч холода", "cost": "action", "resource": "none", "target": "enemy", "range": 8,
+		"desc": "Атака заклинанием, 1d8 холодом; цель теряет 2 клетки движения до твоего следующего хода."},
+	"grease": {"name": "Жир", "cost": "action", "resource": "slot", "target": "cell", "range": 8, "radius": 1,
+		"desc": "Зона 3×3 до конца боя: кто в ней или входит в неё — спасбросок Ловкости или падает и теряет движение. Задевает и своих."},
+}
+
+## Базовые действия, которые добавляются каждому герою и спутнику.
+const BASIC_ACTIONS: Array[String] = ["dodge", "shove"]
+
+## Пассивные приёмы: срабатывают сами, кнопок нет.
+const TRAITS := {
+	"cleave": {"name": "Рассечение", "desc": "Раз за ход при попадании в ближнем бою — удар по второму врагу рядом с целью, 1d8 без модификатора."},
+	"hold_the_line": {"name": "Удержать проход", "desc": "Враг, по которому Гаррет попал атакой при возможности, останавливается."},
 }
 
 const HERO_CLASSES := {
 	"fighter": {"name": "Воин", "max_hp": 20, "ac": 16, "init": 0,
 		"saves": {"str": 5, "dex": 0, "con": 4, "wis": 1},
 		"weapon": {"name": "Длинный меч", "to_hit": 5, "damage": "1d8+3", "reach": 1, "kind": "melee"},
-		"abilities": ["second_wind", "cursed_blade"], "uses": {"second_wind": 1}},
+		"abilities": ["second_wind", "action_surge", "cursed_blade"], "uses": {"second_wind": 1, "action_surge": 1},
+		"traits": ["cleave"], "str_mod": 3},
 	"rogue": {"name": "Плут", "max_hp": 15, "ac": 14, "init": 3,
 		"saves": {"str": 0, "dex": 5, "con": 1, "wis": 1},
 		"weapon": {"name": "Короткий меч", "to_hit": 5, "damage": "1d6+3", "reach": 1, "kind": "melee"},
-		"sneak": "1d6", "abilities": ["disengage", "shadow_step"], "uses": {}},
+		"ranged_weapon": {"name": "Короткий лук", "to_hit": 5, "damage": "1d6+3", "range": 8, "kind": "ranged"},
+		"sneak": "1d6", "abilities": ["shoot", "disengage", "dash", "hide", "shadow_step"], "uses": {}, "str_mod": 0},
 	"cleric": {"name": "Жрец", "max_hp": 17, "ac": 18, "init": 0,
 		"saves": {"str": 1, "dex": 0, "con": 2, "wis": 5},
 		"weapon": {"name": "Булава", "to_hit": 4, "damage": "1d6+2", "reach": 1, "kind": "melee"},
-		"slots": 3, "abilities": ["sacred_flame", "healing_word", "wither"], "uses": {}},
+		"slots": 3, "abilities": ["sacred_flame", "guiding_bolt", "healing_word", "turn_undead", "wither"],
+		"uses": {"turn_undead": 2}, "str_mod": 1},
 	"wizard": {"name": "Волшебник", "max_hp": 12, "ac": 12, "init": 2,
 		"saves": {"str": -1, "dex": 2, "con": 1, "wis": 3},
 		"weapon": {"name": "Посох", "to_hit": 1, "damage": "1d6-1", "reach": 1, "kind": "melee"},
-		"slots": 3, "abilities": ["fire_bolt", "magic_missile", "thunderwave", "life_drain"], "uses": {}},
+		"slots": 3, "abilities": ["fire_bolt", "ray_of_frost", "magic_missile", "thunderwave", "grease", "life_drain"],
+		"uses": {}, "str_mod": -1},
 }
 
 const COMPANIONS := {
 	"irena": {"name": "Ирена", "letter": "И", "color": "#e8d27a", "max_hp": 17, "ac": 16, "init": 0,
 		"saves": {"str": 1, "dex": 0, "con": 2, "wis": 5},
 		"weapon": {"name": "Булава", "to_hit": 4, "damage": "1d6+2", "reach": 1, "kind": "melee"},
-		"slots": 3, "abilities": ["sacred_flame", "healing_word", "hallowed_ground", "shield_of_faith"], "uses": {}},
+		"slots": 3, "abilities": ["sacred_flame", "healing_word", "hallowed_ground", "shield_of_faith"], "uses": {},
+		"str_mod": 1},
 	"garret": {"name": "Гаррет", "letter": "Г", "color": "#c97b4a", "max_hp": 22, "ac": 17, "init": 0,
 		"saves": {"str": 5, "dex": 0, "con": 4, "wis": 0},
 		"weapon": {"name": "Длинный меч", "to_hit": 5, "damage": "1d8+3", "reach": 1, "kind": "melee"},
-		"abilities": ["trip", "taunt"], "uses": {"trip": 2, "taunt": 2}},
+		"abilities": ["trip", "taunt"], "uses": {"trip": 2, "taunt": 2}, "traits": ["hold_the_line"], "str_mod": 3},
 	"velior": {"name": "Велиор", "letter": "В", "color": "#6fb07a", "max_hp": 15, "ac": 14, "init": 3,
 		"saves": {"str": 0, "dex": 5, "con": 1, "wis": 1},
 		"weapon": {"name": "Короткий меч", "to_hit": 5, "damage": "1d6+3", "reach": 1, "kind": "melee"},
-		"sneak": "1d6", "abilities": ["bomb", "trap"], "uses": {"bomb": 2, "trap": 2}},
+		"sneak": "1d6", "abilities": ["bomb", "trap"], "uses": {"bomb": 2, "trap": 2}, "str_mod": 0},
 }
 
 const ENEMIES := {
@@ -99,6 +138,7 @@ const HERO_COLOR := "#7aa7e8"
 static func make_hero(class_id: String) -> Combatant:
 	var t: Dictionary = HERO_CLASSES[class_id]
 	var c := _from_template(t, "hero", class_id)
+	_add_basic_actions(c)
 	c.name = "Герой (%s)" % t.name
 	c.letter = "Я"
 	c.color = Color.html(HERO_COLOR)
@@ -109,6 +149,7 @@ static func make_hero(class_id: String) -> Combatant:
 static func make_companion(comp_id: String) -> Combatant:
 	var t: Dictionary = COMPANIONS[comp_id]
 	var c := _from_template(t, comp_id, comp_id)
+	_add_basic_actions(c)
 	c.name = t.name
 	c.letter = t.letter
 	c.color = Color.html(t.color)
@@ -144,7 +185,16 @@ static func _from_template(t: Dictionary, id: String, kind: String) -> Combatant
 	c.slots = t.get("slots", 0)
 	c.max_slots = c.slots
 	c.sneak_dice = t.get("sneak", "")
+	c.ranged_weapon = t.get("ranged_weapon", {}).duplicate()
+	for tr in t.get("traits", []):
+		c.traits.append(String(tr))
+	c.str_mod = t.get("str_mod", 0)
 	return c
+
+
+static func _add_basic_actions(c: Combatant) -> void:
+	for a in BASIC_ACTIONS:
+		c.abilities.append(a)
 
 
 ## Бой 3 пролога: колонна пленных на привале у ворот рудника.

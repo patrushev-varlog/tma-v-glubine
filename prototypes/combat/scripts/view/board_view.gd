@@ -16,6 +16,7 @@ const C_ALLY_TARGET := Color(0.45, 0.9, 0.5, 0.35)
 const C_AREA := Color(1.0, 0.75, 0.3, 0.4)
 const C_PATH := Color(0.85, 0.92, 1.0, 0.9)
 const C_PENDING := Color(1, 1, 1, 0.9)
+const C_GREASE := Color(0.85, 0.75, 0.2, 0.55)
 
 var battle: Battle
 var reach_cells: Array[Vector2i] = []
@@ -62,6 +63,8 @@ func _draw() -> void:
 			var d := _diamond(c)
 			d.append(d[0])
 			draw_polyline(d, C_EDGE, 1.0)
+	for c in battle.grease:
+		draw_colored_polygon(_diamond(c, 1), C_GREASE)
 	for c in reach_cells:
 		draw_colored_polygon(_diamond(c, 2), C_REACH)
 	for c in target_cells:
@@ -147,6 +150,18 @@ func _draw_unit(u: Combatant) -> void:
 		draw_string(font, base + Vector2(14, -44), "+2", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("#e8d27a"))
 	if u.taunted_by != "":
 		draw_string(font, base + Vector2(-26, -44), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("#ff7a5a"))
+	# Состояния значками над полоской хитов.
+	var marks := []
+	if u.dodging:
+		marks.append("уклон")
+	if u.turned:
+		marks.append("бежит")
+	if u.guided_by != "":
+		marks.append("метка")
+	if u.slowed_by != "":
+		marks.append("медл.")
+	if not marks.is_empty():
+		draw_string(font, base + Vector2(-40, -64), " ".join(marks), HORIZONTAL_ALIGNMENT_CENTER, 80, 11, Color("#bfe3ff"))
 
 
 ## Всплывающий текст над клеткой: урон, лечение, промах.
