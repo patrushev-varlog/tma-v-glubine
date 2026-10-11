@@ -29,6 +29,8 @@ var difficulty := "story"
 var darkness := 0
 var darkness_gained := 0
 var dark_gifts_used := 0
+## Тьма от тёмных предметов за этот бой (сверх потолка тёмных даров).
+var item_darkness := 0
 var traps := {}
 ## Клетки, залитые «Жиром», и клетки «Паутины» до конца боя: клетка → СЛ.
 var grease := {}
@@ -59,6 +61,10 @@ func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
 		units.append(u)
 	for u in units:
 		u.initiative = Dice.d20(rng) + u.init_mod
+		if u.team == 0 and u.item_dark > 0:
+			item_darkness += u.item_dark
+	if item_darkness > 0:
+		darkness += item_darkness
 	var sorted := units.duplicate()
 	sorted.sort_custom(func(a: Combatant, b: Combatant) -> bool:
 		if a.initiative != b.initiative:
@@ -416,6 +422,7 @@ func attack_preview(attacker: Combatant, target: Combatant, extra_dice := "", we
 		extras.append(sneak_expr(attacker, target))
 	if attacker.poison_ready:
 		extras.append("2d6")
+	extras.append_array(_item_dice(attacker, target))
 	for e in extras:
 		lo += Dice.min_of(e)
 		hi += Dice.max_of(e)
@@ -480,6 +487,12 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 		dmg += Dice.roll(rng, "2d6", crit)
 		target.poisoned = true
 		log_line("Яд: %s ослаб." % target.name)
+	var drained := 0
+	if target.undead and attacker.undead_dice != "":
+		dmg += Dice.roll(rng, attacker.undead_dice, crit)
+	if attacker.drain_dice != "":
+		drained = Dice.roll(rng, attacker.drain_dice, crit)
+		dmg += drained
 	dmg += _flat_bonus(attacker, target, ranged)
 	dmg = int(ceil(dmg * enemy_damage_scale(attacker)))
 	dmg = _mitigate(target, dmg)
@@ -489,6 +502,8 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 		heal(attacker, extra / 2)
 	if shadow > 0:
 		heal(attacker, shadow / 2)
+	if drained > 0:
+		heal(attacker, drained / 2)
 	if weapon.get("on_hit", "") == "paralyze" and target.conscious() and not target.undead:
 		if not saving_throw(target, "con", PARALYZE_DC):
 			target.stunned = true
@@ -498,8 +513,20 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	return dmg
 
 
-## Ярость, «Стойкость» и «Уворот» уменьшают урон от оружия.
+## Кости предметов при попадании оружием: по нежити и некротикой.
+func _item_dice(attacker: Combatant, target: Combatant) -> Array[String]:
+	var out: Array[String] = []
+	if target.undead and attacker.undead_dice != "":
+		out.append(attacker.undead_dice)
+	if attacker.drain_dice != "":
+		out.append(attacker.drain_dice)
+	return out
+
+
+## Ярость, «Стойкость», «Уворот» и доспехи со снижением уменьшают урон от оружия.
 func _mitigate(target: Combatant, dmg: int) -> int:
+	if target.dr > 0:
+		dmg = maxi(dmg - target.dr, 0)
 	if target.raging:
 		dmg = maxi(dmg - 2, 0)
 	if target.has_trait("stalwart"):
@@ -535,6 +562,10 @@ func deal_damage(target: Combatant, amount: int, _kind: String) -> void:
 		target.hp = 1
 		log_line("%s в ярости не падает!" % target.name)
 	events.append({"type": "damage", "unit": target.id, "amount": amount})
+	if target.rally and not target.rally_used and target.hp > 0 and target.hp * 2 <= target.max_hp:
+		target.rally_used = true
+		log_line("%s: клятва Молчащих держит на ногах." % target.name)
+		heal(target, 2 * target.level)
 	if target.hp == 0:
 		if target.team == 0:
 			if not target.down:
@@ -542,10 +573,21 @@ func deal_damage(target: Combatant, amount: int, _kind: String) -> void:
 				target.prone = true
 				target.raging = false
 				log_line("%s выбывает из боя." % target.name)
+				_rescue(target)
 		else:
 			target.dead = true
 			log_line("%s повержен." % target.name)
 	_check_outcome()
+
+
+## «Цепь Безымянных»: союзник рядом с носителем, выбыв, сразу встаёт.
+func _rescue(fallen: Combatant) -> void:
+	for o in allies_of(fallen):
+		if o.rescue and not o.rescue_used and o.conscious() and dist(o.cell, fallen.cell) <= 1:
+			o.rescue_used = true
+			log_line("%s: цепь Безымянных поднимает %s." % [o.name, fallen.name])
+			heal(fallen, 2 * o.level)
+			return
 
 
 func heal(target: Combatant, amount: int) -> void:
@@ -611,7 +653,7 @@ func can_use(u: Combatant, aid: String) -> bool:
 		return false
 	if a.resource == "use" and u.uses_left(aid) <= 0:
 		return false
-	if a.get("dark", false) and dark_gifts_left() <= 0:
+	if a.get("dark", false) and dark_gifts_left() <= 0 and not u.ring:
 		return false
 	match aid:
 		"action_surge":
@@ -824,7 +866,7 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 				if o == null or o.dead:
 					continue
 				if o.team == u.team:
-					heal(o, Dice.roll(rng, "1d6"))
+					heal(o, Dice.roll(rng, "1d6") + u.heal_bonus)
 				elif o.undead:
 					deal_damage(o, Dice.roll(rng, "2d6"), "radiant")
 		"shield_of_faith":
@@ -948,13 +990,13 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 				else:
 					o.slow_spell = true
 					log_line("%s замедлен." % o.name)
-	if a.get("dark", false):
+	if a.get("dark", false) and not u.ring:
 		_add_darkness()
 	return true
 
 
 func _heal_roll(u: Combatant, aid: String) -> int:
-	return Dice.roll(rng, dice_of(u, aid)) + (3 if u.has_trait("life_disciple") else 0)
+	return Dice.roll(rng, dice_of(u, aid)) + (3 if u.has_trait("life_disciple") else 0) + u.heal_bonus
 
 
 func _preserve_life(u: Combatant, radius: int) -> void:
@@ -1184,7 +1226,7 @@ func to_dict() -> Dictionary:
 		"units": units.map(func(u: Combatant) -> Dictionary: return u.to_dict()),
 		"order": Array(order), "turn_index": turn_index, "round": round_num,
 		"rng_seed": str(rng.seed), "rng_state": str(rng.state), "difficulty": difficulty,
-		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "traps": tr,
+		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "item_darkness": item_darkness, "traps": tr,
 		"outcome": outcome, "grease": _zones(grease), "webs": _zones(webs), "slow_dc": slow_dc,
 		"spikes": spikes.keys().map(func(c: Vector2i) -> Array: return [c.x, c.y, spikes[c]]),
 	}
@@ -1224,6 +1266,7 @@ static func from_dict(d: Dictionary) -> Battle:
 	b.darkness = int(d.darkness)
 	b.darkness_gained = int(d.darkness_gained)
 	b.dark_gifts_used = int(d.get("dark_gifts_used", 0))
+	b.item_darkness = int(d.get("item_darkness", 0))
 	for t in d.traps:
 		b.traps[Vector2i(int(t[0]), int(t[1]))] = String(t[2])
 	b.grease = _zones_from(d.get("grease", []))

@@ -553,5 +553,7 @@ static func scenario(level: int, hero_class: String, archetype: String, with_vel
 				enemies.append(e)
 	for i in heroes.size():
 		heroes[i].cell = hero_cells[i]
+		if Items.mode != "none":
+			Items.equip(heroes[i], Items.kit_for(heroes[i], level))
 	return {"width": String(rows[0]).length(), "height": rows.size(), "units": heroes + enemies,
 		"obstacles": obstacles, "title": "%s (уровень %d)" % [bt.title, level], "level": level}

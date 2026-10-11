@@ -1,19 +1,21 @@
 extends SceneTree
 ## Таблица баланса боёв уровней 1–5: обе стороны ведёт ИИ.
 ## godot --headless --path prototypes/combat -s res://tools/simulate.gd -- [ключи]
-## Ключи: level=1,2 class=wizard arch=evoker diff=trial velior=0 dark=both runs=200 drop=O,A
-## (drop — буквы врагов на карте, которых убрать: для подбора состава боя).
+## Ключи: level=1,2 class=wizard arch=evoker diff=trial velior=0 dark=both runs=200 drop=O,A gear=kit
+## (gear — экипировка: none — без неё, kit — гарантированный набор уровня, full — набор и всё сверх бюджета;
+## drop — буквы врагов на карте, которых убрать: для подбора состава боя).
 ## Без ключей — все уровни, классы и ветки на «Испытании» без Велиора, с дарами и без, по 200 боёв.
 
 func _init() -> void:
 	var opt := {"level": "1,2,3,4,5", "class": ",".join(Content.HERO_CLASSES.keys()), "arch": "", "diff": "trial",
-		"velior": "0", "dark": "both", "runs": "200"}
+		"velior": "0", "dark": "both", "runs": "200", "gear": "kit"}
 	for arg in OS.get_cmdline_user_args():
 		var kv := arg.split("=", true, 1)
 		if kv.size() == 2:
 			opt[kv[0]] = kv[1]
 	if opt.has("drop"):
 		Content.exclude = Array(String(opt.drop).split(","))
+	Items.mode = String(opt.gear)
 	var runs := int(opt.runs)
 	var darks := [false, true] if opt.dark == "both" else [opt.dark == "1"]
 	print("Уровень | Класс | Ветка | Велиор | Режим | Тёмные дары | Победы | Раундов | Выбыло | Герой выбыл")

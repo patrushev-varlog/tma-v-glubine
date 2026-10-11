@@ -35,6 +35,7 @@ func _init() -> void:
 	test_slow()
 	test_shadow_step()
 	test_save_roundtrip()
+	test_items()
 	test_simulation_terminates()
 	print("Тесты: прошло %d, упало %d" % [passed, failed])
 	quit(1 if failed > 0 else 0)
@@ -449,6 +450,61 @@ func test_save_roundtrip() -> void:
 	var text2 := JSON.stringify(b2.to_dict())
 	check(text1 == text2, "сохранение и загрузка дают то же состояние")
 	check(b.rng.randi() == b2.rng.randi(), "генератор случайных чисел продолжается одинаково")
+
+
+func test_items() -> void:
+	Items.mode = "kit"
+	var bare := Content.make_hero("wizard", 4, "evoker")
+	var sc := Content.scenario(4, "wizard", "evoker", true, "trial")
+	var w: Combatant = sc.units[0]
+	check(Items.names_of(w).has("Посох Молчащих"), "волшебник 4 уровня получает посох Молчащих")
+	check(w.spell_dc == bare.spell_dc + 2 and w.max_slots == bare.max_slots + 1, "посох: СЛ +2 и ячейка")
+	check(w.ac == bare.ac + 1, "мантия Молчащих: +1 КД")
+	check(not w.items.has("workshop_weapon"), "легендарка вытесняет добротное оружие из слота")
+	var g: Combatant = sc.units[2]
+	check(g.items.has("gate_sword") and g.items.has("dwarf_ward"), "набор Гаррета 4 уровня")
+	Items.mode = "none"
+	var plain: Combatant = Content.scenario(4, "wizard", "evoker", false, "trial").units[0]
+	check(plain.items.is_empty(), "без экипировки предметов нет")
+	Items.mode = "kit"
+	# Кости по нежити и снижение урона.
+	var f := Content.make_hero("fighter", 3, "guardian")
+	Items.equip(f, ["guard_blade", "silent_armor"])
+	check(f.undead_dice == "1d4" and f.dr == 1, "клинок гвардии и доспех Молчащих")
+	var z := Content.make_enemy("zombie", 1)
+	var b := arena([f, z])
+	f.cell = Vector2i(2, 2)
+	z.cell = Vector2i(3, 2)
+	var p := b.attack_preview(f, z)
+	var p0 := b.attack_preview(Content.make_hero("fighter", 3, "guardian"), z)
+	check(p.avg > p0.avg + 3.0, "прогноз учитывает +1 урона и 1d4 по нежити")
+	check(b._mitigate(f, 5) == 4, "снижение урона 1")
+	# Клятва Молчащих: раз за бой при падении до половины хитов.
+	var k := Content.make_hero("fighter", 4, "berserker")
+	Items.equip(k, ["silent_legacy"])
+	var b2 := arena([k, Content.make_enemy("zombie", 1)])
+	b2.deal_damage(k, k.max_hp / 2 + 1, "weapon")
+	check(k.rally_used and k.hp > k.max_hp / 2 - 1, "клятва лечит при падении до половины")
+	# Тёмные предметы и перстень.
+	var r := Content.make_hero("wizard", 4, "evoker")
+	Items.equip(r, ["pale_ring"])
+	var b3 := arena([r, Content.make_enemy("zombie", 1)])
+	check(b3.darkness == 3 and b3.item_darkness == 3, "перстень: +3 Тьмы за бой")
+	b3.dark_gifts_used = Battle.DARK_GIFTS_PER_BATTLE
+	check(b3.can_use(r, "life_drain"), "с перстнем тёмный дар доступен сверх лимита")
+	# Цепь Безымянных.
+	var c1 := Content.make_companion("garret", 5)
+	Items.equip(c1, ["nameless_chain"])
+	var c2 := Content.make_companion("irena", 5)
+	var b4 := arena([c1, c2, Content.make_enemy("zombie", 1)])
+	c1.cell = Vector2i(2, 2)
+	c2.cell = Vector2i(3, 2)
+	b4.deal_damage(c2, c2.hp, "weapon")
+	check(c2.conscious() and c1.rescue_used, "цепь поднимает выбывшего соседа")
+	# Сохранение с предметами.
+	var d := w.to_dict()
+	var w2 := Combatant.from_dict(JSON.parse_string(JSON.stringify(d)))
+	check(w2.items == w.items and w2.heal_bonus == w.heal_bonus, "предметы сохраняются")
 
 
 func test_simulation_terminates() -> void:
