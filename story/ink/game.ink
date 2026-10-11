@@ -26,7 +26,16 @@ INCLUDE chapter2/05_projection.ink
 INCLUDE chapter2/06_sluice.ink
 INCLUDE chapter2/07_camp.ink
 
--> prologue -> chapter1 -> chapter2 -> END
+INCLUDE chapter3/01_arches.ink
+INCLUDE chapter3/02_refuge.ink
+INCLUDE chapter3/03_fresco.ink
+INCLUDE chapter3/04_archive.ink
+INCLUDE chapter3/05_shrine.ink
+INCLUDE chapter3/06_keeper.ink
+INCLUDE chapter3/07_judgment.ink
+INCLUDE chapter3/08_camp.ink
+
+-> prologue -> chapter1 -> chapter2 -> chapter3 -> END
 
 === prologue ===
 -> evening -> raid -> ashes -> temple -> deserter -> column -> interrogation_scene ->
@@ -38,4 +47,8 @@ INCLUDE chapter2/07_camp.ink
 
 === chapter2 ===
 -> black_water -> fugitives -> smugglers -> letter -> projection -> sluice -> camp2 ->
+->->
+
+=== chapter3 ===
+-> arches -> refuge -> fresco -> archive -> shrine -> keeper -> judgment -> camp3 ->
 ->->
