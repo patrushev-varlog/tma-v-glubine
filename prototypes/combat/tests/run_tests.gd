@@ -17,6 +17,7 @@ func _init() -> void:
 	test_victory()
 	test_story_scaling()
 	test_darkness_cap()
+	test_trial_enemies_pick_fragile()
 	test_trap()
 	test_save_roundtrip()
 	test_simulation_terminates()
@@ -169,10 +170,29 @@ func test_darkness_cap() -> void:
 	z.max_hp = 999
 	z.hp = 999
 	var b := arena([h, z])
+	var used := 0
 	for i in 4:
 		h.action_used = false
-		b.use_ability(h, "life_drain", z.cell)
+		if b.use_ability(h, "life_drain", z.cell):
+			used += 1
 	check(b.darkness == 6 and b.darkness_gained == 6, "за бой не больше 6 Тьмы")
+	check(used == 3 and not b.can_use(h, "life_drain"), "не больше трёх тёмных даров за бой")
+	check(b.can_use(h, "fire_bolt"), "обычные заклинания после даров доступны")
+
+
+func test_trial_enemies_pick_fragile() -> void:
+	var w := Content.make_hero("wizard")
+	var g := Content.make_companion("garret")
+	var o := Content.make_enemy("overseer", 1)
+	o.cell = Vector2i(4, 0)
+	g.cell = Vector2i(3, 0)
+	w.cell = Vector2i(6, 0)
+	var b := arena([g, w, o])
+	b.difficulty = "trial"
+	o.speed_left = o.speed
+	check(CombatAI._pick_target(b, o) == w, "на «Испытании» враг идёт к хрупкому волшебнику")
+	b.difficulty = "story"
+	check(CombatAI._pick_target(b, o) == g, "на «Истории» враг бьёт ближайшего")
 
 
 func test_trap() -> void:

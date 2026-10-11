@@ -24,8 +24,11 @@ static func _enemy_turn(b: Battle, u: Combatant) -> void:
 			_move_toward(b, u, target, int(u.weapon.get("range", 1)))
 			in_range = _foes_in_range(b, u, int(u.weapon.get("range", 1)))
 		if not in_range.is_empty():
-			in_range.sort_custom(func(a: Combatant, c: Combatant) -> bool: return a.hp < c.hp)
-			b.attack(u, in_range[0])
+			if b.difficulty == "trial":
+				b.attack(u, _best_victim(b, u, in_range))
+			else:
+				in_range.sort_custom(func(a: Combatant, c: Combatant) -> bool: return a.hp < c.hp)
+				b.attack(u, in_range[0])
 		return
 	_approach_and_attack(b, u, target, func() -> void: b.attack(u, target))
 
@@ -35,6 +38,8 @@ static func _pick_target(b: Battle, u: Combatant) -> Combatant:
 		var t := b.get_unit(u.taunted_by)
 		if t != null and t.conscious():
 			return t
+	if u.team == 1 and b.difficulty == "trial":
+		return _best_victim(b, u, b.foes_of(u))
 	var best: Combatant = null
 	for f in b.foes_of(u):
 		if best == null:
@@ -43,6 +48,34 @@ static func _pick_target(b: Battle, u: Combatant) -> Combatant:
 		var df := Battle.dist(u.cell, f.cell)
 		var db := Battle.dist(u.cell, best.cell)
 		if df < db or (df == db and f.hp < best.hp):
+			best = f
+	return best
+
+
+## «Испытание»: враг выбирает, кого выгоднее бить. Ценит добивание, слабую броню
+## и хрупких героев; дальние цели дешевле, чем ближние, только если до них можно дойти.
+static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) -> Combatant:
+	var best: Combatant = null
+	var best_score := -INF
+	var reach := int(u.weapon.get("range", 1)) if u.is_ranged() else u.reach()
+	for f in candidates:
+		if not f.conscious():
+			continue
+		var p := b.attack_preview(u, f)
+		var score: float = p.expected / maxf(f.hp, 1.0) * 10.0
+		if p.max >= f.hp:
+			score += 4.0 * p.chance
+		score += (16.0 - f.max_hp) * 0.25
+		var steps := maxi(0, Battle.dist(u.cell, f.cell) - reach)
+		if steps > 0 and not u.is_ranged():
+			# Уход от героя рядом провоцирует атаку — умный враг этого избегает.
+			for g in b.foes_of(u):
+				if g != f and not g.reaction_used and not g.is_ranged() and Battle.dist(u.cell, g.cell) <= g.reach():
+					score -= 3.0
+		if steps > u.speed_left:
+			score -= 2.0 + float(steps - u.speed_left) * 0.8
+		if score > best_score:
+			best_score = score
 			best = f
 	return best
 
@@ -67,6 +100,8 @@ static func _move_toward(b: Battle, u: Combatant, target: Combatant, want_range:
 		var score := (0 if d <= want_range else d * 10) + int(reach[c].cost)
 		if want_range > 1 and d <= 1:
 			score += 50
+		if u.team == 1 and b.difficulty == "trial" and c != u.cell:
+			score += b.count_opportunity(u, b.path_to(u, c, reach)) * 15
 		if score < best_score:
 			best_score = score
 			best_cell = c
@@ -111,12 +146,12 @@ static func _hero_turn(b: Battle, u: Combatant, use_dark: bool) -> void:
 		_caster_turn(b, u, target, use_dark)
 		return
 	if u.abilities.has("sacred_flame") and Battle.dist(u.cell, target.cell) > 1:
-		var spell := "wither" if use_dark and u.abilities.has("wither") else "sacred_flame"
+		var spell := "wither" if use_dark and b.can_use(u, "wither") else "sacred_flame"
 		if b.ability_targets(u, spell).has(target.cell):
 			b.use_ability(u, spell, target.cell)
 			return
 	var aid := ""
-	if use_dark and u.abilities.has("cursed_blade"):
+	if use_dark and b.can_use(u, "cursed_blade"):
 		aid = "cursed_blade"
 	elif u.abilities.has("trip") and b.can_use(u, "trip"):
 		aid = "trip"
@@ -158,7 +193,7 @@ static func _caster_turn(b: Battle, u: Combatant, target: Combatant, use_dark: b
 		b.use_ability(u, "thunderwave", u.cell)
 		return
 	var spell := "fire_bolt"
-	if use_dark and u.abilities.has("life_drain"):
+	if use_dark and b.can_use(u, "life_drain"):
 		spell = "life_drain"
 	elif b.can_use(u, "magic_missile") and target.hp > 6:
 		spell = "magic_missile"

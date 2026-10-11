@@ -10,6 +10,8 @@ const DIRS: Array[Vector2i] = [
 const STORY_ENEMY_DAMAGE := 0.6
 const DARK_GIFT_COST := 2
 const DARK_BATTLE_CAP := 6
+## Тёмных даров за бой: столько же, сколько укладывается в потолок Тьмы.
+const DARK_GIFTS_PER_BATTLE := DARK_BATTLE_CAP / DARK_GIFT_COST
 
 var title := ""
 var width := 12
@@ -23,6 +25,7 @@ var rng := RandomNumberGenerator.new()
 var difficulty := "story"
 var darkness := 0
 var darkness_gained := 0
+var dark_gifts_used := 0
 var traps := {}
 var outcome := ""
 var log_lines: Array[String] = []
@@ -377,7 +380,13 @@ func can_use(u: Combatant, aid: String) -> bool:
 		return false
 	if a.resource == "use" and u.uses_left(aid) <= 0:
 		return false
+	if a.get("dark", false) and dark_gifts_left() <= 0:
+		return false
 	return true
+
+
+func dark_gifts_left() -> int:
+	return DARK_GIFTS_PER_BATTLE - dark_gifts_used
 
 
 ## Допустимые цели способности: список клеток.
@@ -570,6 +579,7 @@ func _most_wounded_ally(u: Combatant) -> Combatant:
 
 
 func _add_darkness() -> void:
+	dark_gifts_used += 1
 	var gain := mini(DARK_GIFT_COST, DARK_BATTLE_CAP - darkness_gained)
 	if gain > 0:
 		darkness += gain
@@ -656,7 +666,7 @@ func to_dict() -> Dictionary:
 		"units": units.map(func(u: Combatant) -> Dictionary: return u.to_dict()),
 		"order": Array(order), "turn_index": turn_index, "round": round_num,
 		"rng_seed": str(rng.seed), "rng_state": str(rng.state), "difficulty": difficulty,
-		"darkness": darkness, "darkness_gained": darkness_gained, "traps": tr, "outcome": outcome,
+		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "traps": tr, "outcome": outcome,
 	}
 
 
@@ -678,6 +688,7 @@ static func from_dict(d: Dictionary) -> Battle:
 	b.difficulty = d.difficulty
 	b.darkness = int(d.darkness)
 	b.darkness_gained = int(d.darkness_gained)
+	b.dark_gifts_used = int(d.get("dark_gifts_used", 0))
 	for t in d.traps:
 		b.traps[Vector2i(int(t[0]), int(t[1]))] = String(t[2])
 	b.outcome = d.outcome

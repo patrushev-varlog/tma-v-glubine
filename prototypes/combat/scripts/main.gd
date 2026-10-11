@@ -480,7 +480,9 @@ func _refresh_buttons(u: Combatant) -> void:
 		for aid in u.abilities:
 			var a := battle.ability(aid)
 			var text: String = a.name
-			if a.resource == "slot":
+			if a.get("dark", false):
+				text += "\nдаров за бой: %d" % battle.dark_gifts_left()
+			elif a.resource == "slot":
 				text += "\nячейка (%d)" % u.slots
 			elif a.resource == "use":
 				text += "\nосталось %d" % u.uses_left(aid)

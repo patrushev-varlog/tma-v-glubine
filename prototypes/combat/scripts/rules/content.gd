@@ -161,8 +161,10 @@ static func scenario_column(hero_class: String, with_velior: bool) -> Dictionary
 		make_enemy("zombie", 1),
 		make_enemy("zombie", 2),
 		make_enemy("skeleton_archer", 1),
+		make_enemy("skeleton_archer", 2),
 	]
-	var enemy_cells := [Vector2i(9, 2), Vector2i(8, 4), Vector2i(10, 4), Vector2i(7, 2), Vector2i(9, 6), Vector2i(10, 1)]
+	var enemy_cells := [Vector2i(9, 2), Vector2i(8, 4), Vector2i(10, 4), Vector2i(7, 2), Vector2i(9, 6), Vector2i(10, 1),
+		Vector2i(11, 3)]
 	for i in enemies.size():
 		enemies[i].cell = enemy_cells[i]
 	var obstacles: Array[Vector2i] = [
