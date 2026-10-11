@@ -12,3 +12,5 @@
 Проверка без Godot: Ink компилируется `inkjs` (`npx inkjs-compiler story/ink/game.ink -o /tmp/game.json`).
 
 Каждая сцена — туннель Ink: заканчивается `->->`, а `game.ink` вызывает их по порядку из узла главы (`prologue`, `chapter1`, `chapter2`, `chapter3`, `chapter4`, `chapter5`). Бой запускается тегом `# battle:<id>` на последней строке перед ним.
+
+Исследование локаций (тайники, закоулки, охоты за легендарками) — в `ink/chapterN/explore.ink`; правила вызова и теги описаны в `ink/explore_common.ink`.
