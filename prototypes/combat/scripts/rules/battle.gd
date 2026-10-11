@@ -12,8 +12,11 @@ const DARK_GIFT_COST := 2
 const DARK_BATTLE_CAP := 6
 ## Тёмных даров за бой: столько же, сколько укладывается в потолок Тьмы.
 const DARK_GIFTS_PER_BATTLE := DARK_BATTLE_CAP / DARK_GIFT_COST
+## СЛ паралича гуля.
+const PARALYZE_DC := 10
 
 var title := ""
+var level := 2
 var width := 12
 var height := 12
 var obstacles := {}
@@ -27,8 +30,13 @@ var darkness := 0
 var darkness_gained := 0
 var dark_gifts_used := 0
 var traps := {}
-## Клетки, залитые «Жиром», до конца боя.
+## Клетки, залитые «Жиром», и клетки «Паутины» до конца боя: клетка → СЛ.
 var grease := {}
+var webs := {}
+## Клетки «Каменных шипов»: клетка → кости урона за шаг.
+var spikes := {}
+## СЛ «Замедления» для спасбросков в конце хода.
+var slow_dc := 13
 var outcome := ""
 var log_lines: Array[String] = []
 ## События для интерфейса: всплывающий урон и т. п. Интерфейс забирает их через take_events().
@@ -42,6 +50,7 @@ func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
 		rng.randomize()
 	difficulty = diff
 	title = scenario.get("title", "")
+	level = scenario.get("level", 2)
 	width = scenario.width
 	height = scenario.height
 	for o in scenario.obstacles:
@@ -107,6 +116,14 @@ func foes_of(u: Combatant) -> Array[Combatant]:
 	return out
 
 
+func allies_of(u: Combatant) -> Array[Combatant]:
+	var out: Array[Combatant] = []
+	for o in units:
+		if o.team == u.team and not o.dead:
+			out.append(o)
+	return out
+
+
 func in_bounds(c: Vector2i) -> bool:
 	return c.x >= 0 and c.y >= 0 and c.x < width and c.y < height
 
@@ -146,6 +163,16 @@ func cells_in_radius(center: Vector2i, radius: int) -> Array[Vector2i]:
 			if in_bounds(c) and not is_obstacle(c):
 				out.append(c)
 	return out
+
+
+## КД с учётом «Защитника» соседа-Стража.
+func ac_of(t: Combatant) -> int:
+	var v := t.total_ac()
+	for o in units:
+		if o != t and o.team == t.team and o.conscious() and o.has_trait("protector") and dist(o.cell, t.cell) <= 1:
+			v += 2
+			break
+	return v
 
 
 # --- Передвижение ----------------------------------------------------------
@@ -235,7 +262,7 @@ func count_opportunity(u: Combatant, path: Array[Vector2i]) -> int:
 
 func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 	for step in path:
-		if not u.conscious() or u.speed_left <= 0:
+		if not u.conscious() or u.speed_left <= 0 or u.restrained:
 			break
 		if not u.disengaged:
 			for e in foes_of(u):
@@ -257,7 +284,7 @@ func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 			return
 
 
-## Ловушка и жир на клетке, куда участник вошёл. Возвращает true, если он остановился.
+## Ловушка, жир и паутина на клетке, куда участник вошёл. Возвращает true, если он остановился.
 func _enter_cell(u: Combatant, c: Vector2i) -> bool:
 	if traps.has(c) and u.team == 1:
 		traps.erase(c)
@@ -266,20 +293,38 @@ func _enter_cell(u: Combatant, c: Vector2i) -> bool:
 		deal_damage(u, dmg, "trap")
 		u.speed_left = 0
 		return true
-	if grease.has(c) and u.conscious() and _grease_check(u):
+	if spikes.has(c) and u.conscious():
+		deal_damage(u, Dice.roll(rng, String(spikes[c])), "spikes")
+		if not u.conscious():
+			return true
+	if grease.has(c) and u.conscious() and _grease_check(u, int(grease[c])):
+		u.speed_left = 0
+		return true
+	if webs.has(c) and u.conscious() and _web_check(u, int(webs[c])):
 		u.speed_left = 0
 		return true
 	return false
 
 
 ## Спасбросок Ловкости в жиру; при провале участник падает. Возвращает true при падении.
-func _grease_check(u: Combatant) -> bool:
+func _grease_check(u: Combatant, dc: int) -> bool:
 	if u.prone or not u.conscious():
 		return false
-	if saving_throw(u, "dex", Content.SPELL_DC):
+	if saving_throw(u, "dex", dc):
 		return false
 	u.prone = true
 	log_line("%s поскальзывается на жиру и падает." % u.name)
+	return true
+
+
+## Спасбросок Ловкости в паутине; при провале участник опутан. Возвращает true, если опутан.
+func _web_check(u: Combatant, dc: int) -> bool:
+	if u.restrained or not u.conscious():
+		return false
+	if saving_throw(u, "dex", dc):
+		return false
+	u.restrained = true
+	log_line("%s запутывается в паутине." % u.name)
 	return true
 
 
@@ -292,7 +337,15 @@ func advantage_for(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 		adv += 1
 	if target.guided_by != "":
 		adv += 1
+	if target.reckless or target.restrained or target.stunned:
+		adv += 1
+	if attacker.reckless and not ranged:
+		adv += 1
+	if attacker.has_trait("assassinate") and round_num == 1 and not target.acted:
+		adv += 1
 	if target.dodging:
+		dis += 1
+	if attacker.restrained or attacker.poisoned:
 		dis += 1
 	if target.prone:
 		if ranged:
@@ -303,7 +356,7 @@ func advantage_for(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 		dis += 1
 	if ranged:
 		for f in foes_of(attacker):
-			if dist(f.cell, attacker.cell) <= 1:
+			if dist(f.cell, attacker.cell) <= 1 and not f.turned and not f.stunned:
 				dis += 1
 				break
 	if adv > 0 and dis > 0:
@@ -322,8 +375,27 @@ func can_sneak(attacker: Combatant, target: Combatant, adv: int) -> bool:
 	return false
 
 
+## Кости скрытой атаки с учётом «Добивания».
+func sneak_expr(attacker: Combatant, target: Combatant) -> String:
+	var expr := attacker.sneak_dice
+	if attacker.has_trait("finisher") and target.hp * 2 <= target.max_hp:
+		var d := Dice.parse(expr)
+		expr = "%dd%d" % [d.count * 2, d.sides]
+	return expr
+
+
 func enemy_damage_scale(attacker: Combatant) -> float:
 	return STORY_ENEMY_DAMAGE if attacker.team == 1 and difficulty == "story" else 1.0
+
+
+## Плоские прибавки к урону атаки оружием: ярость, «Убийство».
+func _flat_bonus(attacker: Combatant, target: Combatant, ranged: bool) -> int:
+	var b := 0
+	if attacker.raging and not ranged:
+		b += 2
+	if attacker.has_trait("assassinate") and round_num == 1 and not target.acted:
+		b += attacker.level
+	return b
 
 
 ## Прогноз атаки оружием для интерфейса и ИИ.
@@ -332,22 +404,34 @@ func attack_preview(attacker: Combatant, target: Combatant, extra_dice := "", we
 		weapon = attacker.weapon
 	var ranged: bool = weapon.get("kind", "melee") == "ranged"
 	var adv := advantage_for(attacker, target, ranged)
-	var chance := Dice.hit_chance(int(weapon.to_hit), target.total_ac(), adv)
+	var chance := Dice.hit_chance(int(weapon.to_hit), ac_of(target), adv)
 	var dmg_expr: String = weapon.damage
-	var lo := Dice.min_of(dmg_expr)
-	var hi := Dice.max_of(dmg_expr)
+	var lo := float(Dice.min_of(dmg_expr))
+	var hi := float(Dice.max_of(dmg_expr))
 	var avg := Dice.avg_of(dmg_expr)
+	var extras: Array[String] = []
 	if extra_dice != "":
-		lo += Dice.min_of(extra_dice)
-		hi += Dice.max_of(extra_dice)
-		avg += Dice.avg_of(extra_dice)
+		extras.append(extra_dice)
 	if can_sneak(attacker, target, adv):
-		lo += Dice.min_of(attacker.sneak_dice)
-		hi += Dice.max_of(attacker.sneak_dice)
-		avg += Dice.avg_of(attacker.sneak_dice)
-	var scale := enemy_damage_scale(attacker)
+		extras.append(sneak_expr(attacker, target))
+	if attacker.poison_ready:
+		extras.append("2d6")
+	for e in extras:
+		lo += Dice.min_of(e)
+		hi += Dice.max_of(e)
+		avg += Dice.avg_of(e)
+	var flat := _flat_bonus(attacker, target, ranged)
+	lo += flat
+	hi += flat
+	avg += flat
+	var scale := enemy_damage_scale(attacker) * _mitigation_scale(target)
 	return {"chance": chance, "adv": adv, "min": int(ceil(lo * scale)), "max": int(ceil(hi * scale)),
 		"avg": avg * scale, "expected": chance * avg * scale}
+
+
+## Грубая доля урона от оружия, которая дойдёт до цели (для прогноза).
+func _mitigation_scale(target: Combatant) -> float:
+	return 0.8 if target.raging else 1.0
 
 
 func in_weapon_range(attacker: Combatant, target: Combatant) -> bool:
@@ -373,37 +457,69 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	target.guided_by = ""
 	var total := roll + int(weapon.to_hit)
 	var crit := roll == 20
-	if roll == 1 or (not crit and total < target.total_ac()):
-		log_line("%s → %s: промах (%d против КД %d)." % [attacker.name, target.name, total, target.total_ac()])
+	var tac := ac_of(target)
+	if roll == 1 or (not crit and total < tac):
+		log_line("%s → %s: промах (%d против КД %d)." % [attacker.name, target.name, total, tac])
 		events.append({"type": "miss", "unit": target.id})
 		return 0
 	var dmg := Dice.roll(rng, weapon.damage, crit)
 	if can_sneak(attacker, target, adv):
 		attacker.sneak_used = true
-		dmg += Dice.roll(rng, attacker.sneak_dice, crit)
+		dmg += Dice.roll(rng, sneak_expr(attacker, target), crit)
 	var extra := 0
 	if opts.has("extra_dice"):
 		extra = Dice.roll(rng, opts.extra_dice, crit)
 		dmg += extra
+	var shadow := 0
+	if attacker.shadow_ready:
+		attacker.shadow_ready = false
+		shadow = Dice.roll(rng, dice_of(attacker, "shadow_step"), crit)
+		dmg += shadow
+	if attacker.poison_ready:
+		attacker.poison_ready = false
+		dmg += Dice.roll(rng, "2d6", crit)
+		target.poisoned = true
+		log_line("Яд: %s ослаб." % target.name)
+	dmg += _flat_bonus(attacker, target, ranged)
 	dmg = int(ceil(dmg * enemy_damage_scale(attacker)))
+	dmg = _mitigate(target, dmg)
 	log_line("%s → %s: %s%d урона." % [attacker.name, target.name, "крит! " if crit else "", dmg])
 	deal_damage(target, dmg, "weapon")
 	if opts.has("drain_extra") and extra > 0:
 		heal(attacker, extra / 2)
+	if shadow > 0:
+		heal(attacker, shadow / 2)
+	if weapon.get("on_hit", "") == "paralyze" and target.conscious() and not target.undead:
+		if not saving_throw(target, "con", PARALYZE_DC):
+			target.stunned = true
+			log_line("%s парализован и пропустит ход." % target.name)
 	if not ranged and attacker.has_trait("cleave") and not attacker.cleave_used:
 		_cleave(attacker, target)
 	return dmg
 
 
-## «Рассечение»: второй удар по врагу рядом с первой целью и в досягаемости, урон без модификатора.
+## Ярость, «Стойкость» и «Уворот» уменьшают урон от оружия.
+func _mitigate(target: Combatant, dmg: int) -> int:
+	if target.raging:
+		dmg = maxi(dmg - 2, 0)
+	if target.has_trait("stalwart"):
+		dmg = maxi(dmg - 3, 0)
+	if target.has_trait("uncanny_dodge") and not target.uncanny_used and dmg > 0:
+		target.uncanny_used = true
+		dmg /= 2
+		log_line("%s уворачивается: урон вдвое меньше." % target.name)
+	return dmg
+
+
+## «Рассечение»: второй удар по врагу рядом с первой целью и в досягаемости.
 func _cleave(attacker: Combatant, first: Combatant) -> void:
 	for f in foes_of(attacker):
 		if f == first or dist(f.cell, first.cell) > 1 or dist(f.cell, attacker.cell) > attacker.reach():
 			continue
 		attacker.cleave_used = true
-		var expr: String = attacker.weapon.damage.split("+")[0].split("-")[0]
 		log_line("%s: рассечение." % attacker.name)
-		_weapon_attack(attacker, f, {"weapon": {"to_hit": attacker.weapon.to_hit, "damage": expr, "kind": "melee"}})
+		_weapon_attack(attacker, f, {"weapon": {"to_hit": attacker.weapon.to_hit,
+			"damage": attacker.weapon.damage, "kind": "melee"}})
 		return
 
 
@@ -414,12 +530,17 @@ func deal_damage(target: Combatant, amount: int, _kind: String) -> void:
 	if target.turned:
 		target.turned = false
 		log_line("%s больше не бежит." % target.name)
+	if target.hp == 0 and target.raging and target.has_trait("relentless") and not target.relentless_used:
+		target.relentless_used = true
+		target.hp = 1
+		log_line("%s в ярости не падает!" % target.name)
 	events.append({"type": "damage", "unit": target.id, "amount": amount})
 	if target.hp == 0:
 		if target.team == 0:
 			if not target.down:
 				target.down = true
 				target.prone = true
+				target.raging = false
 				log_line("%s выбывает из боя." % target.name)
 		else:
 			target.dead = true
@@ -445,14 +566,24 @@ func saving_throw(target: Combatant, stat: String, dc: int) -> bool:
 
 # --- Действия хода -------------------------------------------------------
 
+## Начать или продолжить действие «Атака»: с дополнительной атакой в нём два удара.
+func _spend_attack(u: Combatant) -> void:
+	if u.attacks_left == 0:
+		u.attacks_left = 1 if u.slow_spell else u.attacks_per_action
+	u.attacks_left -= 1
+	if u.attacks_left == 0:
+		u.action_used = true
+
+
 func can_attack(u: Combatant, target: Combatant) -> bool:
-	return u.conscious() and not u.action_used and target.conscious() and target.team != u.team and in_weapon_range(u, target)
+	return u.conscious() and not u.action_used and not u.stunned and target.conscious() and target.team != u.team \
+		and in_weapon_range(u, target)
 
 
 func attack(u: Combatant, target: Combatant) -> void:
 	if not can_attack(u, target):
 		return
-	u.action_used = true
+	_spend_attack(u)
 	_weapon_attack(u, target, {})
 
 
@@ -460,24 +591,43 @@ func ability(aid: String) -> Dictionary:
 	return Content.ABILITIES[aid]
 
 
+func slot_cost(aid: String) -> int:
+	return int(ability(aid).get("slot_cost", 1))
+
+
 func can_use(u: Combatant, aid: String) -> bool:
-	if not u.conscious() or not u.abilities.has(aid):
+	if not u.conscious() or u.stunned or not u.abilities.has(aid):
 		return false
 	var a := ability(aid)
-	if a.cost == "action" and u.action_used:
-		return false
-	if aid == "action_surge" and not u.action_used:
-		return false
-	if aid == "hide" and _foe_adjacent(u):
-		return false
+	if a.cost == "action":
+		if u.action_used:
+			return false
+		# Начатое действие «Атака» можно продолжить только ударом.
+		if u.attacks_left > 0 and not a.get("attack", false):
+			return false
 	if a.cost == "bonus" and u.bonus_used:
 		return false
-	if a.resource == "slot" and u.slots <= 0:
+	if a.resource == "slot" and u.slots < slot_cost(aid):
 		return false
 	if a.resource == "use" and u.uses_left(aid) <= 0:
 		return false
 	if a.get("dark", false) and dark_gifts_left() <= 0:
 		return false
+	match aid:
+		"action_surge":
+			return u.action_used
+		"hide":
+			return not _foe_adjacent(u)
+		"rage":
+			return not u.raging
+		"reckless":
+			return not u.reckless and not u.action_used
+		"poison_blade":
+			return not u.poison_ready
+		"spiritual_weapon":
+			return u.spirit_weapon or u.slots >= 1
+		"spirit_guardians":
+			return not u.guardians
 	return true
 
 
@@ -539,6 +689,11 @@ func ability_targets(u: Combatant, aid: String) -> Array[Vector2i]:
 ## Клетки, которые заденет способность при выборе цели.
 func ability_area(u: Combatant, aid: String, target: Vector2i) -> Array[Vector2i]:
 	var a := ability(aid)
+	if aid == "knife_fan":
+		var cells: Array[Vector2i] = []
+		for f in _fan_targets(u):
+			cells.append(f.cell)
+		return cells
 	if a.has("radius") and a.target == "self":
 		return cells_in_radius(u.cell, int(a.radius))
 	if a.has("radius"):
@@ -547,25 +702,45 @@ func ability_area(u: Combatant, aid: String, target: Vector2i) -> Array[Vector2i
 	return single
 
 
+## Цели «Веера кинжалов»: до трёх ближайших видимых врагов в 4 клетках.
+func _fan_targets(u: Combatant) -> Array[Combatant]:
+	var list: Array[Combatant] = []
+	for f in foes_of(u):
+		if dist(u.cell, f.cell) <= 4 and has_los(u.cell, f.cell):
+			list.append(f)
+	list.sort_custom(func(a: Combatant, b: Combatant) -> bool: return dist(u.cell, a.cell) < dist(u.cell, b.cell))
+	return list.slice(0, 3)
+
+
+## Урон способности (кости) для этого участника.
+func dice_of(u: Combatant, aid: String) -> String:
+	var expr := Content.ability_dice(aid, u.level)
+	if aid == "fire_bolt" and u.has_trait("empowered"):
+		expr += "+3"
+	return expr
+
+
 func ability_preview(u: Combatant, aid: String, target: Vector2i) -> String:
 	var a := ability(aid)
 	var t := occupant(target)
 	match aid:
 		"cursed_blade", "trip", "shoot":
 			if t != null:
-				var p := attack_preview(u, t, "1d8" if aid == "cursed_blade" else "", u.ranged_weapon if aid == "shoot" else {})
+				var p := attack_preview(u, t, dice_of(u, aid) if aid == "cursed_blade" else "",
+					u.ranged_weapon if aid == "shoot" else {})
 				return "%s: шанс %d%%, урон %d–%d%s" % [a.name, roundi(p.chance * 100), p.min, p.max,
 					" (со скрытой атакой)" if can_sneak(u, t, p.adv) else ""]
-		"fire_bolt", "life_drain", "guiding_bolt", "ray_of_frost":
+		"fire_bolt", "life_drain", "guiding_bolt", "spiritual_weapon", "scorching_ray":
 			if t != null:
-				var expr: String = SPELL_DAMAGE[aid]
-				var ch := Dice.hit_chance(Content.SPELL_ATTACK, t.total_ac(), advantage_for(u, t, true))
-				return "%s: шанс %d%%, урон %d–%d" % [a.name, roundi(ch * 100), Dice.min_of(expr), Dice.max_of(expr)]
+				var expr := dice_of(u, aid)
+				var ch := Dice.hit_chance(u.spell_attack, ac_of(t), advantage_for(u, t, true))
+				var times := " ×3" if aid == "scorching_ray" else ""
+				return "%s: шанс %d%%, урон %d–%d%s" % [a.name, roundi(ch * 100), Dice.min_of(expr), Dice.max_of(expr), times]
 		"sacred_flame", "wither":
 			if t != null:
 				var stat := "dex" if aid == "sacred_flame" else "con"
-				var fail := 1.0 - Dice.hit_chance(t.save_bonus(stat), Content.SPELL_DC, 0, false)
-				var expr2 := "1d8" if aid == "sacred_flame" else "2d8"
+				var fail := 1.0 - Dice.hit_chance(t.save_bonus(stat), u.spell_dc, 0, false)
+				var expr2 := dice_of(u, aid)
 				return "%s: провал спасброска %d%%, урон %d–%d" % [a.name, roundi(fail * 100), Dice.min_of(expr2), Dice.max_of(expr2)]
 		"magic_missile":
 			return "%s: без промаха, урон 6–15" % a.name
@@ -579,8 +754,8 @@ func ability_preview(u: Combatant, aid: String, target: Vector2i) -> String:
 		"hide":
 			if not seen_by_foes(u):
 				return "%s: враги тебя не видят, спрячешься наверняка." % a.name
-			var ch2 := 1.0 - Dice.hit_chance(u.save_bonus("dex"), 15, 0, false)
-			return "%s: тебя видят, шанс спрятаться %d%%." % [a.name, roundi((1.0 - ch2) * 100)]
+			var ch2 := Dice.hit_chance(u.save_bonus("dex"), 15, 0, false)
+			return "%s: тебя видят, шанс спрятаться %d%%." % [a.name, roundi(ch2 * 100)]
 		"turn_undead":
 			var names := []
 			for f in foes_of(u):
@@ -589,7 +764,9 @@ func ability_preview(u: Combatant, aid: String, target: Vector2i) -> String:
 			if names.is_empty():
 				return "%s: рядом нет нежити." % a.name
 			return "%s: изгоняет %s" % [a.name, ", ".join(names)]
-		"dodge", "dash", "action_surge":
+		"preserve_life":
+			return "%s: %d хитов на раненых рядом." % [a.name, 8 * u.level]
+		"dodge", "dash", "action_surge", "rage", "reckless", "poison_blade", "spirit_guardians", "mass_healing_word":
 			return "%s: %s" % [a.name, a.desc]
 	var hit := []
 	for c in ability_area(u, aid, target):
@@ -607,34 +784,40 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 	if not ability_targets(u, aid).has(target):
 		return false
 	var a := ability(aid)
-	if a.cost == "action":
+	if a.get("attack", false):
+		_spend_attack(u)
+	elif a.cost == "action":
 		u.action_used = true
 	elif a.cost == "bonus":
 		u.bonus_used = true
 	if a.resource == "slot":
-		u.slots -= 1
+		u.slots -= slot_cost(aid)
 	elif a.resource == "use":
 		u.uses[aid] = u.uses_left(aid) - 1
 	log_line("%s: %s." % [u.name, a.name])
 	var t := occupant(target)
 	match aid:
 		"second_wind":
-			heal(u, Dice.roll(rng, "1d10+2"))
+			heal(u, Dice.roll(rng, "1d10") + u.level)
 		"disengage":
 			u.disengaged = true
 		"sacred_flame":
-			_save_spell(t, "dex", "1d8", false)
+			_save_spell(u, t, "dex", dice_of(u, aid), false)
 		"healing_word":
-			heal(t, Dice.roll(rng, "1d4+3"))
+			heal(t, _heal_roll(u, aid))
 		"fire_bolt":
-			_spell_attack(u, t, "1d10", false)
+			_spell_attack(u, t, dice_of(u, aid))
 		"magic_missile":
-			deal_damage(t, Dice.roll(rng, "3d4+3"), "force")
-		"thunderwave":
+			deal_damage(t, Dice.roll(rng, dice_of(u, aid)), "force")
+		"thunderwave", "fireball":
+			var stat := "con" if aid == "thunderwave" else "dex"
 			for c in ability_area(u, aid, target):
 				var o := occupant(c)
-				if o != null and o != u and not o.dead:
-					_save_spell(o, "con", "2d8", true)
+				if o == null or o == u or o.dead:
+					continue
+				if o.team == u.team and u.has_trait("sculpt"):
+					continue
+				_save_spell(u, o, stat, dice_of(u, aid), true)
 		"hallowed_ground":
 			for c in ability_area(u, aid, target):
 				var o := occupant(c)
@@ -648,7 +831,7 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 			t.ac_bonus = 2
 		"trip":
 			if _weapon_attack(u, t, {}) > 0 and t.conscious():
-				if not saving_throw(t, "str", Content.SPELL_DC):
+				if not saving_throw(t, "str", u.spell_dc):
 					t.prone = true
 					log_line("%s падает." % t.name)
 		"taunt":
@@ -660,21 +843,22 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 			for c in ability_area(u, aid, target):
 				var o := occupant(c)
 				if o != null and not o.dead:
-					_save_spell(o, "dex", "2d6", true)
+					_save_spell(u, o, "dex", dice_of(u, aid), true)
 		"trap":
 			traps[target] = u.id
 		"cursed_blade":
-			_weapon_attack(u, t, {"extra_dice": "1d8", "drain_extra": true})
+			_weapon_attack(u, t, {"extra_dice": dice_of(u, aid), "drain_extra": true})
 		"shadow_step":
 			u.hidden = true
 			u.disengaged = true
+			u.shadow_ready = true
 		"wither":
-			var dealt := _save_spell(t, "con", "2d8", true)
+			var dealt := _save_spell(u, t, "con", dice_of(u, aid), true)
 			var ally := _most_wounded_ally(u)
 			if ally != null and dealt > 0:
-				heal(ally, dealt)
+				heal(ally, dealt / 2)
 		"life_drain":
-			var d2 := _spell_attack(u, t, "3d6", false)
+			var d2 := _spell_attack(u, t, dice_of(u, aid))
 			if d2 > 0:
 				heal(u, d2 / 2)
 		"dodge":
@@ -683,6 +867,11 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 			_shove(u, t)
 		"action_surge":
 			u.action_used = false
+			u.attacks_left = 0
+		"rage":
+			u.raging = true
+		"reckless":
+			u.reckless = true
 		"dash":
 			u.speed_left += u.speed
 		"hide":
@@ -691,35 +880,104 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 				log_line("%s прячется." % u.name)
 			else:
 				log_line("%s не удаётся спрятаться." % u.name)
+		"poison_blade":
+			u.poison_ready = true
 		"shoot":
 			_weapon_attack(u, t, {"weapon": u.ranged_weapon})
+		"knife_fan":
+			var dagger := {"to_hit": u.weapon.to_hit, "damage": "1d4+3", "kind": "ranged"}
+			for f in _fan_targets(u):
+				_weapon_attack(u, f, {"weapon": dagger})
+		"preserve_life":
+			_preserve_life(u, int(a.radius))
+		"mass_healing_word":
+			for o in allies_of(u):
+				if dist(o.cell, u.cell) <= int(a.radius) and o.hp < o.max_hp:
+					heal(o, _heal_roll(u, aid))
 		"turn_undead":
 			for f in foes_of(u):
 				if f.undead and not f.turned and dist(f.cell, u.cell) <= int(a.radius):
-					if saving_throw(f, "wis", Content.SPELL_DC):
+					if saving_throw(f, "wis", u.spell_dc):
 						log_line("%s устоял." % f.name)
 					else:
 						f.turned = true
 						log_line("%s бежит в страхе." % f.name)
 		"guiding_bolt":
-			if _spell_attack(u, t, "4d6", false) > 0 and t.conscious():
+			if _spell_attack(u, t, dice_of(u, aid)) > 0 and t.conscious():
 				t.guided_by = u.id
-		"ray_of_frost":
-			if _spell_attack(u, t, "1d8", false) > 0 and t.conscious():
-				t.slowed_by = u.id
+		"spiritual_weapon":
+			if not u.spirit_weapon:
+				u.spirit_weapon = true
+				u.slots -= 1
+			_spell_attack(u, t, dice_of(u, aid))
+		"spirit_guardians":
+			u.guardians = true
+		"scorching_ray":
+			var aim := t
+			for i in 3:
+				if aim == null or not aim.conscious():
+					aim = _nearest_foe_in_range(u, int(a.range))
+				if aim == null:
+					break
+				_spell_attack(u, aim, dice_of(u, aid))
+		"spike_growth":
+			for c in ability_area(u, aid, target):
+				spikes[c] = dice_of(u, aid)
 		"grease":
 			for c in ability_area(u, aid, target):
-				grease[c] = true
+				grease[c] = u.spell_dc
 			for c in ability_area(u, aid, target):
 				var o := occupant(c)
 				if o != null and o.conscious():
-					_grease_check(o)
+					_grease_check(o, u.spell_dc)
+		"web":
+			for c in ability_area(u, aid, target):
+				webs[c] = u.spell_dc
+			for c in ability_area(u, aid, target):
+				var o := occupant(c)
+				if o != null and o.conscious():
+					_web_check(o, u.spell_dc)
+		"slow":
+			slow_dc = u.spell_dc
+			for c in ability_area(u, aid, target):
+				var o := occupant(c)
+				if o == null or not o.conscious() or o.team == u.team or o.slow_spell:
+					continue
+				if saving_throw(o, "wis", u.spell_dc):
+					log_line("%s устоял." % o.name)
+				else:
+					o.slow_spell = true
+					log_line("%s замедлен." % o.name)
 	if a.get("dark", false):
 		_add_darkness()
 	return true
 
 
-const SPELL_DAMAGE := {"fire_bolt": "1d10", "life_drain": "3d6", "guiding_bolt": "4d6", "ray_of_frost": "1d8"}
+func _heal_roll(u: Combatant, aid: String) -> int:
+	return Dice.roll(rng, dice_of(u, aid)) + (3 if u.has_trait("life_disciple") else 0)
+
+
+func _preserve_life(u: Combatant, radius: int) -> void:
+	var pool := 8 * u.level
+	var wounded := allies_of(u).filter(func(o: Combatant) -> bool:
+		return dist(o.cell, u.cell) <= radius and o.hp * 2 < o.max_hp)
+	wounded.sort_custom(func(a: Combatant, b: Combatant) -> bool: return a.hp < b.hp)
+	for o in wounded:
+		if pool <= 0:
+			break
+		var amount := mini(pool, o.max_hp / 2 - o.hp)
+		if amount > 0:
+			heal(o, amount)
+			pool -= amount
+
+
+func _nearest_foe_in_range(u: Combatant, r: int) -> Combatant:
+	var best: Combatant = null
+	for f in foes_of(u):
+		if dist(u.cell, f.cell) <= r and has_los(u.cell, f.cell):
+			if best == null or dist(u.cell, f.cell) < dist(u.cell, best.cell):
+				best = f
+	return best
 
 
 ## Клетка, куда отлетит цель толчка, или (-1, -1), если некуда.
@@ -749,14 +1007,14 @@ func _shove(u: Combatant, t: Combatant) -> void:
 	_enter_cell(t, dest)
 
 
-func _spell_attack(u: Combatant, t: Combatant, expr: String, _half: bool) -> int:
+func _spell_attack(u: Combatant, t: Combatant, expr: String) -> int:
 	var adv := advantage_for(u, t, true)
 	var r1 := Dice.d20(rng)
 	var r2 := Dice.d20(rng)
 	var roll := r1 if adv == 0 else (maxi(r1, r2) if adv > 0 else mini(r1, r2))
 	u.hidden = false
 	t.guided_by = ""
-	if roll == 1 or (roll != 20 and roll + Content.SPELL_ATTACK < t.total_ac()):
+	if roll == 1 or (roll != 20 and roll + u.spell_attack < ac_of(t)):
 		log_line("Промах по %s." % t.name)
 		events.append({"type": "miss", "unit": t.id})
 		return 0
@@ -765,9 +1023,9 @@ func _spell_attack(u: Combatant, t: Combatant, expr: String, _half: bool) -> int
 	return dmg
 
 
-func _save_spell(t: Combatant, stat: String, expr: String, half_on_save: bool) -> int:
+func _save_spell(u: Combatant, t: Combatant, stat: String, expr: String, half_on_save: bool) -> int:
 	var dmg := Dice.roll(rng, expr)
-	if saving_throw(t, stat, Content.SPELL_DC):
+	if saving_throw(t, stat, u.spell_dc):
 		dmg = dmg / 2 if half_on_save else 0
 		log_line("%s спасается%s." % [t.name, " частично" if half_on_save else ""])
 	deal_damage(t, dmg, "spell")
@@ -807,30 +1065,71 @@ func _start_turn() -> void:
 	var u := current()
 	u.speed_left = u.speed
 	u.action_used = false
+	u.attacks_left = 0
 	u.bonus_used = false
 	u.sneak_used = false
 	u.disengaged = false
 	u.reaction_used = false
 	u.dodging = false
 	u.cleave_used = false
+	u.reckless = false
+	u.uncanny_used = false
 	for o in units:
 		if o.guided_by == u.id:
 			o.guided_by = ""
 		if o.slowed_by == u.id:
 			o.slowed_by = ""
-	if u.prone and u.conscious():
+	_aura_damage(u)
+	if not u.conscious():
+		return
+	if u.stunned:
+		u.stunned = false
+		u.speed_left = 0
+		u.action_used = true
+		u.bonus_used = true
+		log_line("%s парализован и пропускает ход." % u.name)
+		return
+	if u.prone:
 		u.prone = false
 		u.speed_left = u.speed / 2
 	if u.slowed_by != "":
 		u.speed_left = maxi(u.speed_left - 2, 0)
+	if u.slow_spell:
+		u.speed_left /= 2
+	if webs.has(u.cell):
+		if u.restrained:
+			if saving_throw(u, "str", int(webs[u.cell])):
+				u.restrained = false
+				log_line("%s вырывается из паутины." % u.name)
+		else:
+			_web_check(u, int(webs[u.cell]))
+	elif u.restrained:
+		u.restrained = false
+	if u.restrained:
+		u.speed_left = 0
+
+
+## «Духовные стражи»: враг, начинающий ход рядом с жрецом, получает урон светом.
+func _aura_damage(u: Combatant) -> void:
+	for h in units:
+		if not h.guardians or not h.conscious() or h.team == u.team or not u.conscious():
+			continue
+		if dist(h.cell, u.cell) <= int(Content.ABILITIES.spirit_guardians.radius):
+			log_line("Духовные стражи жгут %s." % u.name)
+			_save_spell(h, u, "wis", Content.ability_dice("spirit_guardians", h.level), true)
 
 
 func end_turn() -> void:
 	if outcome != "":
 		return
 	var u := current()
+	u.acted = true
+	u.poisoned = false
 	if grease.has(u.cell) and u.conscious():
-		_grease_check(u)
+		_grease_check(u, int(grease[u.cell]))
+	if u.slow_spell and u.conscious() and saving_throw(u, "wis", slow_dc):
+		u.slow_spell = false
+		log_line("%s стряхивает замедление." % u.name)
 	if u.taunt_turns > 0:
 		u.taunt_turns -= 1
 		if u.taunt_turns == 0:
@@ -845,6 +1144,9 @@ func end_turn() -> void:
 		if n.conscious():
 			break
 	_start_turn()
+	# Если стражи добили начинающего ход врага, ход переходит дальше.
+	if outcome == "" and not current().conscious():
+		end_turn()
 
 
 func _check_outcome() -> void:
@@ -878,18 +1180,34 @@ func to_dict() -> Dictionary:
 	for t in traps:
 		tr.append([t.x, t.y, traps[t]])
 	return {
-		"version": 1, "title": title, "width": width, "height": height, "obstacles": obs,
+		"version": 2, "title": title, "level": level, "width": width, "height": height, "obstacles": obs,
 		"units": units.map(func(u: Combatant) -> Dictionary: return u.to_dict()),
 		"order": Array(order), "turn_index": turn_index, "round": round_num,
 		"rng_seed": str(rng.seed), "rng_state": str(rng.state), "difficulty": difficulty,
-		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "traps": tr, "outcome": outcome,
-		"grease": grease.keys().map(func(c: Vector2i) -> Array: return [c.x, c.y]),
+		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "traps": tr,
+		"outcome": outcome, "grease": _zones(grease), "webs": _zones(webs), "slow_dc": slow_dc,
+		"spikes": spikes.keys().map(func(c: Vector2i) -> Array: return [c.x, c.y, spikes[c]]),
 	}
+
+
+static func _zones(z: Dictionary) -> Array:
+	var out := []
+	for c in z:
+		out.append([c.x, c.y, z[c]])
+	return out
+
+
+static func _zones_from(arr: Array) -> Dictionary:
+	var out := {}
+	for g in arr:
+		out[Vector2i(int(g[0]), int(g[1]))] = int(g[2]) if g.size() > 2 else 13
+	return out
 
 
 static func from_dict(d: Dictionary) -> Battle:
 	var b := Battle.new()
 	b.title = d.title
+	b.level = int(d.get("level", 2))
 	b.width = int(d.width)
 	b.height = int(d.height)
 	for o in d.obstacles:
@@ -908,8 +1226,11 @@ static func from_dict(d: Dictionary) -> Battle:
 	b.dark_gifts_used = int(d.get("dark_gifts_used", 0))
 	for t in d.traps:
 		b.traps[Vector2i(int(t[0]), int(t[1]))] = String(t[2])
-	for g in d.get("grease", []):
-		b.grease[Vector2i(int(g[0]), int(g[1]))] = true
+	b.grease = _zones_from(d.get("grease", []))
+	b.webs = _zones_from(d.get("webs", []))
+	b.slow_dc = int(d.get("slow_dc", 13))
+	for sp in d.get("spikes", []):
+		b.spikes[Vector2i(int(sp[0]), int(sp[1]))] = String(sp[2])
 	b.outcome = d.outcome
 	return b
 

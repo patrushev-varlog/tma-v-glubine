@@ -17,6 +17,9 @@ func _process(_delta: float) -> bool:
 	if frames == 3:
 		main.enemy_step = 0.0
 		main.hero_class = ["fighter", "rogue", "cleric", "wizard"][randi() % 4]
+		main.level = 1 + randi() % 5
+		var archs := Content.archetypes_of(main.hero_class)
+		main.archetype = archs[randi() % archs.size()] if main.level >= 2 else ""
 		main.with_velior = true
 		main._start_new()
 		started = true
@@ -24,7 +27,8 @@ func _process(_delta: float) -> bool:
 		return false
 	var b: Battle = main.battle
 	if b.outcome != "":
-		print("Смоук интерфейса: бой завершён (%s) за %d раундов, класс %s." % [b.outcome, b.round_num, main.hero_class])
+		print("Смоук интерфейса: бой завершён (%s) за %d раундов, класс %s %s, уровень %d." % [b.outcome, b.round_num,
+				main.hero_class, main.archetype, main.level])
 		quit(0)
 		return true
 	if frames > 50000:

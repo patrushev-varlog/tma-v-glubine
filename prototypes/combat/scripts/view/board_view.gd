@@ -16,6 +16,8 @@ const C_ALLY_TARGET := Color(0.45, 0.9, 0.5, 0.35)
 const C_AREA := Color(1.0, 0.75, 0.3, 0.4)
 const C_PATH := Color(0.85, 0.92, 1.0, 0.9)
 const C_PENDING := Color(1, 1, 1, 0.9)
+const C_SPIKES := Color(0.75, 0.7, 0.65, 0.8)
+const C_WEB := Color(0.9, 0.9, 0.95, 0.6)
 const C_GREASE := Color(0.85, 0.75, 0.2, 0.55)
 
 var battle: Battle
@@ -65,6 +67,18 @@ func _draw() -> void:
 			draw_polyline(d, C_EDGE, 1.0)
 	for c in battle.grease:
 		draw_colored_polygon(_diamond(c, 1), C_GREASE)
+	for c in battle.spikes:
+		var p0 := cell_to_world(c)
+		for k in 3:
+			var x := -10.0 + k * 10.0
+			draw_line(p0 + Vector2(x - 3, 3), p0 + Vector2(x, -5), C_SPIKES, 1.5)
+			draw_line(p0 + Vector2(x, -5), p0 + Vector2(x + 3, 3), C_SPIKES, 1.5)
+	for c in battle.webs:
+		var w := _diamond(c, 3)
+		draw_line(w[0], w[2], C_WEB, 1.5)
+		draw_line(w[1], w[3], C_WEB, 1.5)
+		w.append(w[0])
+		draw_polyline(w, C_WEB, 1.5)
 	for c in reach_cells:
 		draw_colored_polygon(_diamond(c, 2), C_REACH)
 	for c in target_cells:
@@ -158,8 +172,17 @@ func _draw_unit(u: Combatant) -> void:
 		marks.append("бежит")
 	if u.guided_by != "":
 		marks.append("метка")
-	if u.slowed_by != "":
+	if u.slowed_by != "" or u.slow_spell:
 		marks.append("медл.")
+	if u.restrained:
+		marks.append("опутан")
+	if u.stunned:
+		marks.append("паралич")
+	if u.raging:
+		marks.append("ярость")
+	if u.poisoned:
+		marks.append("яд")
+
 	if not marks.is_empty():
 		draw_string(font, base + Vector2(-40, -64), " ".join(marks), HORIZONTAL_ALIGNMENT_CENTER, 80, 11, Color("#bfe3ff"))
 
