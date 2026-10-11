@@ -1,0 +1,29 @@
+// Точка входа всей истории. Каждая глава — туннель из сцен-туннелей.
+// Для отладки игра может начать с любой главы: story.ChoosePathString("chapter1").
+INCLUDE common.ink
+
+INCLUDE prologue/01_evening.ink
+INCLUDE prologue/02_raid.ink
+INCLUDE prologue/03_ashes.ink
+INCLUDE prologue/04_temple.ink
+INCLUDE prologue/05_deserter.ink
+INCLUDE prologue/06_column.ink
+INCLUDE prologue/07_interrogation.ink
+
+INCLUDE chapter1/01_gate.ink
+INCLUDE chapter1/02_cage.ink
+INCLUDE chapter1/03_rest.ink
+INCLUDE chapter1/04_barracks.ink
+INCLUDE chapter1/05_white_woman.ink
+INCLUDE chapter1/06_lift.ink
+INCLUDE chapter1/07_camp.ink
+
+-> prologue -> chapter1 -> END
+
+=== prologue ===
+-> evening -> raid -> ashes -> temple -> deserter -> column -> interrogation_scene ->
+->->
+
+=== chapter1 ===
+-> gate -> cage -> rest -> barracks -> white_woman -> lift -> camp1 ->
+->->
