@@ -11,6 +11,8 @@ INCLUDE prologue/06_column.ink
 INCLUDE prologue/07_interrogation.ink
 
 INCLUDE chapter1/01_gate.ink
+INCLUDE chapter1/02_cage.ink
+INCLUDE chapter1/03_rest.ink
 
 -> prologue -> chapter1 -> END
 
@@ -20,5 +22,5 @@ INCLUDE chapter1/01_gate.ink
 
 // Сцены главы подключаются по мере написания.
 === chapter1 ===
--> gate ->
+-> gate -> cage -> rest ->
 ->->
