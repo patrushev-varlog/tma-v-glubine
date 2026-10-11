@@ -18,7 +18,15 @@ INCLUDE chapter1/05_white_woman.ink
 INCLUDE chapter1/06_lift.ink
 INCLUDE chapter1/07_camp.ink
 
--> prologue -> chapter1 -> END
+INCLUDE chapter2/01_black_water.ink
+INCLUDE chapter2/02_fugitives.ink
+INCLUDE chapter2/03_smugglers.ink
+INCLUDE chapter2/04_letter.ink
+INCLUDE chapter2/05_projection.ink
+INCLUDE chapter2/06_sluice.ink
+INCLUDE chapter2/07_camp.ink
+
+-> prologue -> chapter1 -> chapter2 -> END
 
 === prologue ===
 -> evening -> raid -> ashes -> temple -> deserter -> column -> interrogation_scene ->
@@ -26,4 +34,8 @@ INCLUDE chapter1/07_camp.ink
 
 === chapter1 ===
 -> gate -> cage -> rest -> barracks -> white_woman -> lift -> camp1 ->
+->->
+
+=== chapter2 ===
+-> black_water -> fugitives -> smugglers -> letter -> projection -> sluice -> camp2 ->
 ->->
