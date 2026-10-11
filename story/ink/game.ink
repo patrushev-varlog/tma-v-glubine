@@ -35,7 +35,14 @@ INCLUDE chapter3/06_keeper.ink
 INCLUDE chapter3/07_judgment.ink
 INCLUDE chapter3/08_camp.ink
 
--> prologue -> chapter1 -> chapter2 -> chapter3 -> END
+INCLUDE chapter4/01_workshops.ink
+INCLUDE chapter4/02_reports.ink
+INCLUDE chapter4/03_flesh_master.ink
+INCLUDE chapter4/04_arithmetic.ink
+INCLUDE chapter4/05_foundry.ink
+INCLUDE chapter4/06_camp.ink
+
+-> prologue -> chapter1 -> chapter2 -> chapter3 -> chapter4 -> END
 
 === prologue ===
 -> evening -> raid -> ashes -> temple -> deserter -> column -> interrogation_scene ->
@@ -51,4 +58,8 @@ INCLUDE chapter3/08_camp.ink
 
 === chapter3 ===
 -> arches -> refuge -> fresco -> archive -> shrine -> keeper -> judgment -> camp3 ->
+->->
+
+=== chapter4 ===
+-> workshops -> reports -> flesh_master -> arithmetic -> foundry -> camp4 ->
 ->->
