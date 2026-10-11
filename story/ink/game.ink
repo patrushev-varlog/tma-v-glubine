@@ -13,6 +13,10 @@ INCLUDE prologue/07_interrogation.ink
 INCLUDE chapter1/01_gate.ink
 INCLUDE chapter1/02_cage.ink
 INCLUDE chapter1/03_rest.ink
+INCLUDE chapter1/04_barracks.ink
+INCLUDE chapter1/05_white_woman.ink
+INCLUDE chapter1/06_lift.ink
+INCLUDE chapter1/07_camp.ink
 
 -> prologue -> chapter1 -> END
 
@@ -20,7 +24,6 @@ INCLUDE chapter1/03_rest.ink
 -> evening -> raid -> ashes -> temple -> deserter -> column -> interrogation_scene ->
 ->->
 
-// Сцены главы подключаются по мере написания.
 === chapter1 ===
--> gate -> cage -> rest ->
+-> gate -> cage -> rest -> barracks -> white_woman -> lift -> camp1 ->
 ->->
