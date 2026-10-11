@@ -42,7 +42,14 @@ INCLUDE chapter4/04_arithmetic.ink
 INCLUDE chapter4/05_foundry.ink
 INCLUDE chapter4/06_camp.ink
 
--> prologue -> chapter1 -> chapter2 -> chapter3 -> chapter4 -> END
+INCLUDE chapter5/01_descent.ink
+INCLUDE chapter5/02_seal_hall.ink
+INCLUDE chapter5/03_reunion.ink
+INCLUDE chapter5/04_offer.ink
+INCLUDE chapter5/05_finale.ink
+INCLUDE chapter5/06_epilogue.ink
+
+-> prologue -> chapter1 -> chapter2 -> chapter3 -> chapter4 -> chapter5 -> END
 
 === prologue ===
 -> evening -> raid -> ashes -> temple -> deserter -> column -> interrogation_scene ->
@@ -63,3 +70,7 @@ INCLUDE chapter4/06_camp.ink
 === chapter4 ===
 -> workshops -> reports -> flesh_master -> arithmetic -> foundry -> camp4 ->
 ->->
+
+// Глава 5 заканчивается эпилогом с -> END внутри: концовок четыре.
+=== chapter5 ===
+-> descent -> seal_hall -> reunion -> offer -> finale -> epilogue
