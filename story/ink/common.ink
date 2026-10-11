@@ -1,0 +1,51 @@
+// Общие переменные и функции для всех сцен.
+// Игра выставляет эти переменные перед запуском истории (создание героя).
+
+VAR hero_f = false          // герой — женщина
+VAR spouse_f = true         // супруг — женщина (супруга)
+VAR hero_class = "fighter"  // fighter / rogue / cleric / wizard
+VAR darkness = 0            // скрытая шкала Тьмы 0–100
+
+// Теги строк:
+//   # spk:spouse   — говорит супруг(а); # spk:hero — реплика героя
+//   # mood:<эмоция> — портрет говорящего (smile, sad, away, tense)
+//   # flag:<имя>    — для журнала отладки; сами флаги — переменные ниже
+
+// Форма слова по полу героя: h("пришёл", "пришла").
+=== function h(m, f)
+{ hero_f:
+    ~ return f
+- else:
+    ~ return m
+}
+
+// Форма слова по полу супруга: s("сказал", "сказала").
+=== function s(m, f)
+{ spouse_f:
+    ~ return f
+- else:
+    ~ return m
+}
+
+// Имя супруга по падежам. Заглушки: Мирон / Мирна.
+=== function sp()
+~ return s("Мирон", "Мирна")
+
+=== function sp_gen()
+~ return s("Мирона", "Мирны")
+
+=== function sp_dat()
+~ return s("Мирону", "Мирне")
+
+=== function sp_acc()
+~ return s("Мирона", "Мирну")
+
+// Изменить Тьму, не выходя за 0–100.
+=== function add_darkness(n)
+~ darkness = darkness + n
+{ darkness > 100:
+    ~ darkness = 100
+}
+{ darkness < 0:
+    ~ darkness = 0
+}
