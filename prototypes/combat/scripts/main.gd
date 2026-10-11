@@ -12,6 +12,8 @@ var board: BoardView
 var cam: Camera2D
 
 var hero_class := "fighter"
+var level := 1
+var archetype := ""
 var with_velior := false
 var difficulty := "story"
 
@@ -67,15 +69,47 @@ func _show_menu() -> void:
 	box.add_theme_constant_override("separation", 12)
 	panel.add_child(box)
 	box.add_child(_label("Тьма в глубине — серый прототип боя", 24))
-	box.add_child(_label("Пролог, бой 3: колонна у ворот рудника. Герой, Ирена и Гаррет против надсмотрщиков и мертвецов.", 15, 520))
+	box.add_child(_label("Пять боёв, по одному на уровень отряда 1–5. Герой, Ирена и Гаррет против врагов своего уровня.", 15, 520))
 
 	var cls := OptionButton.new()
 	for id in Content.HERO_CLASSES:
 		cls.add_item(Content.HERO_CLASSES[id].name)
 		cls.set_item_metadata(cls.item_count - 1, id)
 	cls.select(Content.HERO_CLASSES.keys().find(hero_class))
-	cls.item_selected.connect(func(i: int) -> void: hero_class = cls.get_item_metadata(i))
 	box.add_child(_row("Класс героя", cls))
+
+	var lvl := OptionButton.new()
+	for lv in range(1, Content.MAX_LEVEL + 1):
+		lvl.add_item("%d — %s" % [lv, Content.BATTLES[lv].title])
+	lvl.select(level - 1)
+	box.add_child(_row("Уровень и бой", lvl))
+
+	var arch := OptionButton.new()
+	box.add_child(_row("Ветка класса", arch))
+	var arch_desc := _label("", 13, 520)
+	box.add_child(arch_desc)
+	var fill_arch := func() -> void:
+		arch.clear()
+		var ids := Content.archetypes_of(hero_class)
+		if not ids.has(archetype):
+			archetype = ids[0]
+		for id in ids:
+			arch.add_item(Content.HERO_CLASSES[hero_class].archetypes[id].name)
+			arch.set_item_metadata(arch.item_count - 1, id)
+		arch.select(ids.find(archetype))
+		arch.disabled = level < 2
+		var info: Dictionary = Content.HERO_CLASSES[hero_class].archetypes[archetype]
+		arch_desc.text = "Ветка выбирается со 2 уровня." if level < 2 else "%s %s" % [info.desc, _arch_path(hero_class, archetype)]
+	fill_arch.call()
+	cls.item_selected.connect(func(i: int) -> void:
+		hero_class = cls.get_item_metadata(i)
+		fill_arch.call())
+	lvl.item_selected.connect(func(i: int) -> void:
+		level = i + 1
+		fill_arch.call())
+	arch.item_selected.connect(func(i: int) -> void:
+		archetype = arch.get_item_metadata(i)
+		fill_arch.call())
 
 	var diff := OptionButton.new()
 	diff.add_item("История")
@@ -100,7 +134,7 @@ func _show_menu() -> void:
 
 func _start_new() -> void:
 	battle = Battle.new()
-	battle.setup(Content.scenario_column(hero_class, with_velior, difficulty), -1, difficulty)
+	battle.setup(Content.scenario(level, hero_class, archetype, with_velior, difficulty), -1, difficulty)
 	_begin()
 
 
@@ -132,6 +166,17 @@ func _fit_camera() -> void:
 	var center := Vector2((battle.width - battle.height) * BoardView.HALF_W * 0.5,
 		(battle.width + battle.height - 2) * BoardView.HALF_H * 0.5 - 30.0)
 	cam.position = _cam_pos_for(center)
+
+
+## «Ур. 2 — Всплеск действий, ур. 3 — Защитник, …» для описания ветки в меню.
+func _arch_path(cls: String, arch: String) -> String:
+	var parts := []
+	var levels: Dictionary = Content.HERO_CLASSES[cls].archetypes[arch].levels
+	for lv in levels:
+		var gain: String = levels[lv]
+		var info: Dictionary = Content.TRAITS[gain] if Content.TRAITS.has(gain) else Content.ABILITIES[gain]
+		parts.append("%d — %s" % [lv, info.name])
+	return "Уровни: " + ", ".join(parts) + "."
 
 
 func _clear_overlay() -> void:
@@ -482,6 +527,27 @@ func _refresh_portraits() -> void:
 			res += " · %s %d" % [Content.ABILITIES[k].name, h.uses[k]]
 		var res_l := _label(res, 12, 200)
 		box.add_child(res_l)
+		var marks := []
+		for tr in h.traits:
+			marks.append(Content.TRAITS[tr].name)
+		if h.dodging:
+			marks.append("уклоняется")
+		if h.raging:
+			marks.append("в ярости")
+		if h.stunned:
+			marks.append("парализован")
+		if h.restrained:
+			marks.append("опутан")
+		if h.spirit_weapon:
+			marks.append("духовное оружие")
+		if h.guardians:
+			marks.append("духовные стражи")
+		if h.hidden:
+			marks.append("спрятан")
+		if h.prone and not h.down:
+			marks.append("лежит")
+		if not marks.is_empty():
+			box.add_child(_label(" · ".join(marks), 12, 200))
 		var cell := h.cell
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and ev.pressed:
@@ -509,7 +575,7 @@ func _refresh_buttons(u: Combatant) -> void:
 			elif a.resource == "use":
 				text += "\nосталось %d" % u.uses_left(aid)
 			else:
-				text += "\n" + ("бонусное" if a.cost == "bonus" else "действие")
+				text += "\n" + {"bonus": "бонусное", "free": "без действия"}.get(a.cost, "действие")
 			var b := _button(text, func() -> void: _select_mode(aid))
 			b.toggle_mode = true
 			b.button_pressed = mode == aid
