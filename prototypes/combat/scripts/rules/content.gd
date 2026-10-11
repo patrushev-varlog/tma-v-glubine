@@ -2,6 +2,7 @@ class_name Content
 extends RefCounted
 ## Классы героя, спутники, враги, способности и сценарий боя.
 ## Цифры — урезанный SRD 5.2 для героев 2 уровня; уточняются на тестах.
+## Дальности сжаты под поле боя: лук и большинство заклинаний 8 клеток, снаряд и стрела 10.
 
 const SPELL_DC := 13
 const SPELL_ATTACK := 5
@@ -11,19 +12,19 @@ const ABILITIES := {
 		"desc": "Лечит себя на 1d10+2."},
 	"disengage": {"name": "Отход", "cost": "bonus", "resource": "none", "target": "self", "range": 0,
 		"desc": "До конца хода уход от врагов не провоцирует атаки."},
-	"sacred_flame": {"name": "Священное пламя", "cost": "action", "resource": "none", "target": "enemy", "range": 12,
+	"sacred_flame": {"name": "Священное пламя", "cost": "action", "resource": "none", "target": "enemy", "range": 8,
 		"desc": "Спасбросок Ловкости, 1d8 урона светом."},
-	"healing_word": {"name": "Слово исцеления", "cost": "bonus", "resource": "slot", "target": "ally", "range": 12,
+	"healing_word": {"name": "Слово исцеления", "cost": "bonus", "resource": "slot", "target": "ally", "range": 8,
 		"desc": "Лечит союзника на 1d4+3, поднимает выбывшего."},
-	"fire_bolt": {"name": "Огненный снаряд", "cost": "action", "resource": "none", "target": "enemy", "range": 24,
+	"fire_bolt": {"name": "Огненный снаряд", "cost": "action", "resource": "none", "target": "enemy", "range": 10,
 		"desc": "Атака заклинанием, 1d10 огнём."},
-	"magic_missile": {"name": "Волшебная стрела", "cost": "action", "resource": "slot", "target": "enemy", "range": 24,
+	"magic_missile": {"name": "Волшебная стрела", "cost": "action", "resource": "slot", "target": "enemy", "range": 10,
 		"desc": "Без промаха: 3d4+3 силовым полем."},
 	"thunderwave": {"name": "Громовая волна", "cost": "action", "resource": "slot", "target": "self", "range": 0, "radius": 1,
 		"desc": "Все вокруг: спасбросок Телосложения, 2d8 звуком, половина при успехе. Задевает и своих."},
-	"hallowed_ground": {"name": "Освящённая земля", "cost": "action", "resource": "slot", "target": "cell", "range": 12, "radius": 1,
+	"hallowed_ground": {"name": "Освящённая земля", "cost": "action", "resource": "slot", "target": "cell", "range": 8, "radius": 1,
 		"desc": "Зона 3×3: союзники лечатся на 1d6, нежить получает 2d6 светом."},
-	"shield_of_faith": {"name": "Щит веры", "cost": "bonus", "resource": "slot", "target": "ally", "range": 12,
+	"shield_of_faith": {"name": "Щит веры", "cost": "bonus", "resource": "slot", "target": "ally", "range": 8,
 		"desc": "+2 к КД союзника до конца боя."},
 	"trip": {"name": "Сбить с ног", "cost": "action", "resource": "use", "target": "enemy", "range": 1,
 		"desc": "Атака оружием; при попадании спасбросок Силы или враг падает."},
@@ -37,9 +38,9 @@ const ABILITIES := {
 		"desc": "Тёмный дар. Атака оружием +1d8 некротикой, лечит на половину."},
 	"shadow_step": {"name": "Шаг в тень", "cost": "bonus", "resource": "none", "target": "self", "range": 0, "dark": true,
 		"desc": "Тёмный дар. Преимущество на следующую атаку, уход без атак при возможности."},
-	"wither": {"name": "Иссушение", "cost": "action", "resource": "none", "target": "enemy", "range": 12, "dark": true,
+	"wither": {"name": "Иссушение", "cost": "action", "resource": "none", "target": "enemy", "range": 8, "dark": true,
 		"desc": "Тёмный дар. Спасбросок Телосложения, 2d8 некротикой; столько же лечит самого раненого союзника."},
-	"life_drain": {"name": "Высасывание жизни", "cost": "action", "resource": "none", "target": "enemy", "range": 12, "dark": true,
+	"life_drain": {"name": "Высасывание жизни", "cost": "action", "resource": "none", "target": "enemy", "range": 8, "dark": true,
 		"desc": "Тёмный дар. Атака заклинанием, 3d6 некротикой, лечит себя на половину."},
 }
 
@@ -89,7 +90,7 @@ const ENEMIES := {
 		"weapon": {"name": "Удар", "to_hit": 3, "damage": "1d6+1", "reach": 1, "kind": "melee"}},
 	"skeleton_archer": {"name": "Скелет-лучник", "letter": "с", "max_hp": 13, "ac": 13, "init": 2, "speed": 6, "undead": true,
 		"saves": {"str": 0, "dex": 2, "con": 2, "wis": -1},
-		"weapon": {"name": "Короткий лук", "to_hit": 4, "damage": "1d6+2", "range": 16, "kind": "ranged"}},
+		"weapon": {"name": "Короткий лук", "to_hit": 4, "damage": "1d6+2", "range": 8, "kind": "ranged"}},
 }
 
 const HERO_COLOR := "#7aa7e8"
@@ -147,31 +148,56 @@ static func _from_template(t: Dictionary, id: String, kind: String) -> Combatant
 
 
 ## Бой 3 пролога: колонна пленных на привале у ворот рудника.
-static func scenario_column(hero_class: String, with_velior: bool) -> Dictionary:
+## Карта: # — стена или телега, h — места отряда, C — старший надсмотрщик, o — надсмотрщик,
+## z — зомби, a — скелет-лучник. Заглавные O и A есть только на «Испытании».
+## Рудник справа за стеной, ворота в два прохода; низкие стены делят поле на коридоры.
+const COLUMN_MAP: Array[String] = [
+	"..........z.#.....",
+	"......##....#..#..",
+	"............#..a..",
+	"...#.#...o..#.....",
+	".....#......#.....",
+	".....#.......#....",
+	"hh...........C....",
+	"hh..........#..#..",
+	".....#......#..A..",
+	".....#...O..#.....",
+	"...#.#......#.....",
+	"............#.....",
+	"......##....#..#..",
+	"..........z.#.....",
+]
+
+const MAP_ENEMIES := {"C": "overseer_chief", "o": "overseer", "O": "overseer", "z": "zombie",
+	"a": "skeleton_archer", "A": "skeleton_archer"}
+
+
+static func scenario_column(hero_class: String, with_velior: bool, diff := "trial") -> Dictionary:
 	var heroes: Array[Combatant] = [make_hero(hero_class), make_companion("irena"), make_companion("garret")]
-	var hero_cells := [Vector2i(1, 9), Vector2i(2, 10), Vector2i(2, 8), Vector2i(3, 10)]
 	if with_velior:
 		heroes.append(make_companion("velior"))
+	var hero_cells: Array[Vector2i] = []
+	var enemies: Array[Combatant] = []
+	var obstacles: Array[Vector2i] = []
+	var counts := {}
+	for y in COLUMN_MAP.size():
+		var row: String = COLUMN_MAP[y]
+		for x in row.length():
+			var ch := row[x]
+			var c := Vector2i(x, y)
+			if ch == "#":
+				obstacles.append(c)
+			elif ch == "h":
+				hero_cells.append(c)
+			elif MAP_ENEMIES.has(ch):
+				if diff == "story" and ch == ch.to_upper() and ch != "C":
+					continue
+				var kind: String = MAP_ENEMIES[ch]
+				counts[kind] = int(counts.get(kind, 0)) + 1
+				var e := make_enemy(kind, counts[kind])
+				e.cell = c
+				enemies.append(e)
 	for i in heroes.size():
 		heroes[i].cell = hero_cells[i]
-	var enemies: Array[Combatant] = [
-		make_enemy("overseer_chief", 1),
-		make_enemy("overseer", 1),
-		make_enemy("overseer", 2),
-		make_enemy("zombie", 1),
-		make_enemy("zombie", 2),
-		make_enemy("skeleton_archer", 1),
-		make_enemy("skeleton_archer", 2),
-	]
-	var enemy_cells := [Vector2i(9, 2), Vector2i(8, 4), Vector2i(10, 4), Vector2i(7, 2), Vector2i(9, 6), Vector2i(10, 1),
-		Vector2i(11, 3)]
-	for i in enemies.size():
-		enemies[i].cell = enemy_cells[i]
-	var obstacles: Array[Vector2i] = [
-		Vector2i(5, 5), Vector2i(5, 6), Vector2i(6, 5),
-		Vector2i(4, 2), Vector2i(4, 3),
-		Vector2i(8, 8), Vector2i(9, 8),
-		Vector2i(2, 4), Vector2i(7, 10), Vector2i(11, 6),
-	]
-	return {"width": 12, "height": 12, "units": heroes + enemies, "obstacles": obstacles,
-		"title": "Пролог, бой 3: колонна у ворот рудника"}
+	return {"width": COLUMN_MAP[0].length(), "height": COLUMN_MAP.size(), "units": heroes + enemies,
+		"obstacles": obstacles, "title": "Пролог, бой 3: колонна у ворот рудника"}

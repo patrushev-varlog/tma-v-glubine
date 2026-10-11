@@ -100,7 +100,7 @@ func _show_menu() -> void:
 
 func _start_new() -> void:
 	battle = Battle.new()
-	battle.setup(Content.scenario_column(hero_class, with_velior), -1, difficulty)
+	battle.setup(Content.scenario_column(hero_class, with_velior, difficulty), -1, difficulty)
 	_begin()
 
 
@@ -118,9 +118,20 @@ func _begin() -> void:
 	log_shown = 0
 	log_box.clear()
 	board.battle = battle
-	cam.position = BoardView.cell_to_world(Vector2i(battle.width / 2, battle.height / 2))
-	cam.zoom = Vector2.ONE
+	_fit_camera()
 	_advance()
+
+
+## Показывает всё поле между панелями: портреты слева, журнал справа, кнопки снизу.
+func _fit_camera() -> void:
+	var free := _free_rect()
+	var w := (battle.width + battle.height) * BoardView.HALF_W
+	var h := (battle.width + battle.height) * BoardView.HALF_H + 60.0
+	var z := clampf(minf(free.size.x / w, free.size.y / h), ZOOM_MIN, 1.0)
+	cam.zoom = Vector2(z, z)
+	var center := Vector2((battle.width - battle.height) * BoardView.HALF_W * 0.5,
+		(battle.width + battle.height - 2) * BoardView.HALF_H * 0.5 - 30.0)
+	cam.position = _cam_pos_for(center)
 
 
 func _clear_overlay() -> void:
@@ -246,7 +257,18 @@ func _zoom_by(f: float) -> void:
 
 func _focus(c: Vector2i) -> void:
 	var tw := create_tween()
-	tw.tween_property(cam, "position", BoardView.cell_to_world(c), 0.25)
+	tw.tween_property(cam, "position", _cam_pos_for(BoardView.cell_to_world(c)), 0.25)
+
+
+## Позиция камеры, при которой точка поля оказывается в середине свободной от панелей области.
+func _cam_pos_for(world: Vector2) -> Vector2:
+	var view := get_viewport_rect().size
+	return world - (_free_rect().get_center() - view * 0.5) / cam.zoom.x
+
+
+func _free_rect() -> Rect2:
+	var view := get_viewport_rect().size
+	return Rect2(Vector2(230, 50), view - Vector2(230 + 300, 50 + 170))
 
 
 ## Тап по клетке поля в ход героя.

@@ -7,7 +7,7 @@ const MAX_ROUNDS := 40
 
 static func run_battle(hero_class: String, with_velior: bool, diff: String, seed_value: int, use_dark := false) -> Dictionary:
 	var b := Battle.new()
-	b.setup(Content.scenario_column(hero_class, with_velior), seed_value, diff)
+	b.setup(Content.scenario_column(hero_class, with_velior, diff), seed_value, diff)
 	var guard := 0
 	while b.outcome == "" and b.round_num <= MAX_ROUNDS:
 		CombatAI.take_turn(b, b.current(), use_dark)

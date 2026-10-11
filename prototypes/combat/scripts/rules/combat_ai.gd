@@ -66,7 +66,8 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 		if p.max >= f.hp:
 			score += 4.0 * p.chance
 		score += (16.0 - f.max_hp) * 0.25
-		var steps := maxi(0, Battle.dist(u.cell, f.cell) - reach)
+		var gap := Battle.dist(u.cell, f.cell) if u.is_ranged() else int(b.walk_distances(f.cell).get(u.cell, 99))
+		var steps := maxi(0, gap - reach)
 		if steps > 0 and not u.is_ranged():
 			# Уход от героя рядом провоцирует атаку — умный враг этого избегает.
 			for g in b.foes_of(u):
@@ -83,7 +84,7 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 static func _foes_in_range(b: Battle, u: Combatant, r: int) -> Array[Combatant]:
 	var out: Array[Combatant] = []
 	for f in b.foes_of(u):
-		if Battle.dist(u.cell, f.cell) <= r:
+		if Battle.dist(u.cell, f.cell) <= r and (r <= 1 or b.has_los(u.cell, f.cell)):
 			out.append(f)
 	return out
 
@@ -91,12 +92,18 @@ static func _foes_in_range(b: Battle, u: Combatant, r: int) -> Array[Combatant]:
 ## Подходит на дистанцию want_range к цели (как можно ближе к ней).
 static func _move_toward(b: Battle, u: Combatant, target: Combatant, want_range: int) -> void:
 	var reach := b.reachable(u)
+	var walk := b.walk_distances(target.cell)
 	var best_cell := u.cell
 	var best_score := 1_000_000
 	for c in reach:
 		if c is String:
 			continue
 		var d := Battle.dist(c, target.cell)
+		if want_range > 1 and d <= want_range and not b.has_los(c, target.cell):
+			d = want_range + 1
+		if d > want_range:
+			# Вне дальности оцениваем путь пешком, чтобы обходить стены.
+			d = maxi(d, int(walk.get(c, 99)))
 		var score := (0 if d <= want_range else d * 10) + int(reach[c].cost)
 		if want_range > 1 and d <= 1:
 			score += 50

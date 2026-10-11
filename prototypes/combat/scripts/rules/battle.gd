@@ -113,6 +113,25 @@ func is_obstacle(c: Vector2i) -> bool:
 	return obstacles.has(c)
 
 
+## Линия обзора: прямая между центрами клеток не проходит через препятствия.
+## Касание угла препятствия обзор не перекрывает; участники обзор не перекрывают.
+func has_los(a: Vector2i, b: Vector2i) -> bool:
+	var steps := maxi(absi(b.x - a.x), absi(b.y - a.y)) * 4
+	if steps <= 4:
+		return true
+	var from := Vector2(a)
+	var to := Vector2(b)
+	for i in range(1, steps):
+		var p := from.lerp(to, float(i) / steps)
+		var c := Vector2i(roundi(p.x), roundi(p.y))
+		if c == a or c == b:
+			continue
+		# Точка у самой границы клетки — это касание угла, оно обзор не перекрывает.
+		if is_obstacle(c) and absf(p.x - c.x) < 0.45 and absf(p.y - c.y) < 0.45:
+			return false
+	return true
+
+
 static func dist(a: Vector2i, b: Vector2i) -> int:
 	return maxi(absi(a.x - b.x), absi(a.y - b.y))
 
@@ -160,6 +179,26 @@ func reachable(u: Combatant) -> Dictionary:
 	# Клетки с союзниками нужны для восстановления пути, но не как цель.
 	out["_all"] = best
 	return out
+
+
+## Расстояние пешком до клетки from от каждой клетки поля, в обход препятствий (участники не мешают).
+## Нужно ИИ, чтобы обходить стены, а не упираться в них.
+func walk_distances(from: Vector2i) -> Dictionary:
+	var dist_map := {from: 0}
+	var frontier: Array[Vector2i] = [from]
+	while not frontier.is_empty():
+		var next: Array[Vector2i] = []
+		for c in frontier:
+			for d in DIRS:
+				var n := c + d
+				if not in_bounds(n) or is_obstacle(n) or dist_map.has(n):
+					continue
+				if d.x != 0 and d.y != 0 and (is_obstacle(c + Vector2i(d.x, 0)) or is_obstacle(c + Vector2i(0, d.y))):
+					continue
+				dist_map[n] = int(dist_map[c]) + 1
+				next.append(n)
+		frontier = next
+	return dist_map
 
 
 func path_to(u: Combatant, target: Vector2i, reach_map: Dictionary) -> Array[Vector2i]:
@@ -280,7 +319,8 @@ func attack_preview(attacker: Combatant, target: Combatant, extra_dice := "") ->
 
 func in_weapon_range(attacker: Combatant, target: Combatant) -> bool:
 	if attacker.is_ranged():
-		return dist(attacker.cell, target.cell) <= int(attacker.weapon.get("range", 1))
+		return dist(attacker.cell, target.cell) <= int(attacker.weapon.get("range", 1)) \
+			and has_los(attacker.cell, target.cell)
 	return dist(attacker.cell, target.cell) <= attacker.reach()
 
 
@@ -399,11 +439,11 @@ func ability_targets(u: Combatant, aid: String) -> Array[Vector2i]:
 			out.append(u.cell)
 		"enemy":
 			for f in foes_of(u):
-				if dist(u.cell, f.cell) <= rng_cells:
+				if dist(u.cell, f.cell) <= rng_cells and has_los(u.cell, f.cell):
 					out.append(f.cell)
 		"ally":
 			for o in units:
-				if o.team == u.team and not o.dead and dist(u.cell, o.cell) <= rng_cells:
+				if o.team == u.team and not o.dead and dist(u.cell, o.cell) <= rng_cells and has_los(u.cell, o.cell):
 					if aid == "shield_of_faith" and (o.ac_bonus > 0 or o.down):
 						continue
 					out.append(o.cell)
@@ -411,13 +451,14 @@ func ability_targets(u: Combatant, aid: String) -> Array[Vector2i]:
 			for x in width:
 				for y in height:
 					var c := Vector2i(x, y)
-					if not is_obstacle(c) and dist(u.cell, c) <= rng_cells:
+					if not is_obstacle(c) and dist(u.cell, c) <= rng_cells and has_los(u.cell, c):
 						out.append(c)
 		"empty_cell":
 			for x in width:
 				for y in height:
 					var c := Vector2i(x, y)
-					if not is_obstacle(c) and occupant(c) == null and not traps.has(c) and dist(u.cell, c) <= rng_cells:
+					if not is_obstacle(c) and occupant(c) == null and not traps.has(c) and dist(u.cell, c) <= rng_cells \
+						and has_los(u.cell, c):
 						out.append(c)
 	return out
 
