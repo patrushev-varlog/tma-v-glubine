@@ -239,6 +239,8 @@ const HERO_COLOR := "#7aa7e8"
 
 ## Для настройки баланса из tools/simulate.gd: буквы врагов, которых убрать из боя.
 static var exclude: Array = []
+## Для настройки баланса: усиление врагов вместо записанного в бою ("boost").
+static var boost_override := {}
 
 
 static func prof(level: int) -> int:
@@ -420,6 +422,7 @@ static func _finish(c: Combatant) -> void:
 
 ## Карты 18×14: # — стена или телега, h — места отряда, буквы — враги (легенда у боя).
 ## Враги из списка trial_only есть только на «Испытании».
+## boost — усиление врагов под гарантированный набор экипировки отряда (см. Items.KITS): hp — проценты к хитам.
 const BATTLES := {
 	1: {"title": "Пролог, бой 3: колонна у ворот рудника", "intro": "Надсмотрщики и первые мертвецы у ворот рудника.",
 		"legend": {"C": "overseer_chief", "o": "overseer", "O": "overseer", "z": "zombie", "Z": "zombie",
@@ -461,7 +464,8 @@ const BATTLES := {
 			"..##......#...#.A.",
 			"...........Z..#...",
 		]},
-	3: {"title": "Глава 2: Затопленные выработки", "intro": "Тёмная вода, утопленники и гули; послушник некроманта бьёт издали.",
+	3: {"title": "Глава 2: Затопленные выработки", "boost": {"hp": 12},
+		"intro": "Тёмная вода, утопленники и гули; послушник некроманта бьёт издали.",
 		"legend": {"u": "drowned", "U": "drowned", "g": "ghoul", "G": "ghoul", "p": "acolyte", "a": "skeleton_archer",
 			"A": "skeleton_archer"},
 		"trial_only": ["U", "G", "A"],
@@ -481,7 +485,8 @@ const BATTLES := {
 			"..##....#..U..#.A.",
 			"........#.....#...",
 		]},
-	4: {"title": "Глава 3: Дварфийские залы", "intro": "Мёртвые дварфы в доспехах, умертвие и костяные стрелки на галерее.",
+	4: {"title": "Глава 3: Дварфийские залы", "boost": {"hp": 25},
+		"intro": "Мёртвые дварфы в доспехах, умертвие и костяные стрелки на галерее.",
 		"legend": {"d": "dwarf_dead", "S": "skeleton", "W": "wight", "l": "bone_archer", "g": "ghoul", "G": "ghoul"},
 		"trial_only": ["G", "S"],
 		"map": [
@@ -500,7 +505,8 @@ const BATTLES := {
 			"....#...S....#....",
 			"....#........#....",
 		]},
-	5: {"title": "Глава 4: Кузницы плоти", "intro": "Мясной голем у горна, умертвие, послушник и гули.",
+	5: {"title": "Глава 4: Кузницы плоти", "boost": {"hp": 40},
+		"intro": "Мясной голем у горна, умертвие, послушник и гули.",
 		"legend": {"M": "flesh_golem", "W": "wight", "p": "acolyte", "g": "ghoul", "G": "ghoul"},
 		"trial_only": ["G"],
 		"map": [
@@ -549,6 +555,7 @@ static func scenario(level: int, hero_class: String, archetype: String, with_vel
 				var kind: String = bt.legend[ch]
 				counts[kind] = int(counts.get(kind, 0)) + 1
 				var e := make_enemy(kind, counts[kind])
+				_boost_enemy(e, boost_override if not boost_override.is_empty() else bt.get("boost", {}))
 				e.cell = c
 				enemies.append(e)
 	for i in heroes.size():
@@ -557,3 +564,17 @@ static func scenario(level: int, hero_class: String, archetype: String, with_vel
 			Items.equip(heroes[i], Items.kit_for(heroes[i], level))
 	return {"width": String(rows[0]).length(), "height": rows.size(), "units": heroes + enemies,
 		"obstacles": obstacles, "title": "%s (уровень %d)" % [bt.title, level], "level": level}
+
+
+## Усиление врагов боя под гарантированный набор экипировки отряда:
+## hp — проценты к хитам, hit — к попаданию, dmg — к урону, ac — к КД.
+static func _boost_enemy(e: Combatant, boost: Dictionary) -> void:
+	if boost.is_empty():
+		return
+	e.max_hp = int(round(e.max_hp * (1.0 + float(boost.get("hp", 0)) / 100.0)))
+	e.hp = e.max_hp
+	e.ac += int(boost.get("ac", 0))
+	var hit := int(boost.get("hit", 0))
+	var dmg := int(boost.get("dmg", 0))
+	if hit != 0 or dmg != 0:
+		e.weapon = Items._boost(e.weapon, hit, dmg)
