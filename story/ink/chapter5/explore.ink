@@ -49,6 +49,9 @@ VAR ch5_hunt_done = false
 
 // Подсказка 3. Карта сцены 1, тайный путь: Велиор останавливается над залом печати. Только при ch5_secret_path.
 === ch5_talk_velior_niche ===
+{ not ch5_secret_path:
+    -> DONE
+}
 { ch5_clue_velior:
     Велиор кивает вниз, на нишу у стены зала.
     -> DONE
