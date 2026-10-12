@@ -37,6 +37,7 @@
     "ch2_nook_cellar_done",
     "ch2_nook_ledge_done",
     "ch2_nook_stash_done",
+    "ch2_priest",
     "ch2_shrine_drained",
     "ch3_camp_people",
     "ch3_clue_tablet",
@@ -46,6 +47,7 @@
     "ch3_nook_gallery_done",
     "ch3_riddle_solved",
     "ch3_riddle_tried",
+    "ch3_rogue_cache_done",
     "ch4_arithmetic",
     "ch4_chain",
     "ch4_clue_iron",
@@ -110,17 +112,17 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 1,
-     "hash": "2746a40202cb351df8dc5fccbc884f5c2c45809b9c19d95eb65ab55399da89d2",
+     "hash": "a1b153a12eb068d3ac5d7b9f3cf7704b85fc0bd42bd8f8d75bd4f99f6fd00125",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "fighter",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 2,
+     "hash": "c72419cf09130afc2a7d102c73c4c7da47c5817e6a7ff705eccd28c6d42fdf39",
      "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "fighter",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 2,
-     "hash": "4ede4b3e347e0c56bced5f12a2cfbb63915bbaa0087cf06e7457363e793d0b81",
-     "lines": 834,
      "picks": 51
     },
     {
@@ -128,8 +130,8 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 3,
-     "hash": "7b831fff14eee2751162710c145ce01b67474fbf51e16c0af8bdc7fd09d706aa",
-     "lines": 820,
+     "hash": "090ffe1c68d73c60ab2d840c345da1148f2560017182a8840189e618fafd9625",
+     "lines": 828,
      "picks": 50
     },
     {
@@ -137,8 +139,8 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 4,
-     "hash": "ee8c8bcb97a48192cd93553d99b2f0b1f8d627153359a8a7f09948f3bb157b23",
-     "lines": 825,
+     "hash": "ba4cc29274cc4fa2787614177ad4ca4e183187204d9fada658f4ac09c232d305",
+     "lines": 835,
      "picks": 51
     },
     {
@@ -146,17 +148,17 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 1,
-     "hash": "877ef29a2c99ac2d660fe4fc2c104f8b26dc649e218504144d8be51f4fce34b9",
+     "hash": "68e4569653af065e4920e17f7cfa668c8c4ac52323e60e93fc7339bab2b79e1e",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "fighter",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 2,
+     "hash": "ada6bbdccdfff1559c8c54d765a25fd52a1887d16e2c0adb60ddde22517529ae",
      "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "fighter",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 2,
-     "hash": "434aebd5064f0a813718aa769f28807b4d6c5aa66f7be50fec17ae7152575c44",
-     "lines": 834,
      "picks": 51
     },
     {
@@ -164,8 +166,8 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 3,
-     "hash": "0c172b3f1fad96cd49df7a2c9e96846609bfba6c45d9c5e5488215b839cefebc",
-     "lines": 820,
+     "hash": "8d5be1b1a8653153bab93a7998071f65cd909c7719920793a9fa4fdc8a0c865f",
+     "lines": 828,
      "picks": 50
     },
     {
@@ -173,8 +175,8 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 4,
-     "hash": "c68dbe174f54d8535e51acfc66b043adaa922ae51cfb51bc3fb4fb0b39dfbfe7",
-     "lines": 825,
+     "hash": "1b247df9827e5f52efaa8f6a97e0f440f0ee198f4293124d8d118297155f02c8",
+     "lines": 835,
      "picks": 51
     },
     {
@@ -182,17 +184,17 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 1,
-     "hash": "c8a5a98d54c32409f8bf79befe29f4352f20069ecbf093400b874ee44f70bc4e",
+     "hash": "c8971f66a998a263f8c416cb9ee45f3406bb35859170b5c97bde77a906de4ed5",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "fighter",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 2,
+     "hash": "edbccaca93052e73753d7230e2b365288a257a18e1c24ad14d281b6907a733bc",
      "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "fighter",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 2,
-     "hash": "dd0fcc9d3181b54d336c6dc0dfa28d7da5c6a9ad81d14102a70a32f4f331c45f",
-     "lines": 834,
      "picks": 51
     },
     {
@@ -200,8 +202,8 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 3,
-     "hash": "7bbb70af0de57cb3472a30eab2eee1b6f10923288f8adb423546c445a45d1817",
-     "lines": 820,
+     "hash": "d98a58c88ee1da24ef1ac3f91473fbf36c81e1aef1cbc7b9cab8fe0e2748c76a",
+     "lines": 828,
      "picks": 50
     },
     {
@@ -209,8 +211,8 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 4,
-     "hash": "dbd31be6780a856269239fab3ed938619978e387302497e21d90933fd6a32490",
-     "lines": 825,
+     "hash": "ccea377399a832ff63beca3e54be61a15222306a17def5588c4c3bf65a14f377",
+     "lines": 835,
      "picks": 51
     },
     {
@@ -218,17 +220,17 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 1,
-     "hash": "0fc87f285466a91510028e38fe5f71021f4958da6c27740bd00bc1e44d70589a",
+     "hash": "7dbe2e79a46cef58e2f4087ccfebb28b778f934cb30d213bdb8a67c7b3deebb8",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "fighter",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 2,
+     "hash": "5f6ce6f6bbcf50da8e8a7afe4094a8f04475cd3d20897b09efb38670313cbeb0",
      "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "fighter",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 2,
-     "hash": "87493e9e373e888b092022b28931fcdd77de952725b5f023dce93b02235ede62",
-     "lines": 834,
      "picks": 51
     },
     {
@@ -236,8 +238,8 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 3,
-     "hash": "e3403c1f9f26c60e53cc71c22a262cb040d2793ab49bf84f9d941616e073d34d",
-     "lines": 820,
+     "hash": "89263d1728c8b5797bd31023283887bbf2b4bd4caa95b546862b992b3fab4788",
+     "lines": 828,
      "picks": 50
     },
     {
@@ -245,8 +247,8 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 4,
-     "hash": "02d4e95adb4be8e86d811f9f0d57e2be6c39a0adca69e98a4fa6f0f61919b4cf",
-     "lines": 825,
+     "hash": "39873053411132ac94be94082d295c14633844ae051f4cd06e87661dfb7a3bcf",
+     "lines": 835,
      "picks": 51
     },
     {
@@ -254,305 +256,305 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 1,
-     "hash": "1fbf3faa927027a60c61315359ebbc09008c7857e82527eb74528e9680ddd1e6",
-     "lines": 844,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 2,
-     "hash": "94fa6d505d64d1be1d9943a0f61aedb2b7b2f83b3dec7a6da7229743d76187e5",
-     "lines": 838,
-     "picks": 51
-    },
-    {
-     "cls": "rogue",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 3,
-     "hash": "f9e85855ee12b33020c984127c6e7b9e2765a84e69e358bf5f5d6dc14c7731e8",
-     "lines": 824,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 4,
-     "hash": "f8fe94eea79b1292d5f3e817efb7eeb6cbfc32b94b4537d695fb24a6a40fe456",
-     "lines": 829,
-     "picks": 51
-    },
-    {
-     "cls": "rogue",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 1,
-     "hash": "d6ebad93e869d81d2e4fe1fda7962a7d1bb0d6c18fbf1348b2297b1dc8e62b8d",
-     "lines": 844,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 2,
-     "hash": "a213cd2a0a39679dea15a88a7d659010c94d9dd136b9ba22d598e21137dfb1ad",
-     "lines": 838,
-     "picks": 51
-    },
-    {
-     "cls": "rogue",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 3,
-     "hash": "2e3614e169b65b87387da1bc79c44537de81d7bcda03b3b949619f336c8592ff",
-     "lines": 824,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 4,
-     "hash": "050be2286830df91177c2671088ce3d704cf8c672b50a29b94d662bfe31c82ad",
-     "lines": 829,
-     "picks": 51
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 1,
-     "hash": "96a6562e40fa6f9e4d0efd917c680dd2d25b3796695ff77b0d18f08a155a3d6f",
-     "lines": 844,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 2,
-     "hash": "a7cda90003c85eb01016a480a300a9b9de65c31ad94a7cd71f5277175567fab5",
-     "lines": 838,
-     "picks": 51
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 3,
-     "hash": "8a5443ae9dfb997552b173cfa0e51203ac59e2bdebdf92a8b36c40753a96d63c",
-     "lines": 824,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 4,
-     "hash": "d005c5290d08a3c231d7ae5489a3feefeb6414517d104ccdfc25d3dee9479830",
-     "lines": 829,
-     "picks": 51
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 1,
-     "hash": "2bd02c413fee05815ba38ac6dd473240b68136645d50585e3a949cc98c810c5e",
-     "lines": 844,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 2,
-     "hash": "e5203448cd39e6784bc034c7d7cc09bae8abcd2fb1572975b3bc3202d8d2f937",
-     "lines": 838,
-     "picks": 51
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 3,
-     "hash": "f8275931ed4cea7b379505b034adc533a8e1843681fd26c506b65883785ccbdb",
-     "lines": 824,
-     "picks": 50
-    },
-    {
-     "cls": "rogue",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 4,
-     "hash": "0b7d81da4bb39825d4d82e92cf7b0068a0a4973353fe8176ca92e4a17e01105d",
-     "lines": 829,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 1,
-     "hash": "c7c466cbc92b57f5867677e1e0917999354e05bed7da8d1b23f9a8886fdee31f",
-     "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 2,
-     "hash": "d321b780affeb26827ab012036a820c9648b42815b955c0f4bd93d78fbb8df32",
-     "lines": 834,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 3,
-     "hash": "fcba2335afa2a20e889c5b6ea8d348cedadbc6b7a00e5ed41ac6768be8a9795e",
-     "lines": 820,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 4,
-     "hash": "99ead2fe66ab8376d0f7b63e1d7a55dbfe260368a7080faa5dbe880ffe633830",
-     "lines": 825,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 1,
-     "hash": "95a959bce46993edf91a2cef7a2299dd73b96742c9e180134306f988fba4e210",
-     "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 2,
-     "hash": "8c693ce9b3833144ee8b03a22b8438e3c2950224972a5b2903b848f237401505",
-     "lines": 834,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 3,
-     "hash": "72f5913b94192472d1faf54a7b1ec9715df6d167aeb8e385ca4412b41a9f204c",
-     "lines": 820,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": false,
-     "spouse_f": true,
-     "seed": 4,
-     "hash": "1ff007d054b30168a984b5a8a80bafccf9c3a4a73e0429aeeb45fbb91f23fbcf",
-     "lines": 825,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 1,
-     "hash": "aae49923187d174f774f32c78e9edbcbda5c858d6289e5fd82fc1bf440707d4a",
-     "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 2,
-     "hash": "147488a8a48478117276edc3d7a0ace22e2a615bff23d018beb02bb49512f978",
-     "lines": 834,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 3,
-     "hash": "3ccba6c527aa5c9bd2ec575c47eb6007e8dfee1f369ebbf552c768e774caa6e2",
-     "lines": 820,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": false,
-     "seed": 4,
-     "hash": "365a94877f2381b597e5cfd34cd2c72441ef57114046b2fae8f8104495a100c9",
-     "lines": 825,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 1,
-     "hash": "a10a2f415227e8d691ef4bbdfaa5c035ec82442f44d97b600c2c5fb1f027a4bd",
-     "lines": 840,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 2,
-     "hash": "8308aa734f6096dedbb44129037471dcae352d9e654a58d4c44e1530d2a7c860",
-     "lines": 834,
-     "picks": 51
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 3,
-     "hash": "879b2740eeaf6f0432531cf8d3d8cf83ff3d49d7655267baecdf25d18003eae6",
-     "lines": 820,
-     "picks": 50
-    },
-    {
-     "cls": "cleric",
-     "hero_f": true,
-     "spouse_f": true,
-     "seed": 4,
-     "hash": "7fddb43c6cab822a0cd081accbee88295d85bc62a1671013e45dc07aa65efee8",
-     "lines": 825,
-     "picks": 51
-    },
-    {
-     "cls": "wizard",
-     "hero_f": false,
-     "spouse_f": false,
-     "seed": 1,
-     "hash": "54ae68c334529f5785ad3a43fba884437d1b24d57d823d3b41c2a212ea90395b",
+     "hash": "543a1d493763cd131cf3f79b21ffcb8454dadf0fb77f40d62ae73318051d3170",
      "lines": 852,
      "picks": 50
     },
     {
+     "cls": "rogue",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 2,
+     "hash": "b5e0a35a81f312b6e98446946671ca3153d125215532bbdf9e62a25d8037be89",
+     "lines": 844,
+     "picks": 51
+    },
+    {
+     "cls": "rogue",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 3,
+     "hash": "d0581e1bc72953ad873b49f8250e5f6a6961eadd5d3df0afbdc5c1d33925a788",
+     "lines": 832,
+     "picks": 50
+    },
+    {
+     "cls": "rogue",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 4,
+     "hash": "c8bf4f7b5b8776480090edee62ffd2db0f3edde568df40ea5dfccdc6fd4b77e3",
+     "lines": 839,
+     "picks": 51
+    },
+    {
+     "cls": "rogue",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 1,
+     "hash": "14112de79f5dbdc11f9d7649c5667465897d1aaef8f89b32aac1f783da4a6871",
+     "lines": 852,
+     "picks": 50
+    },
+    {
+     "cls": "rogue",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 2,
+     "hash": "4150dfa54ec0b6b9cfb3d808eecaf6dbb8a86b165148b752b4374d7673dd7f60",
+     "lines": 844,
+     "picks": 51
+    },
+    {
+     "cls": "rogue",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 3,
+     "hash": "0979ab809c6a2ded2f19e21d875a9989e479b5ec15d0a0e6fb193d096c4861de",
+     "lines": 832,
+     "picks": 50
+    },
+    {
+     "cls": "rogue",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 4,
+     "hash": "02f85ca968cb01ab4f9b072192358b92277722bbb19fb56a459b35c52c0951b9",
+     "lines": 839,
+     "picks": 51
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 1,
+     "hash": "7f4af10cf780b559079806e6d657306cb57e304d6ea1c0a13ee5a2f775156218",
+     "lines": 852,
+     "picks": 50
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 2,
+     "hash": "62972789582e2019842354a1ccaf90feea9931a3e0af2b1b2d8aa09f70f649c5",
+     "lines": 844,
+     "picks": 51
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 3,
+     "hash": "baf4fb442ca1aa16f95cdc923d1cf79e3508337cfbc0deae72dc50b374fee51a",
+     "lines": 832,
+     "picks": 50
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 4,
+     "hash": "8bc064cdc95d5b5260cf32113d08c55eb395aa6fb7ccd99714a35ba50030b514",
+     "lines": 839,
+     "picks": 51
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 1,
+     "hash": "d710aa0aa1dd5d2b12c4dc7734dd28fbae7346523e60c5bac4ebe30300327a92",
+     "lines": 852,
+     "picks": 50
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 2,
+     "hash": "c1c1d64ad53e53bf5d3259123b972e5d3620c56016337a0bc1dd6612215302f1",
+     "lines": 844,
+     "picks": 51
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 3,
+     "hash": "8fc1229cb755f2122054b48e77c94b0c8447125e82f7632f0914639d135723b0",
+     "lines": 832,
+     "picks": 50
+    },
+    {
+     "cls": "rogue",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 4,
+     "hash": "53bf8bd3d6a9b1bbdd73ffbdcf70d848b43796a015e321c14c85225d552a82e4",
+     "lines": 839,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 1,
+     "hash": "c9826fdbff4e806f4f1109782425386979b60bd1b333ce5e59dc9a4aada797ea",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 2,
+     "hash": "4119bb3398f10861905544101a1ecfa23b504acca6be598d4915016f6ce7237c",
+     "lines": 840,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 3,
+     "hash": "4a6f4f5c30a7e3de2415174337f95c1bf7e4bdc4093d27e2505cebe2e5930d61",
+     "lines": 828,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 4,
+     "hash": "7839944a337f449977bf1888b4c0cb2fc17d830af1e8681f8938e80e77dafe1d",
+     "lines": 835,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 1,
+     "hash": "53939bdc813d6404da3196b9ccefc94bdb2e59e23d44f762b9cf73fb113610e5",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 2,
+     "hash": "5e696b1d8de30f39ab4bb5f227227d723e4939e7693432e50dda33fda012a6f9",
+     "lines": 840,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 3,
+     "hash": "f40700330765fe97f62b2cbb248e4745ccf380cd5caddce3c4c4060fe780c3c0",
+     "lines": 828,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": false,
+     "spouse_f": true,
+     "seed": 4,
+     "hash": "a51454d312cb7b12957b8b5e4b55e44e62e98876c9b167c20e7afe39551441af",
+     "lines": 835,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 1,
+     "hash": "d025eb9c31619d06dfb23fd828d6f72157586fe2425ae7797bfa67fc3e09c32b",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 2,
+     "hash": "89c892a91a335d6fa4b28fc4f0d02256299a1e066710c92d9f53ec904a687681",
+     "lines": 840,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 3,
+     "hash": "e57f7c758c6aa8143d08c610313fc0901f6d832309bbf81d9cf60824ca4e684b",
+     "lines": 828,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": false,
+     "seed": 4,
+     "hash": "9402405a6dd7f272a3ac3f56a8c3764fe889fb181be120eac33e5fd5ad38b801",
+     "lines": 835,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 1,
+     "hash": "43936752752d0937830b824cc72e847aec2a1a75df1082d16551e061c8884f6d",
+     "lines": 848,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 2,
+     "hash": "ae4746904aa9ea654d6fb3eb96ff3c05b37ec139a6f983078e766fc85bbda809",
+     "lines": 840,
+     "picks": 51
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 3,
+     "hash": "0725a01136870627e05ce1ee430701503a730a53b344cf69aa97deef1a319ae3",
+     "lines": 828,
+     "picks": 50
+    },
+    {
+     "cls": "cleric",
+     "hero_f": true,
+     "spouse_f": true,
+     "seed": 4,
+     "hash": "0f86a8e95ded9739098e011c8b22954257530ff06fb45cf95f2a2da9b7ed8a41",
+     "lines": 835,
+     "picks": 51
+    },
+    {
+     "cls": "wizard",
+     "hero_f": false,
+     "spouse_f": false,
+     "seed": 1,
+     "hash": "4fbad1182afaa5955bc9f2cf4c6af93520f4a9e0adb9c398d7b596b84939291f",
+     "lines": 860,
+     "picks": 50
+    },
+    {
      "cls": "wizard",
      "hero_f": false,
      "spouse_f": false,
      "seed": 2,
-     "hash": "ec4f9e98f2179ce0859b20895ef3cdbe4f35e6ff76952c0483b6d71ae4f9ef9a",
-     "lines": 847,
+     "hash": "1c9769a3ee14391e94cb4ab7b52fa587e98f6a6f3209a802243e089a0bc23123",
+     "lines": 853,
      "picks": 51
     },
     {
@@ -560,8 +562,8 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 3,
-     "hash": "e087c74d42143cb068fd85e4aa5ac616425e593c2a7e957149f3cff9c2dce8f7",
-     "lines": 833,
+     "hash": "d27b30796cb3753088b12519ccd58cda5b9e3d2662beae3e84fe4223f4ec6e2c",
+     "lines": 841,
      "picks": 50
     },
     {
@@ -569,8 +571,8 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 4,
-     "hash": "aef50157230462a9330b1259e075ab0bc57379e797d4622b1c3b46059b127c56",
-     "lines": 838,
+     "hash": "dc29e04a941b56733da44b7bc698cfbcb2b66c605ca02ee6555d08286f7651c9",
+     "lines": 848,
      "picks": 51
     },
     {
@@ -578,8 +580,8 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 1,
-     "hash": "1dc2ca809b751f83a6f4f8f5f0512aca91ef9b62fe28925c9a8c2debe0f8b22a",
-     "lines": 852,
+     "hash": "9cdacfad2d9a328555c8573657396b14623758779bbbcdc7e6be168cf2384533",
+     "lines": 860,
      "picks": 50
     },
     {
@@ -587,8 +589,8 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 2,
-     "hash": "53045b66fcac25167b3017ce8b4b35231463a8bde82d9310fc6f199aa97cc339",
-     "lines": 847,
+     "hash": "089542e78665144d8eb059d19dec2b79a3c5dac0453b90aed0469b0f8f2902c4",
+     "lines": 853,
      "picks": 51
     },
     {
@@ -596,8 +598,8 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 3,
-     "hash": "3924d5a9c202774e9591404cc093150d3dd8cd44f0c8a496c3d772c89b5e467d",
-     "lines": 833,
+     "hash": "eebd69ea5ffe794b8d1ad4303ff1e4fef26aa2b02a00489b19bccb6d5e5b0a7b",
+     "lines": 841,
      "picks": 50
     },
     {
@@ -605,8 +607,8 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 4,
-     "hash": "01e4df3e35bdd6fa7b2280fce37ba668e74bf4f023f27e5ff02ce3ff2bb52b1a",
-     "lines": 838,
+     "hash": "1f09819c2a5216ad107d4a18d4101ab58da3df13fc0aba736c36fbbfa0ce621e",
+     "lines": 848,
      "picks": 51
     },
     {
@@ -614,8 +616,8 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 1,
-     "hash": "cd68de0c7c5e13a3c2170b41fd67382b0d1494640ba990bf37c8512b84950fc8",
-     "lines": 852,
+     "hash": "3a15797880a628dbe4205c415614deca1e3ee7147727ad437314ca21841bb4c8",
+     "lines": 860,
      "picks": 50
     },
     {
@@ -623,8 +625,8 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 2,
-     "hash": "22f2dfc67ab00ad0c2d91e7f75ab472452ae3fb0c113dfb97c18ad0ba6386e00",
-     "lines": 847,
+     "hash": "dd452d793cdd3674bfc0d026944b077718ba16caa8f3070cd2fc542b7f7d7f75",
+     "lines": 853,
      "picks": 51
     },
     {
@@ -632,8 +634,8 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 3,
-     "hash": "5b16aa773698a2fb8c97c5fe91a322baaea7575f6d20975dbf64461959643db1",
-     "lines": 833,
+     "hash": "81e51c4da3f674115fae50277c178a9aef76fa5b594e2f220b3033c7cb6e9218",
+     "lines": 841,
      "picks": 50
     },
     {
@@ -641,8 +643,8 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 4,
-     "hash": "9a6315822762d80ca67d2a6c77ae6da3154fa75456162e0a3407daf61f7f490a",
-     "lines": 838,
+     "hash": "4dfc1d7d8a8292c3a550e1433dfdd5f3e3ef4052d699b969e90b9371e7042416",
+     "lines": 848,
      "picks": 51
     },
     {
@@ -650,8 +652,8 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 1,
-     "hash": "6ad964047eb119fdb0385d8b21e2556177326f67d558ae1158d48bb1ee78ddb5",
-     "lines": 852,
+     "hash": "f49b726790f2abec694a6250b52ea88adc1678bba7509ec83ed3f1ce528fffa1",
+     "lines": 860,
      "picks": 50
     },
     {
@@ -659,8 +661,8 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 2,
-     "hash": "16bc65ab8db8aa69172d86354fc5b653e69bd6ce180cbbb373200a25d0070e03",
-     "lines": 847,
+     "hash": "b4e6ea37b90adafc9cfc55a092451ff45ad232ea932c95d08b59c3105974429f",
+     "lines": 853,
      "picks": 51
     },
     {
@@ -668,8 +670,8 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 3,
-     "hash": "3b2acc86021191b8781eb3acfd5b7f61be3988a57062954c2bdc91134e816e6e",
-     "lines": 833,
+     "hash": "aa45a8b943e1baf4643ecdfb26120e8a47827fc1b947325968c8fbd8cc6a1e29",
+     "lines": 841,
      "picks": 50
     },
     {
@@ -677,8 +679,8 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 4,
-     "hash": "5a15b720cf4436ed089c1175c8c965efb4e4a5068f8ec0601f224e16a9baeeda",
-     "lines": 838,
+     "hash": "52da67d89ef9d355465e0c3c24afad69b4435655e5450daf23c15126202816b4",
+     "lines": 848,
      "picks": 51
     }
    ]
