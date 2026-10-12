@@ -111,7 +111,7 @@ The fire sank low. {sp()} looked at the embers for a long time, and then said, a
 -> class_line
 
 = legend_let_go
-You said nothing. The shoulder under your palm was tense, then slowly eased.
+You laid your hand on {s("his", "her")} shoulder. It was tense, then slowly eased.
 "Thank you," said {sp()} quietly. "For not asking." # spk:spouse # mood:sad
 -> class_line
 
@@ -135,7 +135,7 @@ You said nothing. The shoulder under your palm was tense, then slowly eased.
     "I hope not." # spk:hero
     "So do I," said {sp()}, but kept looking at the sword for a long time. # spk:spouse # mood:tense
 - "rogue":
-    "The miller was asking about you again," said {sp()}. "He said you have 'clever hands'. Is that a compliment?" # spk:spouse
+    "The miller was asking about you again," said {sp()}. "He said you have 'clever hands'. Is that meant as praise?" # spk:spouse
     "It's an old debt. I paid it." # spk:hero
     "Good. I don't want you to have a single old debt here." # spk:spouse # mood:smile
 - "cleric":
@@ -159,7 +159,7 @@ The lamp was burning down. Already in bed, in the dark, {sp()} said quietly, as 
     "No. Wherever you are, I'll find you." # spk:hero
     "I knew you'd say that," said {sp()}, and there was something in {s("his", "her")} voice like tenderness, and like fear. # spk:spouse # mood:sad
 * [Say nothing and hold {s("him", "her")}.]
-    You did not answer. {sp()} did not ask again.
+    You held {s("him", "her")} tighter than you meant to. {sp()} did not ask again.
 -
 {evening_roof: The rain drummed on the bark above the chimney.|The water kept dripping, into two bowls now.} Somewhere far off, beyond the forest, a bell struck. Once. Then it was quiet.
 ->->
