@@ -4,7 +4,7 @@
 //   node ink_tool.mjs build      — компилирует историю в JSON для Godot (story/*.json)
 //   node ink_tool.mjs reference  — эталонные прогоны inkjs для тестов рантаймов (tests/reference.json)
 //   node ink_tool.mjs parity     — русский и английский текст ведут себя одинаково (строки, теги, выборы, флаги)
-//   node ink_tool.mjs check      — build + parity + сверка, что JSON в репозитории свежий
+//   node ink_tool.mjs check      — parity + сверка, что JSON сцены в репозитории свежий (вся история — только предупреждение)
 //   node ink_tool.mjs transcript <story.json> <class> <hero_f> <spouse_f> <seed>  — прогон для отладки
 //
 // Прогон («транскрипт») одинаково устроен здесь, в tests/run_tests.gd (GodotInk) и в fallback-inkgd:
@@ -206,8 +206,11 @@ else if (cmd === "parity") process.exit(parity() ? 1 : 0);
 else if (cmd === "check") {
   const { stale, jsons } = build({ write: false });
   const bad = parity(jsons);
+  // Сцена среза (slice.*) обязана быть свежей. Вся история (game.ru) меняется в других тредах
+  // постоянно: её JSON в репозитории — снимок для сборок, а CI пересобирает его перед тестами.
+  const strict = stale.filter((id) => id.startsWith("slice."));
   if (stale.length) console.log(`Устарел JSON: ${stale.join(", ")}. Запустите: node ink_tool.mjs build && node ink_tool.mjs reference`);
-  process.exit(stale.length || bad ? 1 : 0);
+  process.exit(strict.length || bad ? 1 : 0);
 } else if (cmd === "transcript") {
   const [file, cls, hf, sf, seed] = args;
   const json = fs.readFileSync(file, "utf8");

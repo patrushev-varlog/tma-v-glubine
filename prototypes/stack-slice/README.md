@@ -36,7 +36,7 @@ cd prototypes/stack-slice/tools
 npm install                    # один раз
 node ink_tool.mjs build        # story/ink → story/*.json
 node ink_tool.mjs reference    # эталон inkjs для тестов (около минуты)
-node ink_tool.mjs check        # JSON свежий, русский и английский ведут себя одинаково
+node ink_tool.mjs check        # JSON сцены свежий, русский и английский ведут себя одинаково
 ```
 
 ## Сборки
@@ -49,7 +49,7 @@ godot --headless --path . --export-debug Android ../../build/stack-slice/android
 ../../build/stack-slice/linux/TmaStackSlice.x86_64 --headless -- --selftest
 ```
 
-То же самое на каждый PR делает CI (`.github/workflows/stack-slice.yml`) и выкладывает сборки артефактами.
+Тесты на каждый PR со срезом или сюжетом гоняет `.github/workflows/stack-slice.yml`, сборки и самопроверку — `stack-slice-builds.yml` (артефакты на странице проверки).
 
 ## Что где
 

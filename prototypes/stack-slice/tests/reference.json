@@ -21,6 +21,7 @@
     "ch1_gate_disguise",
     "ch1_hunt_clues",
     "ch1_hunt_done",
+    "ch1_hunt_site_seen",
     "ch1_nook_face_done",
     "ch1_nook_hut_done",
     "ch1_nook_timber_done",
@@ -32,6 +33,7 @@
     "ch2_fugitives_leader",
     "ch2_hunt_clues",
     "ch2_hunt_done",
+    "ch2_hunt_enter_seen",
     "ch2_nook_cellar_done",
     "ch2_nook_ledge_done",
     "ch2_nook_stash_done",
@@ -76,6 +78,7 @@
     "garret_trust_start",
     "hero_class",
     "hero_f",
+    "hunt_leave_ok",
     "interrogation",
     "irena_bell",
     "irena_confronted",
@@ -107,7 +110,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 1,
-     "hash": "fbfbd901dbcc6ae972a0f1eb6764afcc7c9240676d8c7f476b4d7b9fb7cfed65",
+     "hash": "2746a40202cb351df8dc5fccbc884f5c2c45809b9c19d95eb65ab55399da89d2",
      "lines": 840,
      "picks": 50
     },
@@ -116,7 +119,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 2,
-     "hash": "30f523339aaf8d1db50d015acd95fea13ef83dfacfe537e157f6774d192a2577",
+     "hash": "4ede4b3e347e0c56bced5f12a2cfbb63915bbaa0087cf06e7457363e793d0b81",
      "lines": 834,
      "picks": 51
     },
@@ -125,7 +128,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 3,
-     "hash": "9e9b45f99c8413b87ab0ee75c8c8e02854baef2f2d148d984cd0b209889bbbf6",
+     "hash": "7b831fff14eee2751162710c145ce01b67474fbf51e16c0af8bdc7fd09d706aa",
      "lines": 820,
      "picks": 50
     },
@@ -134,7 +137,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 4,
-     "hash": "2eda3a26ac5c716093493484e458e9e24a0a198f0ed751e76094dba9b62dfe8f",
+     "hash": "ee8c8bcb97a48192cd93553d99b2f0b1f8d627153359a8a7f09948f3bb157b23",
      "lines": 825,
      "picks": 51
     },
@@ -143,7 +146,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 1,
-     "hash": "23e3a3c892999be1fdf548a9cebcdc1a43cc7a32d59176d786e3b0895b131e48",
+     "hash": "877ef29a2c99ac2d660fe4fc2c104f8b26dc649e218504144d8be51f4fce34b9",
      "lines": 840,
      "picks": 50
     },
@@ -152,7 +155,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 2,
-     "hash": "3fca70ba35c9c3dc12cdc4fbf9a77fa27d0525feb654b7d8c5e38fcf84da9b1e",
+     "hash": "434aebd5064f0a813718aa769f28807b4d6c5aa66f7be50fec17ae7152575c44",
      "lines": 834,
      "picks": 51
     },
@@ -161,7 +164,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 3,
-     "hash": "96e07c113e7fead9df0cfaa738716e637aef4387a725669e44c5a7e87503d5c9",
+     "hash": "0c172b3f1fad96cd49df7a2c9e96846609bfba6c45d9c5e5488215b839cefebc",
      "lines": 820,
      "picks": 50
     },
@@ -170,7 +173,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 4,
-     "hash": "6c586306b73f316e1497dbc479ae69b144ad5c34d75b57c5ae0c30482e5fb443",
+     "hash": "c68dbe174f54d8535e51acfc66b043adaa922ae51cfb51bc3fb4fb0b39dfbfe7",
      "lines": 825,
      "picks": 51
     },
@@ -179,7 +182,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 1,
-     "hash": "73a97fa03beb257fd39aa4770d5d8e77565413db43ae6583d3accdc5b08d9671",
+     "hash": "c8a5a98d54c32409f8bf79befe29f4352f20069ecbf093400b874ee44f70bc4e",
      "lines": 840,
      "picks": 50
     },
@@ -188,7 +191,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 2,
-     "hash": "83d371bb7ded378122ed37bf1914c2fafd72e0d85b17f14a9f5f50e18c9f1ada",
+     "hash": "dd0fcc9d3181b54d336c6dc0dfa28d7da5c6a9ad81d14102a70a32f4f331c45f",
      "lines": 834,
      "picks": 51
     },
@@ -197,7 +200,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 3,
-     "hash": "5fdf54cc6240eee4fd69245908ed22c39c4b199785671e52b0153c1aaa3c670d",
+     "hash": "7bbb70af0de57cb3472a30eab2eee1b6f10923288f8adb423546c445a45d1817",
      "lines": 820,
      "picks": 50
     },
@@ -206,7 +209,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 4,
-     "hash": "b3ac2e4c32f0e4286b81c636e4a74de12eab3db4bc0ab8ed24bef81727f22807",
+     "hash": "dbd31be6780a856269239fab3ed938619978e387302497e21d90933fd6a32490",
      "lines": 825,
      "picks": 51
     },
@@ -215,7 +218,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 1,
-     "hash": "88db40f2b06f0e168ed49b7026028b812c6696082af3881018be08d5ff70e8d3",
+     "hash": "0fc87f285466a91510028e38fe5f71021f4958da6c27740bd00bc1e44d70589a",
      "lines": 840,
      "picks": 50
     },
@@ -224,7 +227,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 2,
-     "hash": "c3e72f8ec55c45abcc1ef72617286b00bd7034841f6ffe40b7cc1395bf8f393e",
+     "hash": "87493e9e373e888b092022b28931fcdd77de952725b5f023dce93b02235ede62",
      "lines": 834,
      "picks": 51
     },
@@ -233,7 +236,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 3,
-     "hash": "e92bb335cb7882af974f48ca0653c3cb4d65a52ed3867962678d1806559a8a0e",
+     "hash": "e3403c1f9f26c60e53cc71c22a262cb040d2793ab49bf84f9d941616e073d34d",
      "lines": 820,
      "picks": 50
     },
@@ -242,7 +245,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 4,
-     "hash": "73ebe0665160f0b2528071d062e573baa7fc5ae0183683d96b5d2ffa9508e46c",
+     "hash": "02d4e95adb4be8e86d811f9f0d57e2be6c39a0adca69e98a4fa6f0f61919b4cf",
      "lines": 825,
      "picks": 51
     },
@@ -251,7 +254,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 1,
-     "hash": "2c651302256036f7f85f334629284979f6e8dffd5573422a488afb148cace685",
+     "hash": "1fbf3faa927027a60c61315359ebbc09008c7857e82527eb74528e9680ddd1e6",
      "lines": 844,
      "picks": 50
     },
@@ -260,7 +263,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 2,
-     "hash": "a9df2ac5eaf3b327d0f042b6ec13751944ebdb3d4f96454cdf572f94f550d2ec",
+     "hash": "94fa6d505d64d1be1d9943a0f61aedb2b7b2f83b3dec7a6da7229743d76187e5",
      "lines": 838,
      "picks": 51
     },
@@ -269,7 +272,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 3,
-     "hash": "8740787763717263cac9cf6c33f7ad603230e96b00afd4fdbcfe8b7d9ac4102c",
+     "hash": "f9e85855ee12b33020c984127c6e7b9e2765a84e69e358bf5f5d6dc14c7731e8",
      "lines": 824,
      "picks": 50
     },
@@ -278,7 +281,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 4,
-     "hash": "4a71ad80c23b8f22bbb84798606070aab33cf824b67f6e7b9abbd075df1a937b",
+     "hash": "f8fe94eea79b1292d5f3e817efb7eeb6cbfc32b94b4537d695fb24a6a40fe456",
      "lines": 829,
      "picks": 51
     },
@@ -287,7 +290,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 1,
-     "hash": "5d2cdda0d22d021acda2e6c9f6e303d5dbd90771a5b7a7645725c73a2f4c113a",
+     "hash": "d6ebad93e869d81d2e4fe1fda7962a7d1bb0d6c18fbf1348b2297b1dc8e62b8d",
      "lines": 844,
      "picks": 50
     },
@@ -296,7 +299,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 2,
-     "hash": "b9a6ff9576e009c8016bc17c3cad6414de7aa57a8832d1fb51186af2d758156f",
+     "hash": "a213cd2a0a39679dea15a88a7d659010c94d9dd136b9ba22d598e21137dfb1ad",
      "lines": 838,
      "picks": 51
     },
@@ -305,7 +308,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 3,
-     "hash": "5ee677c49ad8fbe02523041dbaca7b98832e2227450f01d463a0cac82cb6727e",
+     "hash": "2e3614e169b65b87387da1bc79c44537de81d7bcda03b3b949619f336c8592ff",
      "lines": 824,
      "picks": 50
     },
@@ -314,7 +317,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 4,
-     "hash": "adcf492bc16640ac2eb494b4e660aa80288664ea6b47a8d829ef8cb6e4fe69bf",
+     "hash": "050be2286830df91177c2671088ce3d704cf8c672b50a29b94d662bfe31c82ad",
      "lines": 829,
      "picks": 51
     },
@@ -323,7 +326,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 1,
-     "hash": "f69659ef23568aaec66c9b1e2ed7b56c360767cf781732889e7a67320f1790d2",
+     "hash": "96a6562e40fa6f9e4d0efd917c680dd2d25b3796695ff77b0d18f08a155a3d6f",
      "lines": 844,
      "picks": 50
     },
@@ -332,7 +335,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 2,
-     "hash": "439d89c73db2763284f4aaf4fc09d7f976ad334624ab9c4753fabdd1ef848b8d",
+     "hash": "a7cda90003c85eb01016a480a300a9b9de65c31ad94a7cd71f5277175567fab5",
      "lines": 838,
      "picks": 51
     },
@@ -341,7 +344,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 3,
-     "hash": "d6612189f9f436e3fadae0425a86da3e9730849b8a0d1d365192d48140464edb",
+     "hash": "8a5443ae9dfb997552b173cfa0e51203ac59e2bdebdf92a8b36c40753a96d63c",
      "lines": 824,
      "picks": 50
     },
@@ -350,7 +353,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 4,
-     "hash": "4be860a582582091275983a8d5bdd957833e1d0b17f9cd33de8d642c2dc82075",
+     "hash": "d005c5290d08a3c231d7ae5489a3feefeb6414517d104ccdfc25d3dee9479830",
      "lines": 829,
      "picks": 51
     },
@@ -359,7 +362,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 1,
-     "hash": "a8e30f6c7af5e403c6d9ca8620e11465649953b2faff7db5cc271b24d07dca57",
+     "hash": "2bd02c413fee05815ba38ac6dd473240b68136645d50585e3a949cc98c810c5e",
      "lines": 844,
      "picks": 50
     },
@@ -368,7 +371,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 2,
-     "hash": "7144e546265a5cdf3ab60461f0f7b7ae0a76e0c0f960b809d8c6de4818c2550f",
+     "hash": "e5203448cd39e6784bc034c7d7cc09bae8abcd2fb1572975b3bc3202d8d2f937",
      "lines": 838,
      "picks": 51
     },
@@ -377,7 +380,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 3,
-     "hash": "c0930005fe53c6de6ed3ae51ddebc196ad82298e39c794ac10d3c8983079dff3",
+     "hash": "f8275931ed4cea7b379505b034adc533a8e1843681fd26c506b65883785ccbdb",
      "lines": 824,
      "picks": 50
     },
@@ -386,7 +389,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 4,
-     "hash": "c5972dc3efd3a5f0e38b070fb5da1c1751cdb2fe24fdb714622f724ad68ed879",
+     "hash": "0b7d81da4bb39825d4d82e92cf7b0068a0a4973353fe8176ca92e4a17e01105d",
      "lines": 829,
      "picks": 51
     },
@@ -395,7 +398,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 1,
-     "hash": "2625ac847f822f74608b44ca8131088ffccced5958b6c7e606fdaf4a56100f23",
+     "hash": "c7c466cbc92b57f5867677e1e0917999354e05bed7da8d1b23f9a8886fdee31f",
      "lines": 840,
      "picks": 50
     },
@@ -404,7 +407,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 2,
-     "hash": "1cfdaa64d49dcc825031890de10d94b2a315d382f24212cc9670c0e865b7902d",
+     "hash": "d321b780affeb26827ab012036a820c9648b42815b955c0f4bd93d78fbb8df32",
      "lines": 834,
      "picks": 51
     },
@@ -413,7 +416,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 3,
-     "hash": "d24504e94f08182c750359d1f78d364f458baeb011bb9f767ba19563cd58b7b8",
+     "hash": "fcba2335afa2a20e889c5b6ea8d348cedadbc6b7a00e5ed41ac6768be8a9795e",
      "lines": 820,
      "picks": 50
     },
@@ -422,7 +425,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 4,
-     "hash": "c4f55b9292fe6c3b4e282b840884bbacaa07731cd1ecc00f8d0217711442904c",
+     "hash": "99ead2fe66ab8376d0f7b63e1d7a55dbfe260368a7080faa5dbe880ffe633830",
      "lines": 825,
      "picks": 51
     },
@@ -431,7 +434,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 1,
-     "hash": "5acad84d4585b2107fe2120fe6ef726563c097a151cf530be38976b0067c257c",
+     "hash": "95a959bce46993edf91a2cef7a2299dd73b96742c9e180134306f988fba4e210",
      "lines": 840,
      "picks": 50
     },
@@ -440,7 +443,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 2,
-     "hash": "c1ee288b1e1e12cc38919b4c0b0dcdc30a537ac49f84ba98bdfd02e4edd15ccc",
+     "hash": "8c693ce9b3833144ee8b03a22b8438e3c2950224972a5b2903b848f237401505",
      "lines": 834,
      "picks": 51
     },
@@ -449,7 +452,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 3,
-     "hash": "aaab9f2f86eff4f12f4f9e856fe75efc104915c1c1ad9d1570cac4ec529ae046",
+     "hash": "72f5913b94192472d1faf54a7b1ec9715df6d167aeb8e385ca4412b41a9f204c",
      "lines": 820,
      "picks": 50
     },
@@ -458,7 +461,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 4,
-     "hash": "e8de2f4117b24e3f3aab11ed875eb8ced27d50df7c0ac0546ef350d26dc23e74",
+     "hash": "1ff007d054b30168a984b5a8a80bafccf9c3a4a73e0429aeeb45fbb91f23fbcf",
      "lines": 825,
      "picks": 51
     },
@@ -467,7 +470,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 1,
-     "hash": "22bc5aa21b263b89ecc78f787c1d98b97eddce08c8b381f9e4745ff073be9883",
+     "hash": "aae49923187d174f774f32c78e9edbcbda5c858d6289e5fd82fc1bf440707d4a",
      "lines": 840,
      "picks": 50
     },
@@ -476,7 +479,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 2,
-     "hash": "4b5dec4dd2666c63b16f1c02b5d6171b3f0bc4ed734328346e0b1c09dacd1032",
+     "hash": "147488a8a48478117276edc3d7a0ace22e2a615bff23d018beb02bb49512f978",
      "lines": 834,
      "picks": 51
     },
@@ -485,7 +488,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 3,
-     "hash": "13677b01a3b13459f6df9117adf9c82abf9f60c3b6831ae7a4ff8b76dcffbe04",
+     "hash": "3ccba6c527aa5c9bd2ec575c47eb6007e8dfee1f369ebbf552c768e774caa6e2",
      "lines": 820,
      "picks": 50
     },
@@ -494,7 +497,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 4,
-     "hash": "38128f6db5adfc560f955c0ba273fd2b0d95faf443feef05c7a9a925ff9263cf",
+     "hash": "365a94877f2381b597e5cfd34cd2c72441ef57114046b2fae8f8104495a100c9",
      "lines": 825,
      "picks": 51
     },
@@ -503,7 +506,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 1,
-     "hash": "85f92e51f9311eaeab5d158b05ecef7fa90f2685898723aad81e5662934bc565",
+     "hash": "a10a2f415227e8d691ef4bbdfaa5c035ec82442f44d97b600c2c5fb1f027a4bd",
      "lines": 840,
      "picks": 50
     },
@@ -512,7 +515,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 2,
-     "hash": "4ba3d00fba305c4f1b13d15443a8e30e6fac8802e8eb04d0eac3b7e28d1630e4",
+     "hash": "8308aa734f6096dedbb44129037471dcae352d9e654a58d4c44e1530d2a7c860",
      "lines": 834,
      "picks": 51
     },
@@ -521,7 +524,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 3,
-     "hash": "174f9be9cf22c05d62fc4b38b2b8e13997cffb363bdacb0f09a33c713337c200",
+     "hash": "879b2740eeaf6f0432531cf8d3d8cf83ff3d49d7655267baecdf25d18003eae6",
      "lines": 820,
      "picks": 50
     },
@@ -530,7 +533,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 4,
-     "hash": "946d8326cb17e4eb833d6807b708e5c96573d57b77938d38031292eb7bfa0767",
+     "hash": "7fddb43c6cab822a0cd081accbee88295d85bc62a1671013e45dc07aa65efee8",
      "lines": 825,
      "picks": 51
     },
@@ -539,7 +542,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 1,
-     "hash": "59893d6c7c8b0b7e6416af6bf47304db4885efa9a8ce9f4a3b5e11a0714b6fc2",
+     "hash": "54ae68c334529f5785ad3a43fba884437d1b24d57d823d3b41c2a212ea90395b",
      "lines": 852,
      "picks": 50
     },
@@ -548,7 +551,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 2,
-     "hash": "e8c348d47b165398fbf324447bd78c30b1265ed94709a757fe0f0e0a155717cb",
+     "hash": "ec4f9e98f2179ce0859b20895ef3cdbe4f35e6ff76952c0483b6d71ae4f9ef9a",
      "lines": 847,
      "picks": 51
     },
@@ -557,7 +560,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 3,
-     "hash": "3e9625c54397247e890cc43f095e770a1133486db5b8997b53c4bfc43b14b2ff",
+     "hash": "e087c74d42143cb068fd85e4aa5ac616425e593c2a7e957149f3cff9c2dce8f7",
      "lines": 833,
      "picks": 50
     },
@@ -566,7 +569,7 @@
      "hero_f": false,
      "spouse_f": false,
      "seed": 4,
-     "hash": "69019de57784d461fc293e47ee5300f6ddd4a020ee386e8e1432b6f68aaeb4b1",
+     "hash": "aef50157230462a9330b1259e075ab0bc57379e797d4622b1c3b46059b127c56",
      "lines": 838,
      "picks": 51
     },
@@ -575,7 +578,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 1,
-     "hash": "a755bd99cedf1dbfc6add08581f3ee53deb3e6470ec84e2d6079561fb1a36aa4",
+     "hash": "1dc2ca809b751f83a6f4f8f5f0512aca91ef9b62fe28925c9a8c2debe0f8b22a",
      "lines": 852,
      "picks": 50
     },
@@ -584,7 +587,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 2,
-     "hash": "5c8bf952694de381ca9821a01143b013a8824d074c7762312347d0ab664a6605",
+     "hash": "53045b66fcac25167b3017ce8b4b35231463a8bde82d9310fc6f199aa97cc339",
      "lines": 847,
      "picks": 51
     },
@@ -593,7 +596,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 3,
-     "hash": "7e5395612cc72911091b1082c27108d7f4f27250efaa73561268eb982254cf88",
+     "hash": "3924d5a9c202774e9591404cc093150d3dd8cd44f0c8a496c3d772c89b5e467d",
      "lines": 833,
      "picks": 50
     },
@@ -602,7 +605,7 @@
      "hero_f": false,
      "spouse_f": true,
      "seed": 4,
-     "hash": "491be8e857ee97a190195674e635127aaf4f3ddfd8d08f2146b2daab26e11fe1",
+     "hash": "01e4df3e35bdd6fa7b2280fce37ba668e74bf4f023f27e5ff02ce3ff2bb52b1a",
      "lines": 838,
      "picks": 51
     },
@@ -611,7 +614,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 1,
-     "hash": "b23916d782cbd5eadfb7130d0143bb04e1c19fbb1bc358fc9ee2647286716616",
+     "hash": "cd68de0c7c5e13a3c2170b41fd67382b0d1494640ba990bf37c8512b84950fc8",
      "lines": 852,
      "picks": 50
     },
@@ -620,7 +623,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 2,
-     "hash": "b771331d984af6811ff6596195c95691622bba95a37b2989768e0e327e72b15f",
+     "hash": "22f2dfc67ab00ad0c2d91e7f75ab472452ae3fb0c113dfb97c18ad0ba6386e00",
      "lines": 847,
      "picks": 51
     },
@@ -629,7 +632,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 3,
-     "hash": "52d1c638a9db615c8d7d0485e95b9c03b978cf255c87dbea279b1e22dbeed2fc",
+     "hash": "5b16aa773698a2fb8c97c5fe91a322baaea7575f6d20975dbf64461959643db1",
      "lines": 833,
      "picks": 50
     },
@@ -638,7 +641,7 @@
      "hero_f": true,
      "spouse_f": false,
      "seed": 4,
-     "hash": "f6bbba8ec2ea363c33a88b7f53c1acfcb4a4dd159b7179a9ff723309bcaac2cb",
+     "hash": "9a6315822762d80ca67d2a6c77ae6da3154fa75456162e0a3407daf61f7f490a",
      "lines": 838,
      "picks": 51
     },
@@ -647,7 +650,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 1,
-     "hash": "1bc01ba2484760f80ba12a66a117e6c80193b2cb8fd16f2c6a2a06988e5b9510",
+     "hash": "6ad964047eb119fdb0385d8b21e2556177326f67d558ae1158d48bb1ee78ddb5",
      "lines": 852,
      "picks": 50
     },
@@ -656,7 +659,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 2,
-     "hash": "fa3867383549d7f9c87cee96e4882399de6a707e57df2e79a1ef75478c017a20",
+     "hash": "16bc65ab8db8aa69172d86354fc5b653e69bd6ce180cbbb373200a25d0070e03",
      "lines": 847,
      "picks": 51
     },
@@ -665,7 +668,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 3,
-     "hash": "58e0f5702665662ec04cb356312a9cecfaeb7699575bc6aa3ff81d8a1aac7762",
+     "hash": "3b2acc86021191b8781eb3acfd5b7f61be3988a57062954c2bdc91134e816e6e",
      "lines": 833,
      "picks": 50
     },
@@ -674,7 +677,7 @@
      "hero_f": true,
      "spouse_f": true,
      "seed": 4,
-     "hash": "88b69f46cbbd73aab4f413913b2a818ee76a2a9b1a57a42edcaf0b7779859d58",
+     "hash": "5a15b720cf4436ed089c1175c8c965efb4e4a5068f8ec0601f224e16a9baeeda",
      "lines": 838,
      "picks": 51
     }
