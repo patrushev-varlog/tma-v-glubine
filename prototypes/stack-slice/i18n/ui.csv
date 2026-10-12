@@ -1,0 +1,28 @@
+keys,ru,en
+TITLE,Тьма в глубине — срез стека,What the Deep Keeps — stack slice
+INFO,Ink: {backend} · язык: {lang} · ввод: {device} · экран {w}×{h},Ink: {backend} · language: {lang} · input: {device} · screen {w}×{h}
+DEVICE_keyboard,клавиатура и мышь,keyboard and mouse
+DEVICE_xbox,геймпад Xbox,Xbox gamepad
+DEVICE_deck,Steam Deck,Steam Deck
+DEVICE_playstation,геймпад PlayStation,PlayStation gamepad
+DEVICE_nintendo,геймпад Nintendo,Nintendo gamepad
+SPEAKER_HERO,Ты,You
+CONTINUE,{key} — дальше,{key} — continue
+SCENE_END,Сцена окончена. Где-то далеко ударил колокол.,"The scene is over. Somewhere far off, a bell struck."
+RESTART,Сыграть сцену заново,Play the scene again
+HINT_LANG,{key} — язык RU/EN,{key} — language RU/EN
+HINT_FOCUS,{key} — поле / диалог,{key} — board / dialogue
+HINT_ART,{key} — набор графики,{key} — art set
+HINT_DARK,{a} / {b} — стадия Тьмы,{a} / {b} — Darkness stage
+HINT_MOVE,"{move}, {key} — шаг Гаррета","{move}, {key} — move Garrett"
+ART_PIXELLAB,"Графика: PixelLab (пол, крепь, Гаррет)","Art: PixelLab (floor, support, Garrett)"
+ART_RD,"Графика: Retro Diffusion (пол, крепь, Гаррет)","Art: Retro Diffusion (floor, support, Garrett)"
+ART_MIXED,"Графика: Retro Diffusion (пол, крепь) + PixelLab (Гаррет)","Art: Retro Diffusion (floor, support) + PixelLab (Garrett)"
+PORTRAIT_NOTE,"Портрет: заглушка, ждёт генерации","Portrait: placeholder, awaiting generation"
+DARK_SHADOW,Тень,Shadow
+DARK_DUSK,Сумрак,Dusk
+DARK_GLOOM,Мрак,Gloom
+DARK_ABYSS,Бездна,Abyss
+STAGE,Стадия Тьмы: {name},Darkness stage: {name}
+GLYPH_MOVE_KEYS,стрелки/WASD,arrows/WASD
+GLYPH_MOVE_PAD,крестовина/стик,D-pad/stick
