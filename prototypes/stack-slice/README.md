@@ -65,9 +65,9 @@ godot --headless --path . --export-debug Android ../../build/stack-slice/android
 | `ink/slice.*.ink` | Точки входа сцены на русском и английском |
 | `story/*.json` | Скомпилированная история (собирается `ink_tool.mjs build`) |
 | `i18n/ui.csv` | Строки интерфейса RU/EN |
-| `art/` | Копии якорей стиля из `art/anchors` и заглушки портрета |
+| `art/` | Копии якорей стиля из `art/anchors`, портрет 128 px и слои Тьмы |
 | `tests/` | Тесты и эталон `reference.json` |
-| `tools/` | `ink_tool.mjs`, снимки экрана, генератор заглушек портрета |
+| `tools/` | `ink_tool.mjs`, снимки экрана, `make_portrait.py` (портрет из генерации) |
 | `fallback-inkgd/` | Запасной путь: отдельный проект на inkgd |
 | `addons/GodotInk/` | Плагин GodotInk (MIT), master `49e35b5` |
 | `docs/` | Снимки экрана для STACK.md |

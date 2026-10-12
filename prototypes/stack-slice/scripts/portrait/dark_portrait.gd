@@ -4,16 +4,17 @@ extends Control
 ## Один базовый портрет на внешность, три слоя на стадии — вместо 4 отдельных портретов
 ## на каждую эмоцию (review/02-design-and-product.md, п. 5 про комбинаторику портретов).
 ## Файлы в art/portrait/: hero_base.png и dark_1_dusk / dark_2_gloom / dark_3_abyss.png (слои
-## добавляются накопительно). Сейчас там заглушки из tools/make_placeholder_portrait.py.
+## добавляются накопительно). Их собирает tools/make_portrait.py из генерации Midjourney/Flux.
 
 const STAGES := ["DARK_SHADOW", "DARK_DUSK", "DARK_GLOOM", "DARK_ABYSS"]
 const LAYERS := ["res://art/portrait/dark_1_dusk.png", "res://art/portrait/dark_2_gloom.png", "res://art/portrait/dark_3_abyss.png"]
-# Рампы кожи по стадиям: светлый, основной, тень — только цвета Resurrect 64.
+# Рампы кожи по стадиям: свет, светлый, основной, тень — только цвета Resurrect 64.
+# Стадия 0 — ключи шейдера (рампа базового портрета).
 const SKIN := [
-	["#fdcbb0", "#fca790", "#cd683d"],
-	["#fdcbb0", "#ab947a", "#966c6c"],
-	["#c7dcd0", "#9babb2", "#7f708a"],
-	["#ffffff", "#c7dcd0", "#9babb2"],
+	["#fca790", "#e6904e", "#cd683d", "#9e4539"],
+	["#ab947a", "#966c6c", "#9e4539", "#7a3045"],
+	["#9babb2", "#7f708a", "#694f62", "#45293f"],
+	["#c7dcd0", "#9babb2", "#7f708a", "#625565"],
 ]
 const SCALE := 2
 
@@ -51,8 +52,9 @@ func set_stage(s: int) -> void:
 		_layers[i].visible = i < stage
 	var mat := _base.material as ShaderMaterial
 	mat.set_shader_parameter("to_hi", Color(SKIN[stage][0]))
-	mat.set_shader_parameter("to_mid", Color(SKIN[stage][1]))
-	mat.set_shader_parameter("to_sh", Color(SKIN[stage][2]))
+	mat.set_shader_parameter("to_light", Color(SKIN[stage][1]))
+	mat.set_shader_parameter("to_mid", Color(SKIN[stage][2]))
+	mat.set_shader_parameter("to_sh", Color(SKIN[stage][3]))
 
 
 func stage_name() -> String:
