@@ -13,6 +13,10 @@ const STORIES := {
 	"en": "res://story/slice.en.json",
 }
 
+# preload, а не глобальное имя класса: в свежем клоне кэш глобальных классов собирается
+# до сборки C#, и имя InkLoader ещё неизвестно GDScript (так падала сборка в CI).
+const InkLoaderScript := preload("res://scripts/story/InkLoader.cs")
+
 var language := "ru"
 var _story  # GodotInk.InkStory
 var _json_path := ""
@@ -25,7 +29,7 @@ static func backend_name() -> String:
 
 
 func load_json_text(json: String) -> void:
-	_story = InkLoader.new().Load(json)
+	_story = InkLoaderScript.new().Load(json)
 
 
 ## Начать историю из файла с заданными переменными героя.
