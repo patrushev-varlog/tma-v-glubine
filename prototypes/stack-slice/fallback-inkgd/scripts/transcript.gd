@@ -1,0 +1,1 @@
+../../scripts/story/transcript.gd

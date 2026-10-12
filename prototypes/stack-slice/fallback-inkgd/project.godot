@@ -1,0 +1,13 @@
+; Engine configuration file.
+; Запасной путь Ink для среза стека: inkgd (рантайм Ink на чистом GDScript), Godot без .NET.
+
+config_version=5
+
+[application]
+
+config/name="Тьма в глубине — срез стека, запасной Ink (inkgd)"
+config/features=PackedStringArray("4.7", "Mobile")
+
+[rendering]
+
+renderer/rendering_method="mobile"

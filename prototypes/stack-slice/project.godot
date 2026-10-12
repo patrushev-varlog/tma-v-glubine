@@ -1,0 +1,43 @@
+; Engine configuration file.
+; Технический срез стека «Тьмы в глубине»: Ink, языки, геймпад, графика, экспорт.
+
+config_version=5
+
+[application]
+
+config/name="Тьма в глубине — срез стека"
+config/description="Технический срез: Ink через GodotInk, английский текст, геймпад и Steam Deck, стиль-тест графики, портрет по Тьме."
+run/main_scene="res://main.tscn"
+config/icon="res://art/pixellab/garret/south.png"
+config/features=PackedStringArray("4.7", "C#", "Mobile")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=0
+
+[dotnet]
+
+project/assembly_name="StackSlice"
+
+[input_devices]
+
+pointing/emulate_mouse_from_touch=true
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://i18n/ui.ru.translation", "res://i18n/ui.en.translation")
+locale/fallback="ru"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/canvas_textures/default_texture_filter=0
+textures/vram_compression/import_etc2_astc=true
+
+[autoload]
+
+InputSetup="*res://scripts/input/input_setup.gd"
