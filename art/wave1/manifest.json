@@ -1,0 +1,182 @@
+{
+ "tiles": {
+  "floor_plain_a": {
+   "id": "9320b597-29b3-4993-8331-b61a2f6f855a",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/floor_plain_a.png",
+   "note": "generated as floor_rails; came out as plain floor"
+  },
+  "floor_plain_b": {
+   "id": "916ca042-c132-42a2-8e3b-9628be099a41",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/floor_plain_b.png",
+   "note": "generated as floor_planks; came out as plain floor"
+  },
+  "floor_rails": {
+   "id": "d0dbfd63-615e-4ab1-ace5-d7a93c07447d",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/floor_rails.png"
+  },
+  "floor_cracked": {
+   "id": "a7fd2b13-9419-4cbd-96ca-27161bf194cc",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/floor_cracked.png"
+  },
+  "edge": {
+   "id": "da88f138-829d-49de-8842-d6521cb08dec",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/edge.png"
+  },
+  "minecart": {
+   "id": "4fb05fdd-44bc-4b9d-a34c-04e7ec739e54",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/minecart.png"
+  },
+  "ore_heap": {
+   "id": "36e5605c-5f9e-4436-97c7-840accff1759",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/ore_heap.png"
+  },
+  "scaffolding": {
+   "id": "1c4cfe06-1f67-4ecf-b34f-9b87fa088a42",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/scaffolding.png"
+  },
+  "rockfall": {
+   "id": "e39e3502-7dbc-46b7-9d84-1eb09f239297",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/rockfall.png"
+  },
+  "pickaxe_shovel": {
+   "id": "8b06d888-7cf6-4b77-a80d-c240ebb0f295",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/pickaxe_shovel.png"
+  },
+  "floor_lamp": {
+   "id": "81a83bf8-a5ab-43c0-a258-b07f154ca7f2",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/floor_lamp.png"
+  },
+  "bucket_rope": {
+   "id": "50b73dee-7ad7-4838-8408-06882fa146f7",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/bucket_rope.png"
+  },
+  "floor_planks": {
+   "id": "d875ecac-06c5-408d-910c-9b02471c613f",
+   "file": "/Users/valerijpatrusev/claude/tma-v-glubine/art/wave1/tiles/upper_mines/floor_planks.png"
+  }
+ },
+ "chars": {
+  "garret": {
+   "id": "e0e044cd-adc5-4a6a-9e9b-7e7de527cea2",
+   "mode": "standard (anchor v4)"
+  },
+  "irena": {
+   "id": "e7c92f7b-df8e-4e67-a9b7-6ff6d374464b",
+   "mode": "pro"
+  },
+  "velior": {
+   "id": "233729d2-ad8f-45c4-9e1a-18a5de182c2d",
+   "mode": "pro"
+  },
+  "overseer": {
+   "id": "b50e4b3d-4ea9-4f78-a102-2d1af7367917",
+   "mode": "pro"
+  },
+  "overseer_chief": {
+   "id": "189f286b-68f2-4eea-b189-5f08c64e99f1",
+   "mode": "pro"
+  },
+  "zombie": {
+   "id": "dd0755bc-cd37-4bc3-a5b9-d3a55fbc104b",
+   "mode": "pro"
+  },
+  "hero_wizard_evoker": {
+   "id": "cd55e738-33bb-4fa0-a2b1-eaa8e7ee67fd",
+   "mode": "pro"
+  },
+  "hero_wizard_binder": {
+   "id": "f4301772-475e-4de5-870b-3309ceed10d7",
+   "mode": "pro"
+  },
+  "skeleton": {
+   "id": "a6dbf7af-355b-406e-939b-1e4540af1f4b",
+   "mode": "pro"
+  },
+  "skeleton_archer": {
+   "id": "1831fa39-d860-4c4b-8889-662834caf21f",
+   "mode": "pro v3, no weapon"
+  },
+  "skeleton_archer_v1": {
+   "id": "2d16c1ac-e7b9-4549-9723-04004c5654b2",
+   "mode": "pro"
+  }
+ },
+ "anims": {
+  "garret/idle/group": "29f434e3-eba5-41ab-a329-81cd75d15d54",
+  "garret/idle/south-east": {
+   "submitted": "09:23:15"
+  },
+  "garret/attack_melee/group": "23f415ab-cffa-462a-825c-d15cde7fdf36",
+  "garret/attack_melee/south-east": {
+   "submitted": "10:15:36",
+   "note": "constrained v3 test, replaced the first attempt"
+  },
+  "garret/idle/north-east": {
+   "submitted": "10:06:32"
+  },
+  "garret/walk/group": "0a7aa348-0a82-49b2-965b-d068fa6f571b",
+  "garret/walk/south-east": {
+   "submitted": "10:07:43"
+  },
+  "garret/walk/north-east": {
+   "submitted": "10:08:36"
+  },
+  "garret/hit/group": "025a9857-b7da-4725-8f12-ebc7467f4bc4",
+  "garret/hit/south-east": {
+   "submitted": "10:11:34"
+  },
+  "garret/hit/north-east": {
+   "submitted": "10:12:43"
+  },
+  "garret/down/south-east": {
+   "submitted": "in-flight before stop"
+  },
+  "garret/down/group": "900c963f-75d2-4b07-989a-24dd5653e686",
+  "garret/attack_melee/name": "test_attack_v3b",
+  "garret/attack_melee/north-east": {
+   "submitted": "10:21:07"
+  },
+  "garret/down/north-east": {
+   "submitted": "found in PixelLab"
+  },
+  "hero_wizard_evoker/idle/group": "513f1ce8-d3f7-4eab-bd92-bde44ebcf2dd",
+  "hero_wizard_evoker/idle/south-east": {
+   "submitted": "10:29:34"
+  },
+  "hero_wizard_evoker/idle/north-east": {
+   "submitted": "10:30:34"
+  },
+  "hero_wizard_evoker/walk/group": "dfc3a230-f2e7-413d-8ab8-e86c385ff696",
+  "hero_wizard_evoker/walk/south-east": {
+   "submitted": "10:31:34"
+  },
+  "hero_wizard_evoker/walk/north-east": {
+   "submitted": "10:32:32"
+  },
+  "hero_wizard_evoker/hit/group": "2b78838a-4da1-4cb3-86f2-63474637228f",
+  "hero_wizard_evoker/hit/south-east": {
+   "submitted": "10:33:45"
+  },
+  "hero_wizard_evoker/hit/north-east": {
+   "submitted": "10:34:56"
+  },
+  "hero_wizard_evoker/down/group": "05d2553b-7533-49f4-b060-0ed1ea032701",
+  "hero_wizard_evoker/down/south-east": {
+   "submitted": "10:36:44"
+  }
+ },
+ "log": [],
+ "rejected": {
+  "hero_wizard_evoker_v1": {
+   "id": "8c42045b-13b7-43e6-9cd4-5df34dfdd422",
+   "mode": "pro",
+   "reason": "looked like Garret: grey hair and beard"
+  },
+  "hero_wizard_binder_v1": {
+   "id": "316e38b1-fa9b-4ee2-a243-b7c62fab3dde",
+   "mode": "pro",
+   "reason": "looked like Garret: grey hair and beard"
+  },
+  "garret/attack_melee v1": "v3 swing: sword switched hands, second sword appeared; deleted from PixelLab"
+ }
+}

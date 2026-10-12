@@ -1,0 +1,17 @@
+# отбракованные пробы и старые версии: хранятся локально, в репозиторий не идут
+characters/*/_rejected*/
+characters/*/_v*_*/
+characters/*/unarmed/_rejected/
+characters/*/unarmed/animations/_*/
+characters/garret/bare/
+characters/garret/states/
+characters/garret/animations_v2/
+characters/garret/animations_unified/
+characters/garret/states_unified/
+characters/garret/unarmed/composited/
+characters/garret/unarmed/sword_56px_too_long.png
+characters/_rejected_*/
+characters/*/weapon_v*.png
+characters/*/weapon_diag.png
+characters/*/weapon_dark.png
+characters/*/weapon_v3_upsidedown.png
