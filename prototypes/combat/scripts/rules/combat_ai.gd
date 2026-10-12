@@ -29,6 +29,16 @@ static func _enemy_turn(b: Battle, u: Combatant) -> void:
 		return
 	if u.is_ranged():
 		var r := int(u.weapon.get("range", 1))
+		var taunter := _taunter(b, u)
+		if taunter != null:
+			# Провокация действует и на стрелков: подходят на выстрел и бьют только Гаррета.
+			if not _foes_in_range(b, u, r).has(taunter):
+				_move_toward(b, u, taunter, r)
+			var g := 0
+			while b.can_attack(u, taunter) and b.outcome == "" and g < 4:
+				g += 1
+				b.attack(u, taunter)
+			return
 		var in_range := _foes_in_range(b, u, r)
 		if in_range.is_empty():
 			_move_toward(b, u, target, r)
@@ -46,16 +56,25 @@ static func _enemy_turn(b: Battle, u: Combatant) -> void:
 	_approach_and_attack(b, u, target, func() -> void: b.attack(u, target))
 
 
+## Кто спровоцировал врага, если провокация ещё действует.
+static func _taunter(b: Battle, u: Combatant) -> Combatant:
+	if u.taunted_by == "":
+		return null
+	var t := b.get_unit(u.taunted_by)
+	return t if t != null and t.conscious() else null
+
+
 static func _pick_target(b: Battle, u: Combatant) -> Combatant:
-	if u.taunted_by != "":
-		var t := b.get_unit(u.taunted_by)
-		if t != null and t.conscious():
-			return t
+	var taunter := _taunter(b, u)
+	if taunter != null:
+		return taunter
 	if u.team == 1 and b.difficulty == "trial":
 		return _best_victim(b, u, b.foes_of(u))
 	var best: Combatant = null
 	for f in b.foes_of(u):
 		if f.turned and u.team == 0 and best != null:
+			continue
+		if f.hidden:
 			continue
 		if best == null:
 			best = f
@@ -74,7 +93,8 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 	var best_score := -INF
 	var reach := int(u.weapon.get("range", 1)) if u.is_ranged() else u.reach()
 	for f in candidates:
-		if not f.conscious():
+		# Спрятавшегося не видно, пока он сам не атакует.
+		if not f.conscious() or f.hidden:
 			continue
 		var p := b.attack_preview(u, f)
 		var score: float = p.expected / maxf(f.hp, 1.0) * 10.0
@@ -99,6 +119,8 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 static func _foes_in_range(b: Battle, u: Combatant, r: int) -> Array[Combatant]:
 	var out: Array[Combatant] = []
 	for f in b.foes_of(u):
+		if f.hidden and u.team == 1:
+			continue
 		if Battle.dist(u.cell, f.cell) <= r and (r <= 1 or b.has_los(u.cell, f.cell)):
 			out.append(f)
 	return out
