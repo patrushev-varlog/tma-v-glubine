@@ -18,7 +18,7 @@ HINT_MOVE,"{move}, {key} — шаг Гаррета","{move}, {key} — move Garr
 ART_PIXELLAB,"Графика: PixelLab (пол, крепь, Гаррет)","Art: PixelLab (floor, support, Garrett)"
 ART_RD,"Графика: Retro Diffusion (пол, крепь, Гаррет)","Art: Retro Diffusion (floor, support, Garrett)"
 ART_MIXED,"Графика: Retro Diffusion (пол, крепь) + PixelLab (Гаррет)","Art: Retro Diffusion (floor, support) + PixelLab (Garrett)"
-PORTRAIT_NOTE,"Портрет: заглушка, ждёт генерации","Portrait: placeholder, awaiting generation"
+PORTRAIT_NOTE,"Портрет: Midjourney → 128 px, черновик","Portrait: Midjourney → 128 px, draft"
 DARK_SHADOW,Тень,Shadow
 DARK_DUSK,Сумрак,Dusk
 DARK_GLOOM,Мрак,Gloom
