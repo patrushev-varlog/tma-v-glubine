@@ -5,10 +5,10 @@ extends RefCounted
 const MAX_ROUNDS := 40
 
 
-static func run_battle(level: int, hero_class: String, archetype: String, with_velior: bool, diff: String,
+static func run_battle(level: int, hero_class: String, archetype: String, party: String, diff: String,
 		seed_value: int, use_dark := false) -> Dictionary:
 	var b := Battle.new()
-	b.setup(Content.scenario(level, hero_class, archetype, with_velior, diff), seed_value, diff)
+	b.setup(Content.scenario(level, hero_class, archetype, party, diff), seed_value, diff)
 	var guard := 0
 	while b.outcome == "" and b.round_num <= MAX_ROUNDS:
 		CombatAI.take_turn(b, b.current(), use_dark)
@@ -27,7 +27,7 @@ static func run_battle(level: int, hero_class: String, archetype: String, with_v
 		"heroes_down": down, "hero_down": hero_down, "darkness": b.darkness}
 
 
-static func summarize(level: int, hero_class: String, archetype: String, with_velior: bool, diff: String, runs: int,
+static func summarize(level: int, hero_class: String, archetype: String, party: String, diff: String, runs: int,
 		use_dark := false, seed_base := 1000) -> Dictionary:
 	var wins := 0
 	var rounds := 0
@@ -35,7 +35,7 @@ static func summarize(level: int, hero_class: String, archetype: String, with_ve
 	var downs := 0
 	var hero_downs := 0
 	for i in runs:
-		var r := run_battle(level, hero_class, archetype, with_velior, diff, seed_base + i, use_dark)
+		var r := run_battle(level, hero_class, archetype, party, diff, seed_base + i, use_dark)
 		if r.outcome == "victory":
 			wins += 1
 		elif r.outcome == "timeout":

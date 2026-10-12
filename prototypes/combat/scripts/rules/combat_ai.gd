@@ -266,7 +266,7 @@ static func _bonus_before(b: Battle, u: Combatant, use_dark: bool) -> void:
 		if close >= 2:
 			b.use_ability(u, "taunt", u.cell)
 			return
-	if use_dark and b.can_use(u, "shadow_step") and near <= u.speed_left + 1:
+	if use_dark and b.can_use(u, "shadow_step") and near <= u.speed_left + 1 and u.hp > 3 * b.dark_hp_cost(u):
 		b.use_ability(u, "shadow_step", u.cell)
 		return
 	if b.can_use(u, "hide") and near > 1:
@@ -336,6 +336,13 @@ static func _main_action(b: Battle, u: Combatant, use_dark: bool) -> void:
 				score -= 8.0
 		if dark:
 			score += 3.0
+			# Цена дара: ячейка у заклинателя, хиты у воина и плута.
+			if String(a.get("dark_cost", "")) == "slot":
+				score -= SLOT_VALUE
+				if u.abilities.has("healing_word") and u.slots < 2:
+					score -= 8.0
+			else:
+				score -= b.dark_hp_cost(u) * 0.5
 		if score > best_score:
 			best_score = score
 			best_aid = aid
@@ -448,7 +455,7 @@ static func _single_value(b: Battle, u: Combatant, aid: String, t: Combatant) ->
 static func _area_plan(b: Battle, u: Combatant, aid: String) -> Dictionary:
 	var best := {}
 	var seen := {}
-	var radius := int(b.ability(aid).get("radius", 1))
+	var radius := maxi(b.radius_of(u, aid), 1)
 	var options := b.ability_targets(u, aid)
 	if b.ability(aid).target == "self":
 		options = [u.cell] as Array[Vector2i]
@@ -517,7 +524,7 @@ static func _self_plan(b: Battle, u: Combatant, aid: String) -> Dictionary:
 	match aid:
 		"turn_undead":
 			for f in b.foes_of(u):
-				if f.undead and not f.turned and Battle.dist(f.cell, u.cell) <= int(b.ability(aid).radius):
+				if f.undead and not f.turned and Battle.dist(f.cell, u.cell) <= b.radius_of(u, aid):
 					var fail := 1.0 - Dice.hit_chance(f.save_bonus("wis"), u.spell_dc, 0, false)
 					value += fail * (4.0 + f.attacks_per_action * 2.0)
 		"spirit_guardians":
@@ -531,7 +538,7 @@ static func _self_plan(b: Battle, u: Combatant, aid: String) -> Dictionary:
 			for f in b._fan_targets(u):
 				value += b.attack_preview(u, f, "", dagger).expected
 		"preserve_life":
-			var pool := 8 * u.level
+			var pool := (10 if u.has_trait("preserve_plus") else 8) * u.level
 			var need := 0
 			for o in b.allies_of(u):
 				if Battle.dist(o.cell, u.cell) <= 6 and o.hp * 2 < o.max_hp:
