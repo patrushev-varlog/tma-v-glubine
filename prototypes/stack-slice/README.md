@@ -44,7 +44,7 @@ node ink_tool.mjs check        # JSON свежий, русский и англи
 Пресеты в `export_presets.cfg`, сборки кладутся в `build/stack-slice/` в корне репозитория:
 
 ```sh
-godot --headless --path . --export-release macOS      # Windows, Linux
+godot --headless --path . --export-release macOS      # "Windows Desktop", Linux
 godot --headless --path . --export-debug Android ../../build/stack-slice/android/TmaStackSlice.apk
 ../../build/stack-slice/linux/TmaStackSlice.x86_64 --headless -- --selftest
 ```

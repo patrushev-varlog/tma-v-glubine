@@ -57,18 +57,22 @@ jobs:
         include:
           - os: macos-14
             preset: macOS
+            key: macos
             godot: Godot_v4.7.2-stable_mono_macos.universal.zip
             out: build/stack-slice/macos
           - os: windows-2022
-            preset: Windows
+            preset: Windows Desktop
+            key: windows
             godot: Godot_v4.7.2-stable_mono_win64.zip
             out: build/stack-slice/windows
           - os: ubuntu-24.04
             preset: Linux
+            key: linux
             godot: Godot_v4.7.2-stable_mono_linux_x86_64.zip
             out: build/stack-slice/linux
           - os: ubuntu-24.04
             preset: Android
+            key: android
             godot: Godot_v4.7.2-stable_mono_linux_x86_64.zip
             out: build/stack-slice/android
     runs-on: ${{ matrix.os }}
@@ -141,14 +145,14 @@ jobs:
               unzip -q TmaStackSlice.zip
               APP=$(ls -d *.app)
               "$APP/Contents/MacOS/$(ls "$APP/Contents/MacOS")" --headless -- --selftest;;
-            Windows)
+            "Windows Desktop")
               pwsh -Command '$p = Start-Process -FilePath .\TmaStackSlice.exe -ArgumentList "--headless","--","--selftest" -Wait -PassThru -RedirectStandardOutput out.txt; Get-Content out.txt; exit $p.ExitCode';;
             *)
               ./TmaStackSlice.x86_64 --headless -- --selftest;;
           esac
       - uses: actions/upload-artifact@v4
         with:
-          name: stack-slice-${{ matrix.preset }}
+          name: stack-slice-${{ matrix.key }}
           path: |
             ${{ matrix.out }}/*.zip
             ${{ matrix.out }}/*.exe
