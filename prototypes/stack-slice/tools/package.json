@@ -1,0 +1,7 @@
+{
+  "name": "stack-slice-tools",
+  "private": true,
+  "type": "module",
+  "description": "Ink: сборка JSON для Godot, эталонные прогоны и проверка английского текста",
+  "dependencies": { "inkjs": "2.3.2" }
+}

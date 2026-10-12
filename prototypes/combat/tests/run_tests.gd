@@ -34,6 +34,9 @@ func _init() -> void:
 	test_spikes_and_web()
 	test_slow()
 	test_shadow_step()
+	test_review_fixes()
+	test_named_items()
+	test_party_scaling()
 	test_save_roundtrip()
 	test_items()
 	test_simulation_terminates()
@@ -180,20 +183,57 @@ func test_story_scaling() -> void:
 
 
 func test_darkness_cap() -> void:
-	var h := Content.make_hero("wizard")
+	var h := Content.make_hero("wizard", 5)
 	var z := Content.make_enemy("zombie", 1)
 	z.cell = Vector2i(3, 0)
 	z.max_hp = 999
 	z.hp = 999
 	var b := arena([h, z])
 	var used := 0
+	var slots := h.slots
 	for i in 4:
 		h.action_used = false
 		if b.use_ability(h, "life_drain", z.cell):
 			used += 1
-	check(b.darkness == 6 and b.darkness_gained == 6, "за бой не больше 6 Тьмы")
+	check(b.darkness == 2 and b.darkness_gained == 2, "Тьму даёт только первый дар в бою: +2")
 	check(used == 3 and not b.can_use(h, "life_drain"), "не больше трёх тёмных даров за бой")
+	check(h.slots == slots - 3, "дар волшебника тратит ячейку")
 	check(b.can_use(h, "fire_bolt"), "обычные заклинания после даров доступны")
+	h.slots = 0
+	b.dark_gifts_used = 0
+	check(not b.can_use(h, "life_drain"), "без ячеек дар заклинателя недоступен")
+	# Потолок боевой Тьмы за игру.
+	var sc := Content.scenario(2, "wizard", "evoker", "full", "trial")
+	sc["combat_darkness"] = 19
+	var b2 := Battle.new()
+	b2.setup(sc, 3, "trial")
+	var w: Combatant = sc.units[0]
+	b2.turn_index = b2.order.find(w.id)
+	b2._start_turn()
+	var t: Combatant = null
+	for e in b2.enemies():
+		t = e
+	t.cell = Vector2i(w.cell.x + 2, w.cell.y)
+	b2.use_ability(w, "life_drain", t.cell)
+	check(b2.darkness_gained == 1, "боевая Тьма упирается в потолок 20 за игру")
+	# Дар воина стоит хитов, но не ниже 1.
+	var f := Content.make_hero("fighter", 3)
+	f.cell = Vector2i(5, 5)
+	var e2 := helpless("zombie", 1, Vector2i(6, 5))
+	e2.max_hp = 99
+	e2.hp = 99
+	var b3 := arena([f, e2])
+	var hp0 := f.hp
+	b3.use_ability(f, "cursed_blade", e2.cell)
+	var paid := false
+	for line in b3.log_lines:
+		if line.find("−6 хитов") >= 0:
+			paid = true
+	check(paid and b3.darkness_gained == 2, "проклятый клинок стоит 6 хитов на 3 уровне")
+	f.hp = 2
+	f.action_used = false
+	f.attacks_left = 0
+	check(b3.dark_hp_cost(f) == 1, "дар не опускает ниже 1 хита")
 
 
 func test_trial_enemies_pick_fragile() -> void:
@@ -231,9 +271,9 @@ func test_line_of_sight_and_range() -> void:
 func test_battle_maps() -> void:
 	for level in range(1, 6):
 		var trial := Battle.new()
-		trial.setup(Content.scenario(level, "wizard", "", false, "trial"), 1, "trial")
+		trial.setup(Content.scenario(level, "wizard", "", "full", "trial"), 1, "trial")
 		var story := Battle.new()
-		story.setup(Content.scenario(level, "wizard", "", false, "story"), 1, "story")
+		story.setup(Content.scenario(level, "wizard", "", "full", "story"), 1, "story")
 		check(trial.width == 18 and trial.height == 14, "бой %d: поле 18×14" % level)
 		check(story.enemies().size() < trial.enemies().size(), "бой %d: на «Истории» врагов меньше" % level)
 		var walk := trial.walk_distances(Vector2i(0, 6))
@@ -438,7 +478,7 @@ func test_hold_the_line() -> void:
 
 func test_save_roundtrip() -> void:
 	var b := Battle.new()
-	b.setup(Content.scenario(3, "rogue", "assassin", true, "story"), 42, "story")
+	b.setup(Content.scenario(3, "rogue", "assassin", "full", "story"), 42, "story")
 	CombatAI.take_turn(b, b.current())
 	b.end_turn()
 	b.grease[Vector2i(3, 3)] = 13
@@ -455,7 +495,7 @@ func test_save_roundtrip() -> void:
 func test_items() -> void:
 	Items.mode = "kit"
 	var bare := Content.make_hero("wizard", 4, "evoker")
-	var sc := Content.scenario(4, "wizard", "evoker", true, "trial")
+	var sc := Content.scenario(4, "wizard", "evoker", "full", "trial")
 	var w: Combatant = sc.units[0]
 	check(Items.names_of(w).has("Посох Молчащих"), "волшебник 4 уровня получает посох Молчащих")
 	check(w.spell_dc == bare.spell_dc + 2 and w.max_slots == bare.max_slots + 1, "посох: СЛ +2 и ячейка")
@@ -464,7 +504,7 @@ func test_items() -> void:
 	var g: Combatant = sc.units[2]
 	check(g.items.has("gate_sword") and g.items.has("dwarf_ward"), "набор Гаррета 4 уровня")
 	Items.mode = "none"
-	var plain: Combatant = Content.scenario(4, "wizard", "evoker", false, "trial").units[0]
+	var plain: Combatant = Content.scenario(4, "wizard", "evoker", "no_velior", "trial").units[0]
 	check(plain.items.is_empty(), "без экипировки предметов нет")
 	Items.mode = "kit"
 	# Кости по нежити и снижение урона.
@@ -512,7 +552,7 @@ func test_simulation_terminates() -> void:
 	for cls in Content.HERO_CLASSES:
 		for level in range(1, 6):
 			var arch: String = Content.archetypes_of(cls)[level % 2]
-			var r := Simulator.run_battle(level, cls, arch, level % 2 == 0, "trial", level, level % 3 == 0)
+			var r := Simulator.run_battle(level, cls, arch, Content.PARTIES[level % Content.PARTIES.size()], "trial", level, level % 3 == 0)
 			if r.outcome == "timeout":
 				ok = false
 	check(ok, "симулированные бои заканчиваются")
@@ -571,3 +611,167 @@ func test_shadow_step() -> void:
 	check(b.use_ability(r, "shadow_step", r.cell) and r.shadow_ready, "шаг в тень")
 	b.attack(r, z)
 	check(not r.shadow_ready and r.hp > 3, "удар из тени ранит некротикой и лечит плута")
+
+
+## Баги из разбора боя (review/04, раздел 2.4).
+func test_review_fixes() -> void:
+	# Провокация действует и на стрелков.
+	var g := Content.make_companion("garret")
+	g.cell = Vector2i(2, 3)
+	var w := Content.make_hero("wizard")
+	w.cell = Vector2i(6, 3)
+	var a := Content.make_enemy("skeleton_archer", 1)
+	a.cell = Vector2i(4, 1)
+	var b := arena([a, g, w])
+	check(CombatAI._pick_target(b, a) == w, "без провокации лучник целит в волшебника")
+	a.taunted_by = g.id
+	a.taunt_turns = 1
+	var from := b.events.size()
+	CombatAI.take_turn(b, a)
+	var at_g := false
+	var at_w := false
+	for i in range(from, b.events.size()):
+		var e: Dictionary = b.events[i]
+		if e.get("unit", "") == g.id:
+			at_g = true
+		if e.get("unit", "") == w.id:
+			at_w = true
+	check(at_g and not at_w and w.hp == w.max_hp, "спровоцированный лучник стреляет в Гаррета")
+
+	# Спрятавшегося не выбирают целью, скрытность истекает.
+	var r := Content.make_hero("rogue", 2, "assassin")
+	r.cell = Vector2i(0, 5)
+	var w2 := Content.make_hero("wizard")
+	w2.id = "w2"
+	w2.cell = Vector2i(0, 9)
+	var z := Content.make_enemy("zombie", 1)
+	z.cell = Vector2i(5, 5)
+	b = arena([r, z, w2])
+	r.hidden = true
+	r.hide_expiring = false
+	check(CombatAI._pick_target(b, z) == w2, "враг идёт не к спрятавшемуся плуту")
+	b.difficulty = "story"
+	check(CombatAI._pick_target(b, z) == w2, "и на «Истории» тоже")
+	b.difficulty = "trial"
+	b.end_turn()
+	check(r.hidden, "скрытность держится в ходы врагов")
+	b.end_turn()
+	b.end_turn()
+	check(r.hidden and b.current() == r, "в начале своего хода ещё скрыт")
+	b.end_turn()
+	check(not r.hidden, "не атаковал и не спрятался снова — скрытность спала")
+	b = arena([r, z])
+	r.hidden = true
+	CombatAI.take_turn(b, z)
+	check(r.hp == r.max_hp, "если все спрятались, враг никого не бьёт")
+	r.hidden = true
+	r.cell = Vector2i(4, 5)
+	b.end_turn()
+	check(not r.hidden, "вплотную к врагу скрытность спадает")
+
+	# «Ярость» даёт +1 к урону, как в описании.
+	var f := Content.make_hero("fighter", 2, "berserker")
+	f.raging = true
+	check(b._flat_bonus(f, z, false) == 1, "ярость: +1 к урону в ближнем бою")
+
+	# Паралич снимается при выбывании.
+	var c := Content.make_hero("cleric")
+	c.cell = Vector2i(1, 1)
+	var c2 := Content.make_hero("cleric")
+	c2.id = "c2"
+	c2.cell = Vector2i(2, 1)
+	b = arena([c, c2, Content.make_enemy("zombie", 2)])
+	c2.stunned = true
+	b.deal_damage(c2, 100, "test")
+	check(c2.down and not c2.stunned, "выбывший больше не парализован")
+	b.use_ability(c, "healing_word", c2.cell)
+	check(not c2.down and not c2.stunned, "поднятый герой походит как обычно")
+
+	# Толчок заменяет один удар действия «Атака».
+	var g5 := Content.make_companion("garret", 5)
+	g5.cell = Vector2i(5, 5)
+	var e1 := helpless("zombie", 1, Vector2i(6, 5))
+	e1.max_hp = 99
+	e1.hp = 99
+	b = arena([g5, e1])
+	b.attack(g5, e1)
+	check(not g5.action_used and b.can_use(g5, "shove"), "после первого удара Гаррет может толкнуть")
+	check(b.use_ability(g5, "shove", e1.cell) and g5.action_used, "толчок съел второй удар")
+	var f1 := Content.make_hero("fighter", 1)
+	f1.cell = Vector2i(5, 4)
+	e1.cell = Vector2i(6, 4)
+	b = arena([f1, e1])
+	check(b.use_ability(f1, "shove", e1.cell) and f1.action_used, "без дополнительной атаки толчок — всё действие")
+
+	# Хиты воина по d10.
+	check(Content.make_hero("fighter", 5).max_hp == 13 + 6 * 4, "воин 5 уровня: 13 + 6 за уровень")
+
+
+## Правки предметов по каталогу 12.10.2026 и именные правила легендарок.
+func test_named_items() -> void:
+	check(Items.add_dice("1d4", "1d4") == "2d4" and Items.add_dice("1d4", "1d6") == "1d4+1d6", "кости по нежити складываются")
+	check(Dice.max_of("1d4+1d6") == 10 and is_equal_approx(Dice.avg_of("1d4+1d6"), 6.0), "кости из двух групп")
+	var g := Content.make_companion("garret", 3)
+	Items.equip(g, ["sunken_shrine_spear", "guard_blade"])
+	check(g.reach() == 2 and g.undead_dice == "1d6+1d4", "острога: досягаемость 2, кости по нежити складываются")
+	check(g.has_trait("oa_adv"), "клинок гвардии даёт Гаррету атаку при возможности с преимуществом")
+	check(not Items.ITEMS.has("council_seal"), "печать совета — реликвия, не боевой предмет")
+	var w := Content.make_hero("wizard", 4, "evoker")
+	check(Items.resolve("nameless_chain", w).slot == "armor", "цепь Безымянных — доспех")
+	var to_hit: int = w.weapon.to_hit
+	var dc := w.spell_dc
+	Items.equip(w, ["pale_ring"])
+	check(w.weapon.to_hit == to_hit + 1 and w.spell_dc == dc + 1 and w.ring, "перстень: +1 к попаданию и заклинаниям")
+	check(not Array(Items.KITS[5].hero).has("forge_mace"), "булава литейной не в общем наборе 5 уровня")
+	# Ветки и именные правила.
+	var st := Content.make_hero("fighter", 4, "guardian")
+	Items.equip(st, ["silent_legacy"])
+	var ir := Content.make_companion("irena", 4)
+	st.cell = Vector2i(2, 2)
+	ir.cell = Vector2i(3, 2)
+	var b := arena([st, ir, Content.make_enemy("zombie", 1)])
+	check(b.ac_of(ir) == ir.total_ac() + 3, "Клятва Стража: защитник +3 к КД")
+	var g2 := Content.make_companion("garret", 3)
+	Items.equip(g2, ["garret_tag"])
+	var ir2 := Content.make_companion("irena", 3)
+	var z := Content.make_enemy("zombie", 1)
+	g2.cell = Vector2i(5, 5)
+	ir2.cell = Vector2i(4, 5)
+	z.cell = Vector2i(6, 5)
+	b = arena([g2, ir2, z])
+	check(b.ac_of(ir2) == ir2.total_ac() + 1, "«Жена ждёт»: сосед Гаррета +1 к КД, пока тот у врага")
+	z.cell = Vector2i(9, 9)
+	check(b.ac_of(ir2) == ir2.total_ac(), "без врага рядом с Гарретом бонуса нет")
+	var ir3 := Content.make_companion("irena", 4)
+	Items.equip(ir3, ["irena_bell"])
+	check(b.radius_of(ir3, "hallowed_ground") == 2, "колокол: освящённая земля 5×5")
+	var r := Content.make_hero("rogue", 4, "assassin")
+	Items.equip(r, ["shadowskin"])
+	var b3 := Battle.new()
+	var list: Array[Combatant] = [r, Content.make_enemy("zombie", 2)]
+	b3.setup({"width": 12, "height": 12, "units": list, "obstacles": []}, 1, "trial")
+	check(r.hidden, "тенекожа: в начале боя носитель спрятан")
+
+
+## Неполный отряд: урезание врагов и босса; бой после охоты.
+func test_party_scaling() -> void:
+	Items.mode = "none"
+	var full := Content.scenario(5, "wizard", "evoker", "full", "trial")
+	var duo := Content.scenario(5, "wizard", "evoker", "duo", "trial")
+	var trio := Content.scenario(5, "wizard", "evoker", "no_velior", "trial")
+	var count := func(sc: Dictionary, team: int) -> int:
+		return sc.units.filter(func(u: Combatant) -> bool: return u.team == team).size()
+	check(count.call(full, 0) == 4 and count.call(trio, 0) == 3 and count.call(duo, 0) == 2, "составы отряда 4, 3 и 2")
+	check(count.call(Content.scenario(1, "wizard", "", "full", "trial"), 0) == 3, "в прологе Велиора ещё нет")
+	check(count.call(trio, 1) < count.call(full, 1) and count.call(duo, 1) <= count.call(trio, 1), "врагов меньше под неполный отряд")
+	var golem_hp := func(sc: Dictionary) -> int:
+		for u in sc.units:
+			if u.kind == "flesh_golem":
+				return u.max_hp
+		return 0
+	check(golem_hp.call(duo) < golem_hp.call(trio) and golem_hp.call(trio) < golem_hp.call(full), "босс остаётся, но слабее")
+	Content.hunt_done = true
+	var hunt := Content.scenario(5, "wizard", "evoker", "full", "trial")
+	Content.hunt_done = false
+	check(golem_hp.call(hunt) > golem_hp.call(full), "после охоты у врагов больше хитов")
+	Items.mode = "kit"

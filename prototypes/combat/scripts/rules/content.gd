@@ -7,7 +7,7 @@ extends RefCounted
 const MAX_LEVEL := 5
 
 ## dice — урон или лечение на 1 уровне. scale: "cantrip" — вдвое больше костей с 5 уровня,
-## "dark" и "bomb" — +1 кость с 3 уровня и ещё +1 с 5-го.
+## "dark" — +1 кость с 3 уровня и ещё +1 с 5-го; "dark5" и "bomb" — +1 кость с 5 уровня.
 ## attack: true — способность заменяет одну атаку действия «Атака» (с дополнительной атакой можно ударить ещё раз).
 ## slot_cost — сколько ячеек тратит заклинание 3 круга.
 const ABILITIES := {
@@ -39,23 +39,27 @@ const ABILITIES := {
 	"taunt": {"name": "Провокация", "cost": "bonus", "resource": "use", "target": "self", "range": 0, "radius": 3,
 		"desc": "Враги в 3 клетках атакуют Гаррета в свой следующий ход."},
 	"bomb": {"name": "Алхимическая бомба", "cost": "action", "resource": "use", "target": "cell", "range": 6, "radius": 1,
-		"dice": "2d6", "scale": "bomb", "desc": "Зона 3×3: спасбросок Ловкости, 2d6 огнём (больше с 3 и 5 уровня), половина при успехе. Задевает и своих."},
+		"dice": "2d6", "scale": "bomb", "desc": "Две за бой. Зона 3×3: спасбросок Ловкости, 2d6 огнём (3d6 с 5 уровня), половина при успехе. Задевает и своих."},
 	"trap": {"name": "Ловушка", "cost": "action", "resource": "use", "target": "empty_cell", "range": 3,
 		"desc": "Скрытая ловушка: первый враг на клетке получает 2d6 и останавливается."},
 	# --- Тёмные дары.
 	"cursed_blade": {"name": "Проклятый клинок", "cost": "action", "resource": "none", "target": "enemy", "range": 1, "dark": true,
-		"attack": true, "dice": "2d8", "scale": "dark5", "desc": "Тёмный дар. Атака оружием +2d8 некротикой (3d8 с 5 уровня), лечит на половину."},
+		"dark_cost": "hp", "attack": true, "dice": "2d8", "scale": "dark5",
+		"desc": "Тёмный дар. Цена: хиты, равные двум уровням. Атака оружием +2d8 некротикой (3d8 с 5 уровня), лечит на половину."},
 	"shadow_step": {"name": "Шаг в тень", "cost": "bonus", "resource": "none", "target": "self", "range": 0, "dark": true,
-		"dice": "2d4", "scale": "dark5", "desc": "Тёмный дар. Преимущество на следующую атаку, +2d4 некротикой при попадании (3d4 с 5 уровня) и лечение на половину, уход без атак при возможности."},
+		"dark_cost": "hp", "dice": "2d4", "scale": "dark5",
+		"desc": "Тёмный дар. Цена: хиты, равные двум уровням. Преимущество на следующую атаку, +2d4 некротикой при попадании (3d4 с 5 уровня) и лечение на половину, уход без атак при возможности; до атаки ты скрыт, как после «Спрятаться»."},
 	"wither": {"name": "Иссушение", "cost": "action", "resource": "none", "target": "enemy", "range": 8, "dark": true,
-		"dice": "2d8", "scale": "dark5", "desc": "Тёмный дар. Спасбросок Телосложения, 2d8 некротикой (3d8 с 5 уровня), половина при успехе; половину нанесённого получает самый раненый союзник."},
+		"dark_cost": "slot", "dice": "2d8", "scale": "dark5",
+		"desc": "Тёмный дар. Цена: ячейка. Спасбросок Телосложения, 2d8 некротикой (3d8 с 5 уровня), половина при успехе; половину нанесённого получает самый раненый союзник."},
 	"life_drain": {"name": "Высасывание жизни", "cost": "action", "resource": "none", "target": "enemy", "range": 8, "dark": true,
-		"dice": "5d8", "scale": "dark", "desc": "Тёмный дар. Атака заклинанием, 5d8 некротикой (больше с 3 и 5 уровня), лечит себя на половину."},
+		"dark_cost": "slot", "dice": "6d8", "scale": "dark5",
+		"desc": "Тёмный дар. Цена: ячейка. Атака заклинанием, 6d8 некротикой (7d8 с 5 уровня), лечит себя на половину."},
 	# --- Базовые действия: есть у всех героев и спутников.
 	"dodge": {"name": "Уклонение", "cost": "action", "resource": "none", "target": "self", "range": 0,
 		"desc": "До начала следующего хода атаки по тебе с помехой."},
-	"shove": {"name": "Толчок", "cost": "action", "resource": "none", "target": "enemy", "range": 1,
-		"desc": "Спасбросок Силы или Ловкости врага: отлетает на клетку назад, а если некуда — падает. Можно столкнуть в ловушку или жир."},
+	"shove": {"name": "Толчок", "cost": "action", "resource": "none", "target": "enemy", "range": 1, "attack": true,
+		"desc": "Вместо одного удара атаки. Спасбросок Силы или Ловкости врага: отлетает на клетку назад, а если некуда — падает. Можно столкнуть в ловушку или жир."},
 	# --- Воин: Страж.
 	"action_surge": {"name": "Всплеск действий", "cost": "free", "resource": "use", "target": "self", "range": 0,
 		"desc": "Ещё одно действие в этот ход. Раз за бой."},
@@ -66,7 +70,7 @@ const ABILITIES := {
 		"desc": "В этот ход атаки в ближнем бою с преимуществом, но и по тебе до твоего хода — с преимуществом."},
 	# --- Плут: Убийца.
 	"hide": {"name": "Спрятаться", "cost": "bonus", "resource": "none", "target": "self", "range": 0,
-		"desc": "Если рядом нет врагов. Вне их обзора — сразу, иначе проверка Ловкости против 15. Спрятавшийся бьёт с преимуществом и скрытой атакой."},
+		"desc": "Если рядом нет врагов. Вне их обзора — сразу, иначе проверка Ловкости против 15. Спрятавшегося враги не выбирают целью, пока он не атакует; он бьёт с преимуществом и скрытой атакой. Скрытность держится до конца следующего твоего хода и пропадает вплотную к врагу."},
 	"poison_blade": {"name": "Яд на клинке", "cost": "bonus", "resource": "use", "target": "self", "range": 0,
 		"desc": "Следующее попадание: +2d6 ядом, цель бьёт с помехой до конца своего хода."},
 	# --- Плут: Ловкач.
@@ -119,7 +123,7 @@ const TRAITS := {
 	"assassinate": {"name": "Убийство", "desc": "В первом раунде атаки по врагам, ещё не ходившим, с преимуществом и + уровень к урону."},
 	"finisher": {"name": "Добивание", "desc": "Скрытая атака по врагу с половиной хитов или меньше — двойные кости."},
 	"uncanny_dodge": {"name": "Уворот", "desc": "Первое попадание оружием по тебе между твоими ходами — вдвое меньше урона."},
-	"life_disciple": {"name": "Ученик жизни", "desc": "Лечащие заклинания восстанавливают на 3 хита больше."},
+	"life_disciple": {"name": "Ученик жизни", "desc": "Лечащие заклинания восстанавливают на 2 хита больше."},
 	"sculpt": {"name": "Аккуратное воплощение", "desc": "Громовая волна и огненный шар не задевают своих."},
 	"empowered": {"name": "Усиленный заговор", "desc": "+3 к урону огненного снаряда."},
 	"extra_attack": {"name": "Дополнительная атака", "desc": "Действие «Атака» — два удара."},
@@ -129,13 +133,13 @@ const TRAITS := {
 ## Ветка выбирается на 2 уровне; levels — что она даёт на 2–5 уровнях (умение или пассивный приём).
 ## Оружие: бонус атаки = мастерство + mod (по умолчанию 3), урон + mod.
 const HERO_CLASSES := {
-	"fighter": {"name": "Воин", "hp": 13, "hp_per_level": 3, "ac": 15, "init": 0,
+	"fighter": {"name": "Воин", "hp": 13, "hp_per_level": 6, "ac": 15, "init": 0,
 		"saves": {"str": 5, "dex": 0, "con": 4, "wis": 1}, "str_mod": 2,
 		"weapon": {"name": "Длинный меч", "damage": "1d8", "reach": 1, "kind": "melee"},
 		"abilities": ["second_wind", "cursed_blade"], "uses": {"second_wind": 1},
 		"archetypes": {
 			"guardian": {"name": "Страж", "desc": "Щит и строй: держит врагов на себе и прикрывает соседей.",
-				"ac": 16, "levels": {2: "action_surge", 3: "protector", 4: "hold_the_line", 5: "stalwart"}},
+				"ac": 15, "levels": {2: "action_surge", 3: "protector", 4: "hold_the_line", 5: "stalwart"}},
 			"berserker": {"name": "Берсерк", "desc": "Двуручник и ярость: много урона, мало защиты.",
 				"ac": 13, "weapon": {"name": "Двуручный меч", "damage": "2d6", "reach": 1, "kind": "melee"},
 				"levels": {2: "rage", 3: "cleave", 4: "reckless", 5: "relentless"}},
@@ -188,49 +192,50 @@ const COMPANIONS := {
 	"velior": {"name": "Велиор", "letter": "В", "color": "#6fb07a", "hp": 10, "hp_per_level": 5, "ac": 14, "init": 3,
 		"saves": {"str": 0, "dex": 5, "con": 1, "wis": 1}, "str_mod": 0,
 		"weapon": {"name": "Короткий меч", "damage": "1d6", "reach": 1, "kind": "melee"},
-		"sneak": true, "abilities": ["bomb", "trap"], "uses": {"bomb": 2, "trap": 2}, "uses_growth": true},
+		"sneak": true, "abilities": ["bomb", "trap"], "uses": {"bomb": 2, "trap": 2}, "fixed_uses": ["bomb"], "uses_growth": true},
 }
 
-## Враги. attacks — сколько ударов за действие. on_hit: "paralyze" — спасбросок Телосложения СЛ 10
+## Враги. xp — опыт по SRD, по нему урезается состав под неполный отряд; boss — главный враг боя: его не убирают,
+## а снижают хиты (мясной голем в прототипе стоит за босса главы 4). attacks — сколько ударов за действие. on_hit: "paralyze" — спасбросок Телосложения СЛ 10
 ## или пропускает следующий ход (на нежить не действует).
 const ENEMIES := {
-	"overseer": {"name": "Надсмотрщик", "letter": "н", "max_hp": 11, "ac": 12, "init": 1, "speed": 6,
+	"overseer": {"xp": 25, "name": "Надсмотрщик", "letter": "н", "max_hp": 11, "ac": 12, "init": 1, "speed": 6,
 		"saves": {"str": 1, "dex": 1, "con": 1, "wis": 0},
 		"weapon": {"name": "Сабля", "to_hit": 3, "damage": "1d6+1", "reach": 1, "kind": "melee"}},
-	"overseer_chief": {"name": "Старший надсмотрщик", "letter": "Н", "max_hp": 22, "ac": 14, "init": 2, "speed": 6,
+	"overseer_chief": {"xp": 200, "name": "Старший надсмотрщик", "letter": "Н", "max_hp": 22, "ac": 14, "init": 2, "speed": 6,
 		"saves": {"str": 4, "dex": 2, "con": 2, "wis": 2},
 		"weapon": {"name": "Длинный меч", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"}},
-	"zombie": {"name": "Зомби", "letter": "з", "max_hp": 15, "ac": 8, "init": -2, "speed": 4, "undead": true,
+	"zombie": {"xp": 50, "name": "Зомби", "letter": "з", "max_hp": 15, "ac": 8, "init": -2, "speed": 4, "undead": true,
 		"saves": {"str": 1, "dex": -2, "con": 3, "wis": 0},
 		"weapon": {"name": "Удар", "to_hit": 3, "damage": "1d6+1", "reach": 1, "kind": "melee"}},
-	"skeleton_archer": {"name": "Скелет-лучник", "letter": "с", "max_hp": 13, "ac": 13, "init": 2, "speed": 6, "undead": true,
+	"skeleton_archer": {"xp": 50, "name": "Скелет-лучник", "letter": "с", "max_hp": 13, "ac": 13, "init": 2, "speed": 6, "undead": true,
 		"saves": {"str": 0, "dex": 2, "con": 2, "wis": -1},
 		"weapon": {"name": "Короткий лук", "to_hit": 4, "damage": "1d6+2", "range": 8, "kind": "ranged"}},
-	"skeleton": {"name": "Скелет", "letter": "к", "max_hp": 13, "ac": 14, "init": 2, "speed": 6, "undead": true,
+	"skeleton": {"xp": 50, "name": "Скелет", "letter": "к", "max_hp": 13, "ac": 14, "init": 2, "speed": 6, "undead": true,
 		"saves": {"str": 0, "dex": 2, "con": 2, "wis": -1},
 		"weapon": {"name": "Короткий меч", "to_hit": 4, "damage": "1d6+2", "reach": 1, "kind": "melee"}},
-	"drowned": {"name": "Утопленник", "letter": "у", "max_hp": 22, "ac": 10, "init": -1, "speed": 5, "undead": true,
+	"drowned": {"xp": 100, "name": "Утопленник", "letter": "у", "max_hp": 22, "ac": 10, "init": -1, "speed": 5, "undead": true,
 		"saves": {"str": 2, "dex": -1, "con": 3, "wis": 0},
 		"weapon": {"name": "Хватка", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"}},
-	"ghoul": {"name": "Гуль", "letter": "г", "max_hp": 22, "ac": 12, "init": 2, "speed": 6, "undead": true,
+	"ghoul": {"xp": 200, "name": "Гуль", "letter": "г", "max_hp": 22, "ac": 12, "init": 2, "speed": 6, "undead": true,
 		"saves": {"str": 1, "dex": 2, "con": 0, "wis": 0},
 		"weapon": {"name": "Когти", "to_hit": 4, "damage": "2d4+2", "reach": 1, "kind": "melee", "on_hit": "paralyze"}},
-	"acolyte": {"name": "Послушник некроманта", "letter": "п", "max_hp": 18, "ac": 12, "init": 1, "speed": 6,
+	"acolyte": {"xp": 200, "name": "Послушник некроманта", "letter": "п", "max_hp": 18, "ac": 12, "init": 1, "speed": 6,
 		"saves": {"str": 0, "dex": 1, "con": 1, "wis": 3},
 		"weapon": {"name": "Луч болезни", "to_hit": 5, "damage": "2d8", "range": 8, "kind": "ranged"}},
-	"dwarf_dead": {"name": "Мёртвый дварф", "letter": "д", "max_hp": 30, "ac": 16, "init": 0, "speed": 5, "undead": true,
+	"dwarf_dead": {"xp": 450, "name": "Мёртвый дварф", "letter": "д", "max_hp": 30, "ac": 16, "init": 0, "speed": 5, "undead": true,
 		"saves": {"str": 3, "dex": 0, "con": 3, "wis": 1},
 		"weapon": {"name": "Боевой молот", "to_hit": 5, "damage": "1d8+3", "reach": 1, "kind": "melee"}},
-	"wight": {"name": "Умертвие", "letter": "У", "max_hp": 45, "ac": 14, "init": 2, "speed": 6, "undead": true, "attacks": 2,
+	"wight": {"xp": 700, "name": "Умертвие", "letter": "У", "max_hp": 45, "ac": 14, "init": 2, "speed": 6, "undead": true, "attacks": 2,
 		"saves": {"str": 2, "dex": 2, "con": 3, "wis": 1},
 		"weapon": {"name": "Длинный меч", "to_hit": 5, "damage": "1d8+2", "reach": 1, "kind": "melee"}},
-	"bone_archer": {"name": "Костяной стрелок", "letter": "л", "max_hp": 22, "ac": 14, "init": 3, "speed": 6, "undead": true,
+	"bone_archer": {"xp": 100, "name": "Костяной стрелок", "letter": "л", "max_hp": 22, "ac": 14, "init": 3, "speed": 6, "undead": true,
 		"saves": {"str": 0, "dex": 3, "con": 2, "wis": 0},
 		"weapon": {"name": "Длинный лук", "to_hit": 5, "damage": "1d8+3", "range": 10, "kind": "ranged"}},
-	"ogre_zombie": {"name": "Зомби-огр", "letter": "О", "max_hp": 60, "ac": 8, "init": -2, "speed": 5, "undead": true,
+	"ogre_zombie": {"xp": 450, "name": "Зомби-огр", "letter": "О", "max_hp": 60, "ac": 8, "init": -2, "speed": 5, "undead": true,
 		"saves": {"str": 4, "dex": -2, "con": 4, "wis": -2},
 		"weapon": {"name": "Дубина", "to_hit": 6, "damage": "2d8+4", "reach": 1, "kind": "melee"}},
-	"flesh_golem": {"name": "Мясной голем", "letter": "М", "max_hp": 95, "ac": 10, "init": -1, "speed": 5, "attacks": 2,
+	"flesh_golem": {"xp": 1800, "boss": true, "name": "Мясной голем", "letter": "М", "max_hp": 95, "ac": 10, "init": -1, "speed": 5, "attacks": 2,
 		"saves": {"str": 4, "dex": -1, "con": 4, "wis": 0},
 		"weapon": {"name": "Кулак", "to_hit": 7, "damage": "2d8+4", "reach": 1, "kind": "melee"}},
 }
@@ -262,9 +267,12 @@ static func ability_dice(aid: String, level: int) -> String:
 		"dark5":
 			if level >= 5:
 				count += 1
-		"dark", "bomb":
+		"dark":
 			if level >= 3:
 				count += 1
+			if level >= 5:
+				count += 1
+		"bomb":
 			if level >= 5:
 				count += 1
 	return _expr(count, d.sides, d.bonus)
@@ -335,7 +343,8 @@ static func make_companion(comp_id: String, level := 2) -> Combatant:
 	if t.get("uses_growth", false):
 		var bonus := (1 if level >= 3 else 0) + (1 if level >= 5 else 0)
 		for k in c.uses:
-			c.uses[k] = int(c.uses[k]) + bonus
+			if not t.get("fixed_uses", []).has(k):
+				c.uses[k] = int(c.uses[k]) + bonus
 	if t.get("sneak", false):
 		c.sneak_dice = sneak_for(level)
 	if level >= int(t.get("extra_attack_at", 99)):
@@ -445,30 +454,30 @@ const BATTLES := {
 			"..........Z.#.....",
 		]},
 	2: {"title": "Глава 1: Верхние шахты", "intro": "Штольня у подъёмника: скелеты-лучники на мостках, мертвецы и надсмотрщики.",
-		"legend": {"C": "overseer_chief", "o": "overseer", "O": "overseer", "z": "zombie", "Z": "zombie",
+		"legend": {"y": "zombie", "x": "skeleton", "b": "skeleton_archer", "C": "overseer_chief", "o": "overseer", "O": "overseer", "z": "zombie", "Z": "zombie",
 			"a": "skeleton_archer", "A": "skeleton_archer", "k": "skeleton", "K": "skeleton"},
-		"trial_only": ["O", "Z", "A", "K"],
+		"trial_only": ["y", "x", "b", "O", "Z", "A", "K"],
 		"map": [
 			"...........z..#...",
 			"..##......#...#.a.",
 			"..........#.......",
-			".....##.......k...",
+			".....##....y..k...",
 			"..........##......",
 			"....#.......o..#..",
 			"hh..#........C.#..",
-			"hh..#..........#..",
+			"hh..#..........#b.",
 			"....#..........#..",
 			"..........##......",
-			".....##...........",
+			".....##.......x...",
 			"..........#.......",
 			"..##......#...#.A.",
 			"...........Z..#...",
 		]},
 	3: {"title": "Глава 2: Затопленные выработки", "boost": {"hp": 12},
 		"intro": "Тёмная вода, утопленники и гули; послушник некроманта бьёт издали.",
-		"legend": {"u": "drowned", "U": "drowned", "g": "ghoul", "G": "ghoul", "p": "acolyte", "a": "skeleton_archer",
+		"legend": {"w": "drowned", "v": "ghoul", "u": "drowned", "U": "drowned", "g": "ghoul", "G": "ghoul", "p": "acolyte", "a": "skeleton_archer",
 			"A": "skeleton_archer"},
-		"trial_only": ["U", "G", "A"],
+		"trial_only": ["w", "v", "U", "G", "A"],
 		"map": [
 			"........#.....#...",
 			"..##....#..u..#.a.",
@@ -476,8 +485,8 @@ const BATTLES := {
 			"...........##.....",
 			".....#.....##..g..",
 			".....#............",
-			"hh...........p....",
-			"hh................",
+			"hh........w..p....",
+			"hh.............v..",
 			".....#............",
 			".....#.....##..G..",
 			"...........##.....",
@@ -487,8 +496,8 @@ const BATTLES := {
 		]},
 	4: {"title": "Глава 3: Дварфийские залы", "boost": {"hp": 25},
 		"intro": "Мёртвые дварфы в доспехах, умертвие и костяные стрелки на галерее.",
-		"legend": {"d": "dwarf_dead", "S": "skeleton", "W": "wight", "l": "bone_archer", "g": "ghoul", "G": "ghoul"},
-		"trial_only": ["G", "S"],
+		"legend": {"L": "skeleton_archer", "D": "dwarf_dead", "d": "dwarf_dead", "S": "skeleton", "W": "wight", "l": "bone_archer", "g": "ghoul", "G": "ghoul"},
+		"trial_only": ["L", "D", "G", "S"],
 		"map": [
 			"....#........#....",
 			"....#...d....#..l.",
@@ -498,43 +507,75 @@ const BATTLES := {
 			"......#.......#...",
 			"hh.........W..#...",
 			"hh............#...",
-			"......#...........",
+			"......#.....D.....",
 			"......#.......G...",
 			"..#.......#.......",
 			"..........#.......",
-			"....#...S....#....",
+			"....#...S....#..L.",
 			"....#........#....",
 		]},
 	5: {"title": "Глава 4: Кузницы плоти", "boost": {"hp": 40},
 		"intro": "Мясной голем у горна, умертвие, послушник и гули.",
-		"legend": {"M": "flesh_golem", "W": "wight", "p": "acolyte", "g": "ghoul", "G": "ghoul"},
-		"trial_only": ["G"],
+		"legend": {"H": "ghoul", "V": "ghoul", "P": "acolyte", "M": "flesh_golem", "W": "wight", "p": "acolyte", "g": "ghoul", "G": "ghoul"},
+		"trial_only": ["H", "V", "P", "G"],
 		"map": [
 			".......#......#...",
-			".......#....p.#...",
+			".......#....p.#.H.",
 			"..##..............",
 			"..##.......g...#..",
 			"...........#...#..",
-			"......#....#......",
+			"......#....#.V....",
 			"hh....#.......M...",
 			"hh....#...W.......",
 			"......#....#......",
 			"...........#...#..",
 			"..##.......G...#..",
 			"..##..............",
-			".......#......#...",
+			".......#....P.#...",
 			".......#......#...",
 		]},
 }
 
 
+## Составы отряда (DESIGN.md, «Состав отряда в балансе»): full — все, кто есть на этом уровне (Велиор с главы 1,
+## то есть с боя 2 уровня); no_velior и no_irena — без одного спутника; duo — герой и Гаррет.
+const PARTIES: Array[String] = ["full", "no_velior", "no_irena", "duo"]
+## Бюджет опыта врагов (без босса) при неполном отряде, в процентах. Без Ирены отряд теряет всё лечение,
+## поэтому ему врагов меньше, чем без Велиора (подобрано симуляцией, см. BALANCE-levels.md).
+const PARTY_BUDGET := {"full": 100, "no_velior": 75, "no_irena": 60, "duo": 45}
+## Хиты босса при неполном отряде, в процентах. По канону −15% втроём и −30% вдвоём; симуляция показала,
+## что без Ирены и вдвоём этого мало (BALANCE-levels.md).
+const BOSS_HP_CUT := {"full": 0, "no_velior": 15, "no_irena": 30, "duo": 45}
+## Бой после завершённой охоты главы (решение 8): враги получают ещё столько процентов хитов.
+const HUNT_HP := 10
+## Для баланса: бой после завершённой охоты главы.
+static var hunt_done := false
+
+
+static func party_members(level: int, party: String) -> Array[String]:
+	var out: Array[String] = ["irena", "garret"]
+	if level >= 2:
+		out.append("velior")
+	match party:
+		"no_velior":
+			out.erase("velior")
+		"no_irena":
+			out.erase("irena")
+		"duo":
+			out = ["garret"]
+	return out
+
+
 ## Бой своего уровня: отряд героя того же уровня против врагов боя.
-static func scenario(level: int, hero_class: String, archetype: String, with_velior: bool, diff := "trial") -> Dictionary:
+static func scenario(level: int, hero_class: String, archetype: String, party := "full", diff := "trial") -> Dictionary:
 	var bt: Dictionary = BATTLES[level]
-	var heroes: Array[Combatant] = [make_hero(hero_class, level, archetype), make_companion("irena", level),
-		make_companion("garret", level)]
-	if with_velior:
-		heroes.append(make_companion("velior", level))
+	var heroes: Array[Combatant] = [make_hero(hero_class, level, archetype)]
+	for comp in party_members(level, party):
+		heroes.append(make_companion(comp, level))
+	var missing := party_members(level, "full").size() + 1 - heroes.size()
+	var boost: Dictionary = (boost_override if not boost_override.is_empty() else bt.get("boost", {})).duplicate()
+	if hunt_done:
+		boost["hp"] = int(boost.get("hp", 0)) + HUNT_HP
 	var hero_cells: Array[Vector2i] = []
 	var enemies: Array[Combatant] = []
 	var obstacles: Array[Vector2i] = []
@@ -555,15 +596,52 @@ static func scenario(level: int, hero_class: String, archetype: String, with_vel
 				var kind: String = bt.legend[ch]
 				counts[kind] = int(counts.get(kind, 0)) + 1
 				var e := make_enemy(kind, counts[kind])
-				_boost_enemy(e, boost_override if not boost_override.is_empty() else bt.get("boost", {}))
+				_boost_enemy(e, boost)
 				e.cell = c
 				enemies.append(e)
+	if missing > 0:
+		enemies = trim_for_party(enemies, party)
 	for i in heroes.size():
 		heroes[i].cell = hero_cells[i]
 		if Items.mode != "none":
 			Items.equip(heroes[i], Items.kit_for(heroes[i], level))
 	return {"width": String(rows[0]).length(), "height": rows.size(), "units": heroes + enemies,
 		"obstacles": obstacles, "title": "%s (уровень %d)" % [bt.title, level], "level": level}
+
+
+## Урезать врагов под неполный отряд по бюджету опыта PARTY_BUDGET (без босса).
+## Сначала уходят рядовые бойцы ближнего боя, стрелки — в последнюю очередь; босс остаётся, но с меньшими хитами.
+static func trim_for_party(enemies: Array[Combatant], party: String) -> Array[Combatant]:
+	var out: Array[Combatant] = []
+	var total := 0
+	for e in enemies:
+		if ENEMIES[e.kind].get("boss", false):
+			var cut := int(BOSS_HP_CUT.get(party, 0))
+			e.max_hp = int(round(e.max_hp * (1.0 - cut / 100.0)))
+			e.hp = e.max_hp
+		else:
+			total += int(ENEMIES[e.kind].xp)
+		out.append(e)
+	var target := total * int(PARTY_BUDGET.get(party, 100)) / 100.0
+	var sum := float(total)
+	while sum > target * 1.05:
+		var excess := sum - target
+		var pick: Combatant = null
+		for ranged_pass in [false, true]:
+			for e in out:
+				if ENEMIES[e.kind].get("boss", false) or e.is_ranged() != ranged_pass:
+					continue
+				var xp := float(ENEMIES[e.kind].xp)
+				# Первыми уходят рядовые (самые слабые), пока состав не опускается ниже бюджета больше чем на 15%.
+				if sum - xp >= target * 0.85 and (pick == null or xp < float(ENEMIES[pick.kind].xp)):
+					pick = e
+			if pick != null:
+				break
+		if pick == null:
+			break
+		out.erase(pick)
+		sum -= float(ENEMIES[pick.kind].xp)
+	return out
 
 
 ## Усиление врагов боя под гарантированный набор экипировки отряда:

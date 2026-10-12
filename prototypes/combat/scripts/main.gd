@@ -14,7 +14,7 @@ var cam: Camera2D
 var hero_class := "fighter"
 var level := 1
 var archetype := ""
-var with_velior := false
+var with_velior := true
 var difficulty := "story"
 
 ## Пауза между шагами врагов, сек.
@@ -142,7 +142,7 @@ func _show_menu() -> void:
 
 func _start_new() -> void:
 	battle = Battle.new()
-	battle.setup(Content.scenario(level, hero_class, archetype, with_velior, difficulty), -1, difficulty)
+	battle.setup(Content.scenario(level, hero_class, archetype, "full" if with_velior else "no_velior", difficulty), -1, difficulty)
 	_begin()
 
 

@@ -48,6 +48,8 @@ var sneak_used := false
 var cleave_used := false
 var disengaged := false
 var hidden := false
+## Спрятался не в этот ход: скрытность спадёт в конце хода, если не спрятаться снова.
+var hide_expiring := false
 var dodging := false
 var ac_bonus := 0
 var taunted_by := ""
@@ -83,6 +85,12 @@ var heal_bonus := 0
 var dr := 0
 var undead_dice := ""
 var drain_dice := ""
+## Кости огнём при попадании оружием по любому врагу (молот литейщика).
+var fire_dice := ""
+## Разовые за бой именные правила легендарок: «Шёпот», «Молчание»; «Уворот» с плащом литейщика — до двух раз.
+var whisper_used := false
+var silence_used := false
+var uncanny_count := 0
 var rally := false
 var rally_used := false
 var rescue := false
@@ -94,10 +102,10 @@ var item_dark := 0
 const STATE := ["id", "name", "team", "kind", "letter", "level", "archetype", "max_hp", "hp", "ac", "speed", "init_mod",
 	"slots", "max_slots", "spell_attack", "spell_dc", "attacks_per_action", "str_mod", "undead", "sneak_dice",
 	"is_hero", "is_companion", "initiative", "down", "dead", "prone", "reaction_used", "speed_left", "action_used",
-	"attacks_left", "bonus_used", "sneak_used", "cleave_used", "disengaged", "hidden", "dodging", "ac_bonus",
+	"attacks_left", "bonus_used", "sneak_used", "cleave_used", "disengaged", "hidden", "hide_expiring", "dodging", "ac_bonus",
 	"taunted_by", "taunt_turns", "acted", "guided_by", "slowed_by", "turned", "raging", "reckless",
 	"relentless_used", "poison_ready", "shadow_ready", "poisoned", "uncanny_used", "spirit_weapon", "guardians", "restrained",
-	"slow_spell", "stunned", "heal_bonus", "dr", "undead_dice", "drain_dice", "rally", "rally_used", "rescue",
+	"slow_spell", "stunned", "heal_bonus", "dr", "undead_dice", "drain_dice", "fire_dice", "whisper_used", "silence_used", "uncanny_count", "rally", "rally_used", "rescue",
 	"rescue_used", "ring", "item_dark"]
 
 

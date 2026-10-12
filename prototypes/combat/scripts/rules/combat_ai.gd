@@ -29,6 +29,16 @@ static func _enemy_turn(b: Battle, u: Combatant) -> void:
 		return
 	if u.is_ranged():
 		var r := int(u.weapon.get("range", 1))
+		var taunter := _taunter(b, u)
+		if taunter != null:
+			# Провокация действует и на стрелков: подходят на выстрел и бьют только Гаррета.
+			if not _foes_in_range(b, u, r).has(taunter):
+				_move_toward(b, u, taunter, r)
+			var g := 0
+			while b.can_attack(u, taunter) and b.outcome == "" and g < 4:
+				g += 1
+				b.attack(u, taunter)
+			return
 		var in_range := _foes_in_range(b, u, r)
 		if in_range.is_empty():
 			_move_toward(b, u, target, r)
@@ -46,16 +56,25 @@ static func _enemy_turn(b: Battle, u: Combatant) -> void:
 	_approach_and_attack(b, u, target, func() -> void: b.attack(u, target))
 
 
+## Кто спровоцировал врага, если провокация ещё действует.
+static func _taunter(b: Battle, u: Combatant) -> Combatant:
+	if u.taunted_by == "":
+		return null
+	var t := b.get_unit(u.taunted_by)
+	return t if t != null and t.conscious() else null
+
+
 static func _pick_target(b: Battle, u: Combatant) -> Combatant:
-	if u.taunted_by != "":
-		var t := b.get_unit(u.taunted_by)
-		if t != null and t.conscious():
-			return t
+	var taunter := _taunter(b, u)
+	if taunter != null:
+		return taunter
 	if u.team == 1 and b.difficulty == "trial":
 		return _best_victim(b, u, b.foes_of(u))
 	var best: Combatant = null
 	for f in b.foes_of(u):
 		if f.turned and u.team == 0 and best != null:
+			continue
+		if f.hidden:
 			continue
 		if best == null:
 			best = f
@@ -74,7 +93,8 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 	var best_score := -INF
 	var reach := int(u.weapon.get("range", 1)) if u.is_ranged() else u.reach()
 	for f in candidates:
-		if not f.conscious():
+		# Спрятавшегося не видно, пока он сам не атакует.
+		if not f.conscious() or f.hidden:
 			continue
 		var p := b.attack_preview(u, f)
 		var score: float = p.expected / maxf(f.hp, 1.0) * 10.0
@@ -99,6 +119,8 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 static func _foes_in_range(b: Battle, u: Combatant, r: int) -> Array[Combatant]:
 	var out: Array[Combatant] = []
 	for f in b.foes_of(u):
+		if f.hidden and u.team == 1:
+			continue
 		if Battle.dist(u.cell, f.cell) <= r and (r <= 1 or b.has_los(u.cell, f.cell)):
 			out.append(f)
 	return out
@@ -244,7 +266,7 @@ static func _bonus_before(b: Battle, u: Combatant, use_dark: bool) -> void:
 		if close >= 2:
 			b.use_ability(u, "taunt", u.cell)
 			return
-	if use_dark and b.can_use(u, "shadow_step") and near <= u.speed_left + 1:
+	if use_dark and b.can_use(u, "shadow_step") and near <= u.speed_left + 1 and u.hp > 3 * b.dark_hp_cost(u):
 		b.use_ability(u, "shadow_step", u.cell)
 		return
 	if b.can_use(u, "hide") and near > 1:
@@ -314,6 +336,13 @@ static func _main_action(b: Battle, u: Combatant, use_dark: bool) -> void:
 				score -= 8.0
 		if dark:
 			score += 3.0
+			# Цена дара: ячейка у заклинателя, хиты у воина и плута.
+			if String(a.get("dark_cost", "")) == "slot":
+				score -= SLOT_VALUE
+				if u.abilities.has("healing_word") and u.slots < 2:
+					score -= 8.0
+			else:
+				score -= b.dark_hp_cost(u) * 0.5
 		if score > best_score:
 			best_score = score
 			best_aid = aid
@@ -426,7 +455,7 @@ static func _single_value(b: Battle, u: Combatant, aid: String, t: Combatant) ->
 static func _area_plan(b: Battle, u: Combatant, aid: String) -> Dictionary:
 	var best := {}
 	var seen := {}
-	var radius := int(b.ability(aid).get("radius", 1))
+	var radius := maxi(b.radius_of(u, aid), 1)
 	var options := b.ability_targets(u, aid)
 	if b.ability(aid).target == "self":
 		options = [u.cell] as Array[Vector2i]
@@ -495,7 +524,7 @@ static func _self_plan(b: Battle, u: Combatant, aid: String) -> Dictionary:
 	match aid:
 		"turn_undead":
 			for f in b.foes_of(u):
-				if f.undead and not f.turned and Battle.dist(f.cell, u.cell) <= int(b.ability(aid).radius):
+				if f.undead and not f.turned and Battle.dist(f.cell, u.cell) <= b.radius_of(u, aid):
 					var fail := 1.0 - Dice.hit_chance(f.save_bonus("wis"), u.spell_dc, 0, false)
 					value += fail * (4.0 + f.attacks_per_action * 2.0)
 		"spirit_guardians":
@@ -509,7 +538,7 @@ static func _self_plan(b: Battle, u: Combatant, aid: String) -> Dictionary:
 			for f in b._fan_targets(u):
 				value += b.attack_preview(u, f, "", dagger).expected
 		"preserve_life":
-			var pool := 8 * u.level
+			var pool := (10 if u.has_trait("preserve_plus") else 8) * u.level
 			var need := 0
 			for o in b.allies_of(u):
 				if Battle.dist(o.cell, u.cell) <= 6 and o.hp * 2 < o.max_hp:
