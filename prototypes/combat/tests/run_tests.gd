@@ -34,6 +34,7 @@ func _init() -> void:
 	test_spikes_and_web()
 	test_slow()
 	test_shadow_step()
+	test_review_fixes()
 	test_save_roundtrip()
 	test_items()
 	test_simulation_terminates()
@@ -571,3 +572,97 @@ func test_shadow_step() -> void:
 	check(b.use_ability(r, "shadow_step", r.cell) and r.shadow_ready, "шаг в тень")
 	b.attack(r, z)
 	check(not r.shadow_ready and r.hp > 3, "удар из тени ранит некротикой и лечит плута")
+
+
+## Баги из разбора боя (review/04, раздел 2.4).
+func test_review_fixes() -> void:
+	# Провокация действует и на стрелков.
+	var g := Content.make_companion("garret")
+	g.cell = Vector2i(2, 3)
+	var w := Content.make_hero("wizard")
+	w.cell = Vector2i(6, 3)
+	var a := Content.make_enemy("skeleton_archer", 1)
+	a.cell = Vector2i(4, 1)
+	var b := arena([a, g, w])
+	check(CombatAI._pick_target(b, a) == w, "без провокации лучник целит в волшебника")
+	a.taunted_by = g.id
+	a.taunt_turns = 1
+	var from := b.events.size()
+	CombatAI.take_turn(b, a)
+	var at_g := false
+	var at_w := false
+	for i in range(from, b.events.size()):
+		var e: Dictionary = b.events[i]
+		if e.get("unit", "") == g.id:
+			at_g = true
+		if e.get("unit", "") == w.id:
+			at_w = true
+	check(at_g and not at_w and w.hp == w.max_hp, "спровоцированный лучник стреляет в Гаррета")
+
+	# Спрятавшегося не выбирают целью, скрытность истекает.
+	var r := Content.make_hero("rogue", 2, "assassin")
+	r.cell = Vector2i(0, 5)
+	var w2 := Content.make_hero("wizard")
+	w2.id = "w2"
+	w2.cell = Vector2i(0, 9)
+	var z := Content.make_enemy("zombie", 1)
+	z.cell = Vector2i(5, 5)
+	b = arena([r, z, w2])
+	r.hidden = true
+	r.hide_expiring = false
+	check(CombatAI._pick_target(b, z) == w2, "враг идёт не к спрятавшемуся плуту")
+	b.difficulty = "story"
+	check(CombatAI._pick_target(b, z) == w2, "и на «Истории» тоже")
+	b.difficulty = "trial"
+	b.end_turn()
+	check(r.hidden, "скрытность держится в ходы врагов")
+	b.end_turn()
+	b.end_turn()
+	check(r.hidden and b.current() == r, "в начале своего хода ещё скрыт")
+	b.end_turn()
+	check(not r.hidden, "не атаковал и не спрятался снова — скрытность спала")
+	b = arena([r, z])
+	r.hidden = true
+	CombatAI.take_turn(b, z)
+	check(r.hp == r.max_hp, "если все спрятались, враг никого не бьёт")
+	r.hidden = true
+	r.cell = Vector2i(4, 5)
+	b.end_turn()
+	check(not r.hidden, "вплотную к врагу скрытность спадает")
+
+	# «Ярость» даёт +1 к урону, как в описании.
+	var f := Content.make_hero("fighter", 2, "berserker")
+	f.raging = true
+	check(b._flat_bonus(f, z, false) == 1, "ярость: +1 к урону в ближнем бою")
+
+	# Паралич снимается при выбывании.
+	var c := Content.make_hero("cleric")
+	c.cell = Vector2i(1, 1)
+	var c2 := Content.make_hero("cleric")
+	c2.id = "c2"
+	c2.cell = Vector2i(2, 1)
+	b = arena([c, c2, Content.make_enemy("zombie", 2)])
+	c2.stunned = true
+	b.deal_damage(c2, 100, "test")
+	check(c2.down and not c2.stunned, "выбывший больше не парализован")
+	b.use_ability(c, "healing_word", c2.cell)
+	check(not c2.down and not c2.stunned, "поднятый герой походит как обычно")
+
+	# Толчок заменяет один удар действия «Атака».
+	var g5 := Content.make_companion("garret", 5)
+	g5.cell = Vector2i(5, 5)
+	var e1 := helpless("zombie", 1, Vector2i(6, 5))
+	e1.max_hp = 99
+	e1.hp = 99
+	b = arena([g5, e1])
+	b.attack(g5, e1)
+	check(not g5.action_used and b.can_use(g5, "shove"), "после первого удара Гаррет может толкнуть")
+	check(b.use_ability(g5, "shove", e1.cell) and g5.action_used, "толчок съел второй удар")
+	var f1 := Content.make_hero("fighter", 1)
+	f1.cell = Vector2i(5, 4)
+	e1.cell = Vector2i(6, 4)
+	b = arena([f1, e1])
+	check(b.use_ability(f1, "shove", e1.cell) and f1.action_used, "без дополнительной атаки толчок — всё действие")
+
+	# Хиты воина по d10.
+	check(Content.make_hero("fighter", 5).max_hp == 13 + 6 * 4, "воин 5 уровня: 13 + 6 за уровень")

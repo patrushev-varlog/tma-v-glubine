@@ -398,7 +398,7 @@ func enemy_damage_scale(attacker: Combatant) -> float:
 func _flat_bonus(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 	var b := 0
 	if attacker.raging and not ranged:
-		b += 2
+		b += 1
 	if attacker.has_trait("assassinate") and round_num == 1 and not target.acted:
 		b += attacker.level
 	return b
@@ -572,6 +572,9 @@ func deal_damage(target: Combatant, amount: int, _kind: String) -> void:
 				target.down = true
 				target.prone = true
 				target.raging = false
+				# Выбывший теряет паралич и скрытность: поднятый встанет и походит как обычно.
+				target.stunned = false
+				target.hidden = false
 				log_line("%s выбывает из боя." % target.name)
 				_rescue(target)
 		else:
@@ -892,6 +895,7 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 			_weapon_attack(u, t, {"extra_dice": dice_of(u, aid), "drain_extra": true})
 		"shadow_step":
 			u.hidden = true
+			u.hide_expiring = false
 			u.disengaged = true
 			u.shadow_ready = true
 		"wither":
@@ -919,6 +923,7 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 		"hide":
 			if not seen_by_foes(u) or Dice.d20(rng) + u.save_bonus("dex") >= 15:
 				u.hidden = true
+				u.hide_expiring = false
 				log_line("%s прячется." % u.name)
 			else:
 				log_line("%s не удаётся спрятаться." % u.name)
@@ -1116,6 +1121,7 @@ func _start_turn() -> void:
 	u.cleave_used = false
 	u.reckless = false
 	u.uncanny_used = false
+	u.hide_expiring = u.hidden
 	for o in units:
 		if o.guided_by == u.id:
 			o.guided_by = ""
@@ -1167,6 +1173,11 @@ func end_turn() -> void:
 	var u := current()
 	u.acted = true
 	u.poisoned = false
+	# Скрытность держится до конца следующего своего хода и пропадает, если стоишь вплотную к врагу.
+	if u.hidden and (u.hide_expiring or _foe_adjacent(u)):
+		u.hidden = false
+		log_line("%s больше не скрыт." % u.name)
+	u.hide_expiring = false
 	if grease.has(u.cell) and u.conscious():
 		_grease_check(u, int(grease[u.cell]))
 	if u.slow_spell and u.conscious() and saving_throw(u, "wis", slow_dc):
