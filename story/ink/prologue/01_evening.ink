@@ -2,9 +2,7 @@
 // ~7 минут. Тьма не меняется. Три крючка на главу 5: крыша/вечер, правда о предании, обещание.
 
 VAR evening_roof = false
-VAR evening_together = false
 VAR evening_asked_scribe = false
-VAR evening_asked_future = false
 VAR evening_asked_songs = false
 VAR legend_pressed = false      // настоял(а) на правде о бабушкиной сестре
 VAR legend_joked = false
@@ -23,7 +21,6 @@ VAR asked = 0                   // сколько тем уже спросили
     ~ evening_roof = true
     -> roof
 * [Махнуть рукой и сесть рядом.]
-    ~ evening_together = true
     -> together
 
 = roof
@@ -55,7 +52,6 @@ VAR asked = 0                   // сколько тем уже спросили
     ~ asked++
     -> scribe
 * [Спросить, что будет, если мёртвые дойдут сюда.]
-    ~ evening_asked_future = true
     ~ asked++
     -> future
 * [Спросить о песнях, которые {sp()} поёт, когда думает, что никто не слышит.]
