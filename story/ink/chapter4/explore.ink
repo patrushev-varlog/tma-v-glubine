@@ -57,6 +57,9 @@ VAR ch4_nook_safe_done = false
 // Подсказка 3. Карта сцены 5 («Литейная») после боя, только при ch4_arithmetic == "refuse":
 // старуха из спасённых узников подходит сама.
 === ch4_talk_prisoners ===
+{ ch4_arithmetic != "refuse":
+    -> DONE
+}
 { ch4_clue_prisoners:
     Старуха кивает на пол литейной.
     -> DONE
