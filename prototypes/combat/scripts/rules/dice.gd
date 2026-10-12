@@ -21,8 +21,22 @@ static func parse(expr: String) -> Dictionary:
 	}
 
 
+## Несколько групп костей через «+» («1d4+1d6»): кости по нежити от разных предметов складываются.
+static func _terms(expr: String) -> PackedStringArray:
+	return expr.replace(" ", "").split("+")
+
+
+static func _multi(expr: String) -> bool:
+	return expr.count("d") > 1
+
+
 ## Критический удар удваивает количество костей, но не бонус.
 static func roll(rng: RandomNumberGenerator, expr: String, crit := false) -> int:
+	if _multi(expr):
+		var sum := 0
+		for t in _terms(expr):
+			sum += roll(rng, t, crit)
+		return sum
 	var d := parse(expr)
 	var count: int = d.count * (2 if crit else 1)
 	var total: int = d.bonus
@@ -32,16 +46,31 @@ static func roll(rng: RandomNumberGenerator, expr: String, crit := false) -> int
 
 
 static func min_of(expr: String) -> int:
+	if _multi(expr):
+		var sum := 0
+		for t in _terms(expr):
+			sum += min_of(t)
+		return sum
 	var d := parse(expr)
 	return max(d.count + d.bonus, 0)
 
 
 static func max_of(expr: String) -> int:
+	if _multi(expr):
+		var sum := 0
+		for t in _terms(expr):
+			sum += max_of(t)
+		return sum
 	var d := parse(expr)
 	return max(d.count * d.sides + d.bonus, 0)
 
 
 static func avg_of(expr: String) -> float:
+	if _multi(expr):
+		var sum := 0.0
+		for t in _terms(expr):
+			sum += avg_of(t)
+		return sum
 	var d := parse(expr)
 	return d.count * (d.sides + 1) / 2.0 + d.bonus
 

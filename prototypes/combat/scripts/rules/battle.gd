@@ -8,10 +8,12 @@ const DIRS: Array[Vector2i] = [
 ]
 ## Режим «История»: урон врагов умножается на этот коэффициент.
 const STORY_ENEMY_DAMAGE := 0.6
-const DARK_GIFT_COST := 2
-const DARK_BATTLE_CAP := 6
-## Тёмных даров за бой: столько же, сколько укладывается в потолок Тьмы.
-const DARK_GIFTS_PER_BATTLE := DARK_BATTLE_CAP / DARK_GIFT_COST
+## Тьма за первый тёмный дар в бою; следующие дары того же боя Тьму не добавляют (DESIGN.md, «Источники Тьмы»).
+const DARK_FIRST_GIFT := 2
+## Тёмных даров за бой (перстень снимает лимит для носителя).
+const DARK_GIFTS_PER_BATTLE := 3
+## Потолок Тьмы из боя за всю игру: дары и тёмные предметы вместе.
+const COMBAT_DARK_CAP := 20
 ## СЛ паралича гуля.
 const PARALYZE_DC := 10
 
@@ -29,8 +31,14 @@ var difficulty := "story"
 var darkness := 0
 var darkness_gained := 0
 var dark_gifts_used := 0
+## Тёмных даров применено в этом бою, с перстнем тоже (Тьма только за первый).
+var dark_gifts_cast := 0
+## Боевая Тьма, набранная до этого боя (для потолка COMBAT_DARK_CAP).
+var combat_dark_before := 0
 ## Тьма от тёмных предметов за этот бой (сверх потолка тёмных даров).
 var item_darkness := 0
+## Нежить, уже сделавшая спасбросок под «Светом штейгера»: id → true.
+var light_saved := {}
 var traps := {}
 ## Клетки, залитые «Жиром», и клетки «Паутины» до конца боя: клетка → СЛ.
 var grease := {}
@@ -51,6 +59,7 @@ func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
 	else:
 		rng.randomize()
 	difficulty = diff
+	combat_dark_before = int(scenario.get("combat_darkness", 0))
 	title = scenario.get("title", "")
 	level = scenario.get("level", 2)
 	width = scenario.width
@@ -61,8 +70,12 @@ func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
 		units.append(u)
 	for u in units:
 		u.initiative = Dice.d20(rng) + u.init_mod
+		if u.has_trait("shadow_start"):
+			# «Тень» (тенекожа): в начале боя носитель спрятан.
+			u.hidden = true
 		if u.team == 0 and u.item_dark > 0:
 			item_darkness += u.item_dark
+	item_darkness = clampi(item_darkness, 0, combat_dark_room())
 	if item_darkness > 0:
 		darkness += item_darkness
 	var sorted := units.duplicate()
@@ -176,7 +189,13 @@ func ac_of(t: Combatant) -> int:
 	var v := t.total_ac()
 	for o in units:
 		if o != t and o.team == t.team and o.conscious() and o.has_trait("protector") and dist(o.cell, t.cell) <= 1:
-			v += 2
+			v += 3 if o.has_trait("protector_plus") else 2
+			break
+	# «Жена ждёт» (бирка жены): соседи носителя +1 к КД, пока он стоит вплотную к врагу.
+	for o in units:
+		if o != t and o.team == t.team and o.conscious() and o.has_trait("wife_waits") and dist(o.cell, t.cell) <= 1 \
+			and _foe_adjacent(o):
+			v += 1
 			break
 	return v
 
@@ -277,7 +296,7 @@ func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 				if dist(u.cell, e.cell) <= e.reach() and dist(step, e.cell) > e.reach():
 					e.reaction_used = true
 					log_line("%s атакует при возможности." % e.name)
-					var hit := _weapon_attack(e, u, {})
+					var hit := _weapon_attack(e, u, {"oa": true})
 					if not u.conscious():
 						return
 					if hit > 0 and e.has_trait("hold_the_line"):
@@ -347,7 +366,7 @@ func advantage_for(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 		adv += 1
 	if attacker.reckless and not ranged:
 		adv += 1
-	if attacker.has_trait("assassinate") and round_num == 1 and not target.acted:
+	if _assassinating(attacker, target):
 		adv += 1
 	if target.dodging:
 		dis += 1
@@ -360,7 +379,7 @@ func advantage_for(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 			adv += 1
 	if attacker.prone:
 		dis += 1
-	if ranged:
+	if ranged and not attacker.has_trait("bow_close"):
 		for f in foes_of(attacker):
 			if dist(f.cell, attacker.cell) <= 1 and not f.turned and not f.stunned:
 				dis += 1
@@ -368,6 +387,15 @@ func advantage_for(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 	if adv > 0 and dis > 0:
 		return 0
 	return 1 if adv > 0 else (-1 if dis > 0 else 0)
+
+
+## «Убийство»: первый раунд по врагам, ещё не ходившим; с «Шёпотом Молчащих» Убийцы — первые два раунда.
+func _assassinating(attacker: Combatant, target: Combatant) -> bool:
+	if not attacker.has_trait("assassinate"):
+		return false
+	if attacker.has_trait("assassinate_long"):
+		return round_num <= 2
+	return round_num == 1 and not target.acted
 
 
 func can_sneak(attacker: Combatant, target: Combatant, adv: int) -> bool:
@@ -398,8 +426,8 @@ func enemy_damage_scale(attacker: Combatant) -> float:
 func _flat_bonus(attacker: Combatant, target: Combatant, ranged: bool) -> int:
 	var b := 0
 	if attacker.raging and not ranged:
-		b += 1
-	if attacker.has_trait("assassinate") and round_num == 1 and not target.acted:
+		b += 2 if attacker.has_trait("rage_plus") else 1
+	if _assassinating(attacker, target):
 		b += attacker.level
 	return b
 
@@ -453,6 +481,9 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	var weapon: Dictionary = opts.get("weapon", attacker.weapon)
 	var ranged: bool = weapon.get("kind", "melee") == "ranged"
 	var adv := advantage_for(attacker, target, ranged)
+	if opts.get("oa", false) and attacker.has_trait("oa_adv"):
+		# Клинок гвардии: атака при возможности с преимуществом.
+		adv = mini(adv + 1, 1)
 	var r1 := Dice.d20(rng)
 	var r2 := Dice.d20(rng)
 	var roll := r1
@@ -463,7 +494,7 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	attacker.hidden = false
 	target.guided_by = ""
 	var total := roll + int(weapon.to_hit)
-	var crit := roll == 20
+	var crit := roll == 20 or (roll == 19 and attacker.has_trait("king_gift"))
 	var tac := ac_of(target)
 	if roll == 1 or (not crit and total < tac):
 		log_line("%s → %s: промах (%d против КД %d)." % [attacker.name, target.name, total, tac])
@@ -473,6 +504,11 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	if can_sneak(attacker, target, adv):
 		attacker.sneak_used = true
 		dmg += Dice.roll(rng, sneak_expr(attacker, target), crit)
+		if attacker.has_trait("whisper") and not attacker.whisper_used:
+			# «Шёпот»: раз за бой после скрытой атаки отойти на 2 клетки без атак при возможности.
+			attacker.whisper_used = true
+			attacker.disengaged = true
+			attacker.speed_left += 2
 	var extra := 0
 	if opts.has("extra_dice"):
 		extra = Dice.roll(rng, opts.extra_dice, crit)
@@ -493,6 +529,8 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	if attacker.drain_dice != "":
 		drained = Dice.roll(rng, attacker.drain_dice, crit)
 		dmg += drained
+	if attacker.fire_dice != "":
+		dmg += Dice.roll(rng, attacker.fire_dice, crit)
 	dmg += _flat_bonus(attacker, target, ranged)
 	dmg = int(ceil(dmg * enemy_damage_scale(attacker)))
 	dmg = _mitigate(target, dmg)
@@ -520,6 +558,8 @@ func _item_dice(attacker: Combatant, target: Combatant) -> Array[String]:
 		out.append(attacker.undead_dice)
 	if attacker.drain_dice != "":
 		out.append(attacker.drain_dice)
+	if attacker.fire_dice != "":
+		out.append(attacker.fire_dice)
 	return out
 
 
@@ -531,8 +571,10 @@ func _mitigate(target: Combatant, dmg: int) -> int:
 		dmg = maxi(dmg - 2, 0)
 	if target.has_trait("stalwart"):
 		dmg = maxi(dmg - 3, 0)
-	if target.has_trait("uncanny_dodge") and not target.uncanny_used and dmg > 0:
-		target.uncanny_used = true
+	var uncanny_max := 2 if target.has_trait("uncanny_two") else 1
+	if target.has_trait("uncanny_dodge") and target.uncanny_count < uncanny_max and dmg > 0:
+		target.uncanny_count += 1
+		target.uncanny_used = target.uncanny_count >= uncanny_max
 		dmg /= 2
 		log_line("%s уворачивается: урон вдвое меньше." % target.name)
 	return dmg
@@ -606,7 +648,24 @@ func heal(target: Combatant, amount: int) -> void:
 
 
 func saving_throw(target: Combatant, stat: String, dc: int) -> bool:
-	return Dice.d20(rng) + target.save_bonus(stat) >= dc
+	var roll := Dice.d20(rng)
+	if target.undead and not light_saved.has(target.id):
+		# «Свет штейгера»: первый спасбросок нежити в 2 клетках от носителя фонаря — с помехой.
+		for h in foes_of(target):
+			if h.has_trait("miner_light") and dist(h.cell, target.cell) <= 2:
+				light_saved[target.id] = true
+				roll = mini(roll, Dice.d20(rng))
+				break
+	if roll + target.save_bonus(stat) >= dc:
+		return true
+	# «Молчание» (венец): раз за бой носитель или союзник рядом перебрасывает проваленный спасбросок.
+	for h in units:
+		if h.team == target.team and h.conscious() and h.has_trait("silence") and not h.silence_used \
+			and dist(h.cell, target.cell) <= 1:
+			h.silence_used = true
+			log_line("%s: Молчание, переброс спасброска." % h.name)
+			return Dice.d20(rng) + target.save_bonus(stat) >= dc
+	return false
 
 
 # --- Действия хода -------------------------------------------------------
@@ -656,8 +715,11 @@ func can_use(u: Combatant, aid: String) -> bool:
 		return false
 	if a.resource == "use" and u.uses_left(aid) <= 0:
 		return false
-	if a.get("dark", false) and dark_gifts_left() <= 0 and not u.ring:
-		return false
+	if a.get("dark", false):
+		if dark_gifts_left() <= 0 and not u.ring:
+			return false
+		if String(a.get("dark_cost", "")) == "slot" and u.slots < 1:
+			return false
 	match aid:
 		"action_surge":
 			return u.action_used
@@ -740,21 +802,34 @@ func ability_area(u: Combatant, aid: String, target: Vector2i) -> Array[Vector2i
 			cells.append(f.cell)
 		return cells
 	if a.has("radius") and a.target == "self":
-		return cells_in_radius(u.cell, int(a.radius))
+		return cells_in_radius(u.cell, radius_of(u, aid))
 	if a.has("radius"):
-		return cells_in_radius(target, int(a.radius))
+		return cells_in_radius(target, radius_of(u, aid))
 	var single: Array[Vector2i] = [target]
 	return single
 
 
-## Цели «Веера кинжалов»: до трёх ближайших видимых врагов в 4 клетках.
+## Радиус умения с учётом предметов: колокол Ирены, молот-кадило Света, Шёпот Ловкача.
+func radius_of(u: Combatant, aid: String) -> int:
+	var r := int(ability(aid).get("radius", 0))
+	if aid == "hallowed_ground" and u.has_trait("bell_ring"):
+		r = 2
+	elif aid == "turn_undead" and u.has_trait("turn_wide"):
+		r = 3
+	elif aid == "knife_fan" and u.has_trait("fan_wide"):
+		r = 5
+	return r
+
+
+## Цели «Веера кинжалов»: до трёх ближайших видимых врагов в 4 клетках (с Шёпотом Ловкача — четыре в 5).
 func _fan_targets(u: Combatant) -> Array[Combatant]:
 	var list: Array[Combatant] = []
+	var r := radius_of(u, "knife_fan")
 	for f in foes_of(u):
-		if dist(u.cell, f.cell) <= 4 and has_los(u.cell, f.cell):
+		if dist(u.cell, f.cell) <= r and has_los(u.cell, f.cell):
 			list.append(f)
 	list.sort_custom(func(a: Combatant, b: Combatant) -> bool: return dist(u.cell, a.cell) < dist(u.cell, b.cell))
-	return list.slice(0, 3)
+	return list.slice(0, 4 if u.has_trait("fan_wide") else 3)
 
 
 ## Урон способности (кости) для этого участника.
@@ -804,7 +879,7 @@ func ability_preview(u: Combatant, aid: String, target: Vector2i) -> String:
 		"turn_undead":
 			var names := []
 			for f in foes_of(u):
-				if f.undead and not f.turned and dist(f.cell, u.cell) <= int(a.radius):
+				if f.undead and not f.turned and dist(f.cell, u.cell) <= radius_of(u, aid):
 					names.append(f.name)
 			if names.is_empty():
 				return "%s: рядом нет нежити." % a.name
@@ -829,6 +904,8 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 	if not ability_targets(u, aid).has(target):
 		return false
 	var a := ability(aid)
+	if a.get("dark", false):
+		_pay_dark(u, aid)
 	if a.get("attack", false):
 		_spend_attack(u)
 	elif a.cost == "action":
@@ -851,7 +928,13 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 		"healing_word":
 			heal(t, _heal_roll(u, aid))
 		"fire_bolt":
-			_spell_attack(u, t, dice_of(u, aid))
+			var hit_dmg := _spell_attack(u, t, dice_of(u, aid))
+			if hit_dmg > 0 and u.has_trait("bolt_splash"):
+				# Посох Молчащих Воплотителя: враг рядом с целью получает половину.
+				for f in foes_of(u):
+					if f != t and dist(f.cell, t.cell) <= 1:
+						deal_damage(f, hit_dmg / 2, "fire")
+						break
 		"magic_missile":
 			deal_damage(t, Dice.roll(rng, dice_of(u, aid)), "force")
 		"thunderwave", "fireball":
@@ -871,9 +954,9 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 				if o.team == u.team:
 					heal(o, Dice.roll(rng, "1d6") + u.heal_bonus)
 				elif o.undead:
-					deal_damage(o, Dice.roll(rng, "2d6"), "radiant")
+					deal_damage(o, Dice.roll(rng, "3d6" if u.has_trait("hallowed_plus") else "2d6"), "radiant")
 		"shield_of_faith":
-			t.ac_bonus = 2
+			t.ac_bonus = 3 if u.has_trait("shield_plus") else 2
 		"trip":
 			if _weapon_attack(u, t, {}) > 0 and t.conscious():
 				if not saving_throw(t, "str", u.spell_dc):
@@ -943,7 +1026,7 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 					heal(o, _heal_roll(u, aid))
 		"turn_undead":
 			for f in foes_of(u):
-				if f.undead and not f.turned and dist(f.cell, u.cell) <= int(a.radius):
+				if f.undead and not f.turned and dist(f.cell, u.cell) <= radius_of(u, aid):
 					if saving_throw(f, "wis", u.spell_dc):
 						log_line("%s устоял." % f.name)
 					else:
@@ -961,7 +1044,7 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 			u.guardians = true
 		"scorching_ray":
 			var aim := t
-			for i in 3:
+			for i in (4 if u.has_trait("rays_four") else 3):
 				if aim == null or not aim.conscious():
 					aim = _nearest_foe_in_range(u, int(a.range))
 				if aim == null:
@@ -995,17 +1078,17 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 				else:
 					o.slow_spell = true
 					log_line("%s замедлен." % o.name)
-	if a.get("dark", false) and not u.ring:
-		_add_darkness()
+	if a.get("dark", false):
+		_add_darkness(u)
 	return true
 
 
 func _heal_roll(u: Combatant, aid: String) -> int:
-	return Dice.roll(rng, dice_of(u, aid)) + (3 if u.has_trait("life_disciple") else 0) + u.heal_bonus
+	return Dice.roll(rng, dice_of(u, aid)) + (2 if u.has_trait("life_disciple") else 0) + u.heal_bonus
 
 
 func _preserve_life(u: Combatant, radius: int) -> void:
-	var pool := 8 * u.level
+	var pool := (10 if u.has_trait("preserve_plus") else 8) * u.level
 	var wounded := allies_of(u).filter(func(o: Combatant) -> bool:
 		return dist(o.cell, u.cell) <= radius and o.hp * 2 < o.max_hp)
 	wounded.sort_custom(func(a: Combatant, b: Combatant) -> bool: return a.hp < b.hp)
@@ -1088,12 +1171,37 @@ func _most_wounded_ally(u: Combatant) -> Combatant:
 	return best
 
 
-func _add_darkness() -> void:
-	dark_gifts_used += 1
-	var gain := mini(DARK_GIFT_COST, DARK_BATTLE_CAP - darkness_gained)
+## Сколько ещё боевой Тьмы влезает в потолок за игру.
+func combat_dark_room() -> int:
+	return maxi(COMBAT_DARK_CAP - combat_dark_before - darkness_gained - item_darkness, 0)
+
+
+func _add_darkness(u: Combatant) -> void:
+	if not u.ring:
+		dark_gifts_used += 1
+	dark_gifts_cast += 1
+	if dark_gifts_cast > 1:
+		return
+	var gain := mini(DARK_FIRST_GIFT, combat_dark_room())
 	if gain > 0:
 		darkness += gain
 		darkness_gained += gain
+
+
+## Цена тёмного дара в бою: заклинателю — ячейка, воину и плуту — хиты, равные двум уровням (не ниже 1 хита).
+func dark_hp_cost(u: Combatant) -> int:
+	return mini(2 * u.level, maxi(u.hp - 1, 0))
+
+
+func _pay_dark(u: Combatant, aid: String) -> void:
+	if String(ability(aid).get("dark_cost", "")) == "slot":
+		u.slots -= 1
+		return
+	var loss := dark_hp_cost(u)
+	if loss > 0:
+		u.hp -= loss
+		events.append({"type": "damage", "unit": u.id, "amount": loss})
+		log_line("%s платит за дар: −%d хитов." % [u.name, loss])
 
 
 static func darkness_level(value: int) -> String:
@@ -1121,6 +1229,7 @@ func _start_turn() -> void:
 	u.cleave_used = false
 	u.reckless = false
 	u.uncanny_used = false
+	u.uncanny_count = 0
 	u.hide_expiring = u.hidden
 	for o in units:
 		if o.guided_by == u.id:
@@ -1130,6 +1239,15 @@ func _start_turn() -> void:
 	_aura_damage(u)
 	if not u.conscious():
 		return
+	if u.has_trait("lamp"):
+		# «Светильник»: самый раненый союзник в 2 клетках лечится на 1d4.
+		var low: Combatant = null
+		for o in allies_of(u):
+			if o.conscious() and o.hp < o.max_hp and dist(o.cell, u.cell) <= 2:
+				if low == null or float(o.hp) / o.max_hp < float(low.hp) / low.max_hp:
+					low = o
+		if low != null:
+			heal(low, Dice.roll(rng, "1d4"))
 	if u.stunned:
 		u.stunned = false
 		u.speed_left = 0
@@ -1164,7 +1282,10 @@ func _aura_damage(u: Combatant) -> void:
 			continue
 		if dist(h.cell, u.cell) <= int(Content.ABILITIES.spirit_guardians.radius):
 			log_line("Духовные стражи жгут %s." % u.name)
-			_save_spell(h, u, "wis", Content.ability_dice("spirit_guardians", h.level), true)
+			var expr := Content.ability_dice("spirit_guardians", h.level)
+			if h.has_trait("guardians_plus"):
+				expr = Items.add_dice(expr, "1d8")
+			_save_spell(h, u, "wis", expr, true)
 
 
 func end_turn() -> void:
@@ -1237,8 +1358,9 @@ func to_dict() -> Dictionary:
 		"units": units.map(func(u: Combatant) -> Dictionary: return u.to_dict()),
 		"order": Array(order), "turn_index": turn_index, "round": round_num,
 		"rng_seed": str(rng.seed), "rng_state": str(rng.state), "difficulty": difficulty,
-		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "item_darkness": item_darkness, "traps": tr,
-		"outcome": outcome, "grease": _zones(grease), "webs": _zones(webs), "slow_dc": slow_dc,
+		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used, "dark_gifts_cast": dark_gifts_cast,
+		"combat_dark_before": combat_dark_before, "item_darkness": item_darkness, "traps": tr,
+		"light_saved": light_saved.keys(), "outcome": outcome, "grease": _zones(grease), "webs": _zones(webs), "slow_dc": slow_dc,
 		"spikes": spikes.keys().map(func(c: Vector2i) -> Array: return [c.x, c.y, spikes[c]]),
 	}
 
@@ -1277,6 +1399,8 @@ static func from_dict(d: Dictionary) -> Battle:
 	b.darkness = int(d.darkness)
 	b.darkness_gained = int(d.darkness_gained)
 	b.dark_gifts_used = int(d.get("dark_gifts_used", 0))
+	b.dark_gifts_cast = int(d.get("dark_gifts_cast", b.dark_gifts_used))
+	b.combat_dark_before = int(d.get("combat_dark_before", 0))
 	b.item_darkness = int(d.get("item_darkness", 0))
 	for t in d.traps:
 		b.traps[Vector2i(int(t[0]), int(t[1]))] = String(t[2])
@@ -1285,6 +1409,8 @@ static func from_dict(d: Dictionary) -> Battle:
 	b.slow_dc = int(d.get("slow_dc", 13))
 	for sp in d.get("spikes", []):
 		b.spikes[Vector2i(int(sp[0]), int(sp[1]))] = String(sp[2])
+	for lid in d.get("light_saved", []):
+		b.light_saved[String(lid)] = true
 	b.outcome = d.outcome
 	return b
 

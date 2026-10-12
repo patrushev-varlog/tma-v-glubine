@@ -85,6 +85,12 @@ var heal_bonus := 0
 var dr := 0
 var undead_dice := ""
 var drain_dice := ""
+## Кости огнём при попадании оружием по любому врагу (молот литейщика).
+var fire_dice := ""
+## Разовые за бой именные правила легендарок: «Шёпот», «Молчание»; «Уворот» с плащом литейщика — до двух раз.
+var whisper_used := false
+var silence_used := false
+var uncanny_count := 0
 var rally := false
 var rally_used := false
 var rescue := false
@@ -99,7 +105,7 @@ const STATE := ["id", "name", "team", "kind", "letter", "level", "archetype", "m
 	"attacks_left", "bonus_used", "sneak_used", "cleave_used", "disengaged", "hidden", "hide_expiring", "dodging", "ac_bonus",
 	"taunted_by", "taunt_turns", "acted", "guided_by", "slowed_by", "turned", "raging", "reckless",
 	"relentless_used", "poison_ready", "shadow_ready", "poisoned", "uncanny_used", "spirit_weapon", "guardians", "restrained",
-	"slow_spell", "stunned", "heal_bonus", "dr", "undead_dice", "drain_dice", "rally", "rally_used", "rescue",
+	"slow_spell", "stunned", "heal_bonus", "dr", "undead_dice", "drain_dice", "fire_dice", "whisper_used", "silence_used", "uncanny_count", "rally", "rally_used", "rescue",
 	"rescue_used", "ring", "item_dark"]
 
 
