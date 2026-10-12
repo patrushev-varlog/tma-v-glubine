@@ -1,0 +1,159 @@
+# Срез стека: тесты Ink и геймпада, запасной рантайм, сборки под macOS, Windows, Linux и Android.
+# Каждая сборка запускается с --selftest на своей системе (кроме Android) и выкладывается артефактом.
+name: stack-slice
+
+on:
+  pull_request:
+    paths:
+      - "prototypes/stack-slice/**"
+      - "story/**"
+      - ".github/workflows/stack-slice.yml"
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.7.2"
+  DOTNET_NOLOGO: "1"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  SLICE: prototypes/stack-slice
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Ink — JSON свежий, русский и английский совпадают
+        working-directory: ${{ env.SLICE }}/tools
+        run: npm install --no-audit --no-fund && node ink_tool.mjs check
+      - name: Godot
+        run: |
+          B=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable
+          curl -sSL -o mono.zip $B/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64.zip
+          curl -sSL -o std.zip $B/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
+          unzip -q mono.zip -d ~/godot && unzip -q std.zip -d ~/godot
+          echo "GODOT_MONO=$HOME/godot/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64" >> $GITHUB_ENV
+          echo "GODOT_STD=$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64" >> $GITHUB_ENV
+      - name: Тесты среза (GodotInk против inkjs, смена языка, геймпад)
+        working-directory: ${{ env.SLICE }}
+        run: |
+          dotnet build StackSlice.csproj -v q
+          $GODOT_MONO --headless --path . --import || true
+          $GODOT_MONO --headless --path . -s res://tests/run_tests.gd
+      - name: Запасной рантайм inkgd против inkjs
+        working-directory: ${{ env.SLICE }}/fallback-inkgd
+        run: |
+          $GODOT_STD --headless --path . --import || true
+          SLICE_RUNS=4 $GODOT_STD --headless --path . -s res://tests/run_tests.gd
+
+  export:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            preset: macOS
+            godot: Godot_v4.7.2-stable_mono_macos.universal.zip
+            out: build/stack-slice/macos
+          - os: windows-2022
+            preset: Windows
+            godot: Godot_v4.7.2-stable_mono_win64.zip
+            out: build/stack-slice/windows
+          - os: ubuntu-24.04
+            preset: Linux
+            godot: Godot_v4.7.2-stable_mono_linux_x86_64.zip
+            out: build/stack-slice/linux
+          - os: ubuntu-24.04
+            preset: Android
+            godot: Godot_v4.7.2-stable_mono_linux_x86_64.zip
+            out: build/stack-slice/android
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          # 8 — для ПК; Android-шаблон Godot 4.7 собран под .NET 9.
+          dotnet-version: |
+            8.0.x
+            9.0.x
+      - uses: actions/setup-java@v4
+        if: matrix.preset == 'Android'
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Godot и шаблоны экспорта
+        shell: bash
+        run: |
+          B=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable
+          curl -sSL -o godot.zip $B/${{ matrix.godot }}
+          curl -sSL -o tpl.tpz $B/Godot_v${GODOT_VERSION}-stable_mono_export_templates.tpz
+          mkdir -p ~/godot && unzip -q godot.zip -d ~/godot
+          case "${{ runner.os }}" in
+            macOS)   T="$HOME/Library/Application Support/Godot/export_templates"
+                     G="$HOME/godot/Godot_mono.app/Contents/MacOS/Godot";;
+            Windows) T="$APPDATA/Godot/export_templates"
+                     G="$(ls $HOME/godot/*/Godot_v${GODOT_VERSION}-stable_mono_win64_console.exe)";;
+            *)       T="$HOME/.local/share/godot/export_templates"
+                     G="$HOME/godot/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64";;
+          esac
+          mkdir -p "$T/${GODOT_VERSION}.stable.mono"
+          unzip -q tpl.tpz -d tpl && mv tpl/templates/* "$T/${GODOT_VERSION}.stable.mono/"
+          rm -rf tpl tpl.tpz godot.zip
+          echo "GODOT=$G" >> $GITHUB_ENV
+      - name: Настройки Android (SDK раннера, отладочный ключ)
+        if: matrix.preset == 'Android'
+        shell: bash
+        run: |
+          keytool -genkeypair -keystore $HOME/debug.keystore -storepass android -alias androiddebugkey \
+            -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$HOME/debug.keystore" >> $GITHUB_ENV
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> $GITHUB_ENV
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> $GITHUB_ENV
+          # Пути SDK и JDK — в настройках редактора: создаём их запуском и дописываем.
+          "$GODOT" --headless --quit || true
+          S=$(ls $HOME/.config/godot/editor_settings-4.*.tres | head -1)
+          sed -i '/^export\/android\/\(android_sdk_path\|java_sdk_path\)/d' "$S"
+          echo "export/android/android_sdk_path = \"$ANDROID_SDK_ROOT\"" >> "$S"
+          echo "export/android/java_sdk_path = \"$JAVA_HOME\"" >> "$S"
+      - name: Экспорт ${{ matrix.preset }}
+        shell: bash
+        working-directory: ${{ env.SLICE }}
+        run: |
+          mkdir -p ../../${{ matrix.out }}
+          "$GODOT" --headless --path . --import || true
+          if [ "${{ matrix.preset }}" = "Android" ]; then
+            "$GODOT" --headless --path . --export-debug Android ../../${{ matrix.out }}/TmaStackSlice.apk
+          else
+            "$GODOT" --headless --path . --export-release "${{ matrix.preset }}"
+          fi
+          ls -la ../../${{ matrix.out }}
+      - name: Самопроверка сборки (вся история через рантайм внутри сборки)
+        if: matrix.preset != 'Android'
+        shell: bash
+        working-directory: ${{ matrix.out }}
+        run: |
+          case "${{ matrix.preset }}" in
+            macOS)
+              unzip -q TmaStackSlice.zip
+              APP=$(ls -d *.app)
+              "$APP/Contents/MacOS/$(ls "$APP/Contents/MacOS")" --headless -- --selftest;;
+            Windows)
+              pwsh -Command '$p = Start-Process -FilePath .\TmaStackSlice.exe -ArgumentList "--headless","--","--selftest" -Wait -PassThru -RedirectStandardOutput out.txt; Get-Content out.txt; exit $p.ExitCode';;
+            *)
+              ./TmaStackSlice.x86_64 --headless -- --selftest;;
+          esac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stack-slice-${{ matrix.preset }}
+          path: |
+            ${{ matrix.out }}/*.zip
+            ${{ matrix.out }}/*.exe
+            ${{ matrix.out }}/*.pck
+            ${{ matrix.out }}/*.apk
+            ${{ matrix.out }}/*.x86_64
+            ${{ matrix.out }}/data_*
+          retention-days: 14
