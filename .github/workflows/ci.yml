@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  GODOT_VERSION: "4.7.2"
+  # Папка проекта игры. Сборки включаются, когда в ней появится export_presets.cfg
+  # с пресетами "Windows Desktop", "macOS" и "Linux".
+  GAME_DIR: game
+
+jobs:
+  prototype-tests:
+    name: Тесты прототипа боя
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Установить Godot
+        run: |
+          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          sudo mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
+      - name: Импорт проекта
+        run: godot --headless --path prototypes/combat --import
+      - name: Правила боя
+        run: godot --headless --path prototypes/combat -s res://tests/run_tests.gd
+      - name: Бой через интерфейс
+        run: godot --headless --path prototypes/combat -s res://tests/ui_smoke.gd
+
+  ink:
+    name: Компиляция Ink
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Скомпилировать story/ink/game.ink
+        run: npx -y -p inkjs@2.4.0 inkjs-compiler story/ink/game.ink -o "$RUNNER_TEMP/game.json"
+
+  export:
+    name: Сборка ${{ matrix.preset }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - preset: Windows Desktop
+            file: tma-v-glubine.exe
+          - preset: macOS
+            file: tma-v-glubine.zip
+          - preset: Linux
+            file: tma-v-glubine.x86_64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Есть ли пресеты экспорта
+        id: presets
+        run: |
+          if [ -f "$GAME_DIR/export_presets.cfg" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Нет $GAME_DIR/export_presets.cfg — сборка «${{ matrix.preset }}» пропущена"
+          fi
+      - name: Установить Godot и шаблоны экспорта
+        if: steps.presets.outputs.ready == 'true'
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          sudo mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
+          curl -sSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          dir="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dir"
+          unzip -q templates.tpz -d "$RUNNER_TEMP/tpl"
+          mv "$RUNNER_TEMP"/tpl/templates/* "$dir"/
+      - name: Экспорт
+        if: steps.presets.outputs.ready == 'true'
+        run: |
+          mkdir -p build
+          godot --headless --path "$GAME_DIR" --import
+          godot --headless --path "$GAME_DIR" --export-release "${{ matrix.preset }}" "$GITHUB_WORKSPACE/build/${{ matrix.file }}"
+      - uses: actions/upload-artifact@v4
+        if: steps.presets.outputs.ready == 'true'
+        with:
+          name: ${{ matrix.preset }}
+          path: build/
