@@ -1,0 +1,4 @@
+.godot/
+tools/node_modules/
+*.csproj.old*
+/android/

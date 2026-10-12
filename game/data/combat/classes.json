@@ -1,0 +1,42 @@
+{
+  "_doc": "Классы героя. hp — хиты на 1 уровне, hp_per_level — за каждый следующий. Ветка выбирается на 2 уровне; levels — что она даёт на 2–5 уровнях (умение из abilities.json или приём из traits.json). Оружие: бонус атаки = мастерство + mod (по умолчанию 3), урон + mod.",
+
+  "fighter": {"hp": 13, "hp_per_level": 6, "ac": 15, "init": 0, "str_mod": 2,
+    "saves": {"str": 5, "dex": 0, "con": 4, "wis": 1},
+    "weapon": {"id": "longsword", "damage": "1d8", "reach": 1, "kind": "melee"},
+    "abilities": ["second_wind", "cursed_blade"],
+    "archetypes": {
+      "guardian": {"ac": 15, "levels": {"2": "action_surge", "3": "protector", "4": "hold_the_line", "5": "stalwart"}},
+      "berserker": {"ac": 13, "weapon": {"id": "greatsword", "damage": "2d6", "reach": 1, "kind": "melee"},
+        "levels": {"2": "rage", "3": "cleave", "4": "reckless", "5": "relentless"}}
+    }},
+
+  "rogue": {"hp": 14, "hp_per_level": 4, "ac": 15, "init": 3, "str_mod": 0, "sneak": true,
+    "saves": {"str": 0, "dex": 5, "con": 1, "wis": 1},
+    "weapon": {"id": "shortsword", "damage": "1d6", "reach": 1, "kind": "melee"},
+    "abilities": ["disengage", "shadow_step"],
+    "archetypes": {
+      "assassin": {"levels": {"2": "hide", "3": "poison_blade", "4": "finisher", "5": "assassinate"}},
+      "trickster": {"ac": 13, "ranged_weapon": {"id": "shortbow", "damage": "1d6", "range": 8, "kind": "ranged"},
+        "levels": {"2": "shoot", "3": "uncanny_dodge", "4": "dash", "5": "knife_fan"}}
+    }},
+
+  "cleric": {"hp": 9, "hp_per_level": 5, "ac": 15, "init": 0, "str_mod": 1, "caster": true,
+    "saves": {"str": 1, "dex": 0, "con": 2, "wis": 5},
+    "weapon": {"id": "mace", "damage": "1d6", "reach": 1, "kind": "melee", "mod": 2},
+    "abilities": ["sacred_flame", "healing_word", "wither"],
+    "slot_cut": {"4": 1, "5": 2},
+    "archetypes": {
+      "life": {"levels": {"2": "life_disciple", "3": "shield_of_faith", "4": "mass_healing_word", "5": "preserve_life"}},
+      "light": {"levels": {"2": "guiding_bolt", "3": "turn_undead", "4": "spiritual_weapon", "5": "spirit_guardians"}}
+    }},
+
+  "wizard": {"hp": 8, "hp_per_level": 4, "ac": 12, "init": 2, "str_mod": -1, "caster": true,
+    "saves": {"str": -1, "dex": 2, "con": 1, "wis": 3},
+    "weapon": {"id": "staff", "damage": "1d6", "reach": 1, "kind": "melee", "mod": -1, "no_prof": true},
+    "abilities": ["fire_bolt", "magic_missile", "thunderwave", "life_drain"],
+    "archetypes": {
+      "evoker": {"levels": {"2": "sculpt", "3": "scorching_ray", "4": "empowered", "5": "fireball"}},
+      "binder": {"levels": {"2": "grease", "3": "spike_growth", "4": "web", "5": "slow"}}
+    }}
+}

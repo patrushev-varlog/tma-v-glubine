@@ -1,0 +1,256 @@
+keys,ru,en
+CLASS_fighter,Воин,Fighter
+CLASS_rogue,Плут,Rogue
+CLASS_cleric,Жрец,Cleric
+CLASS_wizard,Волшебник,Wizard
+ARCH_guardian,Страж,Guardian
+ARCH_berserker,Берсерк,Berserker
+ARCH_assassin,Убийца,Assassin
+ARCH_trickster,Ловкач,Trickster
+ARCH_life,Жизнь,Life
+ARCH_light,Свет,Light
+ARCH_evoker,Воплотитель,Evoker
+ARCH_binder,Сковыватель,Binder
+ARCH_guardian_DESC,Щит и строй: держит врагов на себе и прикрывает соседей.,Shield and line: holds enemies on himself and covers his neighbours.
+ARCH_berserker_DESC,"Двуручник и ярость: много урона, мало защиты.","Greatsword and rage: lots of damage, little defence."
+ARCH_assassin_DESC,"Прятки, яд и смертельный первый удар.","Hiding, poison and a deadly first strike."
+ARCH_trickster_DESC,"Лук, скорость и кинжалы по нескольким целям.","Bow, speed and daggers at several targets."
+ARCH_life_DESC,Лечит весь отряд и держит его на ногах.,Heals the whole party and keeps it on its feet.
+ARCH_light_DESC,Жжёт нежить и бьёт духовным оружием.,Burns the undead and strikes with a spiritual weapon.
+ARCH_evoker_DESC,"Чистый урон: лучи, огненный шар, свои не страдают.","Pure damage: rays, fireball, allies are spared."
+ARCH_binder_DESC,"Контроль поля: жир, шипы, паутина, замедление.","Battlefield control: grease, spikes, web, slow."
+HERO_fighter,Герой (воин),Hero (fighter)
+HERO_rogue,Герой (плут),Hero (rogue)
+HERO_cleric,Герой (жрец),Hero (cleric)
+HERO_wizard,Герой (волшебник),Hero (wizard)
+COMPANION_irena,Ирена,Irena
+COMPANION_garret,Гаррет,Garret
+COMPANION_velior,Велиор,Velior
+ENEMY_overseer,Надсмотрщик,Overseer
+ENEMY_overseer_chief,Старший надсмотрщик,Chief Overseer
+ENEMY_zombie,Зомби,Zombie
+ENEMY_skeleton_archer,Скелет-лучник,Skeleton Archer
+ENEMY_skeleton,Скелет,Skeleton
+ENEMY_drowned,Утопленник,Drowned One
+ENEMY_ghoul,Гуль,Ghoul
+ENEMY_acolyte,Послушник некроманта,Necromancer's Acolyte
+ENEMY_dwarf_dead,Мёртвый дварф,Dead Dwarf
+ENEMY_wight,Умертвие,Wight
+ENEMY_bone_archer,Костяной стрелок,Bone Archer
+ENEMY_ogre_zombie,Зомби-огр,Ogre Zombie
+ENEMY_flesh_golem,Мясной голем,Flesh Golem
+DIFF_story,История,Story
+DIFF_trial,Испытание,Trial
+DARK_shadow,Тень,Shadow
+DARK_dusk,Сумрак,Dusk
+DARK_gloom,Мрак,Gloom
+DARK_abyss,Бездна,Abyss
+BATTLE_level_1,Колонна у ворот рудника,The column at the mine gate
+BATTLE_level_2,Верхние шахты,The Upper Shafts
+BATTLE_level_3,Затопленные выработки,The Flooded Workings
+BATTLE_level_4,Дварфийские залы,The Dwarven Halls
+BATTLE_level_5,Кузницы плоти,The Flesh Forges
+ABILITY_second_wind,Второе дыхание,Second Wind
+ABILITY_second_wind_DESC,Лечит себя на 1d10 + уровень.,Heals yourself for 1d10 + level.
+ABILITY_disengage,Отход,Disengage
+ABILITY_disengage_DESC,До конца хода уход от врагов не провоцирует атаки.,"Until the end of the turn, moving away from enemies provokes no attacks."
+ABILITY_sacred_flame,Священное пламя,Sacred Flame
+ABILITY_sacred_flame_DESC,"Спасбросок Ловкости, 1d8 светом (2d8 с 5 уровня).","Dexterity save, 1d8 radiant (2d8 from level 5)."
+ABILITY_healing_word,Слово исцеления,Healing Word
+ABILITY_healing_word_DESC,"Лечит союзника на 1d4+3, поднимает выбывшего.",Heals an ally for 1d4+3 and raises a fallen one.
+ABILITY_fire_bolt,Огненный снаряд,Fire Bolt
+ABILITY_fire_bolt_DESC,"Атака заклинанием, 1d10 огнём (2d10 с 5 уровня).","Spell attack, 1d10 fire (2d10 from level 5)."
+ABILITY_magic_missile,Волшебная стрела,Magic Missile
+ABILITY_magic_missile_DESC,Без промаха: 3d4+3 силовым полем.,Never misses: 3d4+3 force.
+ABILITY_thunderwave,Громовая волна,Thunderwave
+ABILITY_thunderwave_DESC,"Все вокруг: спасбросок Телосложения, 2d8 звуком, половина при успехе. Задевает и своих.","Everyone around: Constitution save, 2d8 thunder, half on success. Hits allies too."
+ABILITY_hallowed_ground,Освящённая земля,Hallowed Ground
+ABILITY_hallowed_ground_DESC,"Зона 3×3: союзники лечатся на 1d6, нежить получает 2d6 светом.","3×3 area: allies heal 1d6, undead take 2d6 radiant."
+ABILITY_shield_of_faith,Щит веры,Shield of Faith
+ABILITY_shield_of_faith_DESC,+2 к КД союзника до конца боя.,+2 AC to an ally until the end of the battle.
+ABILITY_trip,Сбить с ног,Trip
+ABILITY_trip_DESC,Атака оружием; при попадании спасбросок Силы или враг падает.,"Weapon attack; on a hit, Strength save or the enemy falls prone."
+ABILITY_taunt,Провокация,Taunt
+ABILITY_taunt_DESC,Враги в 3 клетках атакуют Гаррета в свой следующий ход.,Enemies within 3 cells attack Garret on their next turn.
+ABILITY_bomb,Алхимическая бомба,Alchemist's Bomb
+ABILITY_bomb_DESC,"Две за бой. Зона 3×3: спасбросок Ловкости, 2d6 огнём (3d6 с 5 уровня), половина при успехе. Задевает и своих.","Two per battle. 3×3 area: Dexterity save, 2d6 fire (3d6 from level 5), half on success. Hits allies too."
+ABILITY_trap,Ловушка,Trap
+ABILITY_trap_DESC,Скрытая ловушка: первый враг на клетке получает 2d6 и останавливается.,Hidden trap: the first enemy on the cell takes 2d6 and stops.
+ABILITY_cursed_blade,Проклятый клинок,Cursed Blade
+ABILITY_cursed_blade_DESC,"Тёмный дар. Цена: хиты, равные двум уровням. Атака оружием +2d8 некротикой (3d8 с 5 уровня), лечит на половину.","Dark gift. Cost: hit points equal to twice your level. Weapon attack +2d8 necrotic (3d8 from level 5), heals you for half."
+ABILITY_shadow_step,Шаг в тень,Shadow Step
+ABILITY_shadow_step_DESC,"Тёмный дар. Цена: хиты, равные двум уровням. Преимущество на следующую атаку, +2d4 некротикой при попадании (3d4 с 5 уровня) и лечение на половину, уход без атак при возможности; до атаки ты скрыт, как после «Спрятаться».","Dark gift. Cost: hit points equal to twice your level. Advantage on your next attack, +2d4 necrotic on a hit (3d4 from level 5) and healing for half, move away without opportunity attacks; until you attack you are hidden, as after Hide."
+ABILITY_wither,Иссушение,Wither
+ABILITY_wither_DESC,"Тёмный дар. Цена: ячейка. Спасбросок Телосложения, 2d8 некротикой (3d8 с 5 уровня), половина при успехе; половину нанесённого получает самый раненый союзник.","Dark gift. Cost: a spell slot. Constitution save, 2d8 necrotic (3d8 from level 5), half on success; the most wounded ally receives half of the damage dealt."
+ABILITY_life_drain,Высасывание жизни,Life Drain
+ABILITY_life_drain_DESC,"Тёмный дар. Цена: ячейка. Атака заклинанием, 6d8 некротикой (7d8 с 5 уровня), лечит себя на половину.","Dark gift. Cost: a spell slot. Spell attack, 6d8 necrotic (7d8 from level 5), heals you for half."
+ABILITY_dodge,Уклонение,Dodge
+ABILITY_dodge_DESC,До начала следующего хода атаки по тебе с помехой.,"Until your next turn, attacks against you have disadvantage."
+ABILITY_shove,Толчок,Shove
+ABILITY_shove_DESC,"Вместо одного удара атаки. Спасбросок Силы или Ловкости врага: отлетает на клетку назад, а если некуда — падает. Можно столкнуть в ловушку или жир.","Instead of one attack. The enemy makes a Strength or Dexterity save: pushed back one cell, or knocked prone if there is no room. Can push into a trap or grease."
+ABILITY_action_surge,Всплеск действий,Action Surge
+ABILITY_action_surge_DESC,Ещё одно действие в этот ход. Раз за бой.,One more action this turn. Once per battle.
+ABILITY_rage,Ярость,Rage
+ABILITY_rage_DESC,"До конца боя +1 к урону в ближнем бою, а урон от оружия по берсерку меньше на 2.","Until the end of the battle, +1 melee damage and weapon damage against the berserker is reduced by 2."
+ABILITY_reckless,Безрассудная атака,Reckless Attack
+ABILITY_reckless_DESC,"В этот ход атаки в ближнем бою с преимуществом, но и по тебе до твоего хода — с преимуществом.","This turn your melee attacks have advantage, but attacks against you have advantage until your next turn."
+ABILITY_hide,Спрятаться,Hide
+ABILITY_hide_DESC,"Если рядом нет врагов. Вне их обзора — сразу, иначе проверка Ловкости против 15. Спрятавшегося враги не выбирают целью, пока он не атакует; он бьёт с преимуществом и скрытой атакой. Скрытность держится до конца следующего твоего хода и пропадает вплотную к врагу.","Only with no enemy next to you. Out of their sight it always works, otherwise a Dexterity check against 15. Enemies do not target a hidden character until he attacks; he strikes with advantage and sneak attack. Hiding lasts until the end of your next turn and breaks next to an enemy."
+ABILITY_poison_blade,Яд на клинке,Poisoned Blade
+ABILITY_poison_blade_DESC,"Следующее попадание: +2d6 ядом, цель бьёт с помехой до конца своего хода.","Next hit: +2d6 poison, the target attacks with disadvantage until the end of its turn."
+ABILITY_shoot,Выстрел из лука,Bow Shot
+ABILITY_shoot_DESC,"Атака коротким луком, 1d6+3. Скрытая атака работает и издали.","Short bow attack, 1d6+3. Sneak attack works at range too."
+ABILITY_dash,Рывок,Dash
+ABILITY_dash_DESC,Ещё столько же движения в этот ход.,Double your movement this turn.
+ABILITY_knife_fan,Веер кинжалов,Fan of Knives
+ABILITY_knife_fan_DESC,"Метает кинжалы в трёх ближайших видимых врагов в 4 клетках: атака, 1d4+3 каждому, скрытая атака по первому.","Throws daggers at the three nearest visible enemies within 4 cells: an attack, 1d4+3 each, sneak attack on the first."
+ABILITY_preserve_life,Сохранение жизни,Preserve Life
+ABILITY_preserve_life_DESC,"Распределяет 8 × уровень хитов между ранеными союзниками в 6 клетках, каждому не выше половины его хитов.","Distributes 8 × level hit points among wounded allies within 6 cells, each up to half of their hit points."
+ABILITY_mass_healing_word,Массовое слово исцеления,Mass Healing Word
+ABILITY_mass_healing_word_DESC,"Заклинание 3 круга (2 ячейки): все союзники в 6 клетках лечатся на 1d4+3, выбывшие встают.","3rd-level spell (2 slots): all allies within 6 cells heal 1d4+3, fallen ones rise."
+ABILITY_guiding_bolt,Направляющий снаряд,Guiding Bolt
+ABILITY_guiding_bolt_DESC,"Атака заклинанием, 3d6 светом; следующая атака по цели до твоего хода — с преимуществом.","Spell attack, 3d6 radiant; the next attack against the target before your turn has advantage."
+ABILITY_turn_undead,Изгнание нежити,Turn Undead
+ABILITY_turn_undead_DESC,"Раз за бой. Нежить в 2 клетках: спасбросок Мудрости или бежит и не атакует, пока не получит урон.",Once per battle. Undead within 2 cells: Wisdom save or flee and do not attack until they take damage.
+ABILITY_spiritual_weapon,Духовное оружие,Spiritual Weapon
+ABILITY_spiritual_weapon_DESC,"Первый раз — ячейка: призывает парящее оружие до конца боя. Каждый ход бонусом бьёт врага в 6 клетках: атака заклинанием, 1d6.","The first use costs a slot and summons a floating weapon until the end of the battle. Each turn, as a bonus action, it strikes an enemy within 6 cells: spell attack, 1d6."
+ABILITY_spirit_guardians,Духовные стражи,Spirit Guardians
+ABILITY_spirit_guardians_DESC,"Заклинание 3 круга (2 ячейки): до конца боя враг, начинающий ход в 2 клетках от жреца, — спасбросок Мудрости, 2d8 светом, половина при успехе.","3rd-level spell (2 slots): until the end of the battle, an enemy starting its turn within 2 cells of the cleric makes a Wisdom save, 2d8 radiant, half on success."
+ABILITY_scorching_ray,Палящий луч,Scorching Ray
+ABILITY_scorching_ray_DESC,"Три луча, каждый — атака заклинанием на 2d6 огнём. Если цель падает, оставшиеся лучи летят в ближайшего врага.","Three rays, each a spell attack for 2d6 fire. If the target falls, the remaining rays fly at the nearest enemy."
+ABILITY_fireball,Огненный шар,Fireball
+ABILITY_fireball_DESC,"Заклинание 3 круга, раз за бой: зона 3×3, спасбросок Ловкости, 7d6 огнём, половина при успехе. Задевает и своих, если нет «Аккуратного воплощения».","3rd-level spell, once per battle: 3×3 area, Dexterity save, 7d6 fire, half on success. Hits allies too unless you have Sculpt Spells."
+ABILITY_grease,Жир,Grease
+ABILITY_grease_DESC,Зона 3×3 до конца боя: кто в ней или входит в неё — спасбросок Ловкости или падает и теряет движение. Задевает и своих.,3×3 area until the end of the battle: anyone in it or entering it makes a Dexterity save or falls prone and loses movement. Hits allies too.
+ABILITY_web,Паутина,Web
+ABILITY_web_DESC,"Зона 3×3 до конца боя: кто в ней — спасбросок Ловкости или опутан: не ходит, бьёт с помехой, по нему с преимуществом. В начале хода — Сила, чтобы вырваться.","3×3 area until the end of the battle: anyone in it makes a Dexterity save or is restrained: cannot move, attacks with disadvantage, attacks against it have advantage. A Strength save at the start of its turn to break free."
+ABILITY_spike_growth,Каменные шипы,Spike Growth
+ABILITY_spike_growth_DESC,"Зона 5×5 до конца боя: каждый шаг по ней — 2d4 колющего урона. Задевает и своих, если пойдут через неё.",5×5 area until the end of the battle: every step in it deals 2d4 piercing damage. Hits allies too if they walk through it.
+ABILITY_slow,Замедление,Slow
+ABILITY_slow_DESC,"Заклинание 3 круга: враги в зоне 7×7 — спасбросок Мудрости или −2 КД, половина движения, одна атака за ход и без атак при возможности. Спасбросок в конце каждого их хода.","3rd-level spell: enemies in a 7×7 area make a Wisdom save or get −2 AC, half movement, one attack per turn and no opportunity attacks. They repeat the save at the end of each of their turns."
+STATUS_prone,лежит,prone
+STATUS_dodging,уклоняется,dodging
+STATUS_hidden,спрятан,hidden
+STATUS_disengaged,отходит,disengaging
+STATUS_guided,метка,marked
+STATUS_taunted,спровоцирован,taunted
+STATUS_raging,ярость,raging
+STATUS_reckless,безрассуден,reckless
+STATUS_poison_ready,яд на клинке,poisoned blade
+STATUS_poisoned,яд,poisoned
+STATUS_shadow_ready,тень,shadow
+STATUS_stunned,парализован,paralysed
+STATUS_restrained,опутан,restrained
+STATUS_slowed,замедлен,slowed
+STATUS_turned,бежит,fleeing
+STATUS_shielded,щит веры,shield of faith
+STATUS_spirit_weapon,духовное оружие,spiritual weapon
+STATUS_guardians,духовные стражи,spirit guardians
+TRAIT_protector,Защитник,Protector
+TRAIT_protector_DESC,Союзники рядом со Стражем получают +2 к КД.,Allies next to the Guardian get +2 AC.
+TRAIT_hold_the_line,Удержать проход,Hold the Line
+TRAIT_hold_the_line_DESC,"Враг, по которому попала атака при возможности, останавливается.",An enemy hit by an opportunity attack stops.
+TRAIT_stalwart,Стойкость,Stalwart
+TRAIT_stalwart_DESC,Урон от оружия по Стражу меньше на 3.,Weapon damage against the Guardian is reduced by 3.
+TRAIT_cleave,Рассечение,Cleave
+TRAIT_cleave_DESC,Раз за ход при попадании в ближнем бою — такой же удар по второму врагу рядом с целью.,"Once per turn on a melee hit, the same strike against a second enemy next to the target."
+TRAIT_relentless,Неудержимый,Relentless
+TRAIT_relentless_DESC,Раз за бой в ярости при 0 хитов остаётся с 1 хитом.,"Once per battle, while raging, drops to 1 hit point instead of 0."
+TRAIT_assassinate,Убийство,Assassinate
+TRAIT_assassinate_DESC,"В первом раунде атаки по врагам, ещё не ходившим, с преимуществом и + уровень к урону.","In the first round, attacks against enemies who have not acted yet have advantage and deal + level damage."
+TRAIT_finisher,Добивание,Finisher
+TRAIT_finisher_DESC,Скрытая атака по врагу с половиной хитов или меньше — двойные кости.,Sneak attack against an enemy at half hit points or less deals double dice.
+TRAIT_uncanny_dodge,Уворот,Uncanny Dodge
+TRAIT_uncanny_dodge_DESC,Первое попадание оружием по тебе между твоими ходами — вдвое меньше урона.,The first weapon hit against you between your turns deals half damage.
+TRAIT_life_disciple,Ученик жизни,Disciple of Life
+TRAIT_life_disciple_DESC,Лечащие заклинания восстанавливают на 2 хита больше.,Healing spells restore 2 more hit points.
+TRAIT_sculpt,Аккуратное воплощение,Sculpt Spells
+TRAIT_sculpt_DESC,Громовая волна и огненный шар не задевают своих.,Thunderwave and Fireball do not hit allies.
+TRAIT_empowered,Усиленный заговор,Empowered Cantrip
+TRAIT_empowered_DESC,+3 к урону огненного снаряда.,+3 to Fire Bolt damage.
+TRAIT_extra_attack,Дополнительная атака,Extra Attack
+TRAIT_extra_attack_DESC,Действие «Атака» — два удара.,The Attack action is two strikes.
+TRAIT_rage_plus,Ярость тесака,Cleaver's Rage
+TRAIT_bow_close,Выстрел в упор,Point-Blank Shot
+TRAIT_poison_more,Ещё яда,More Poison
+TRAIT_oa_adv,Выпад гвардейца,Guard's Lunge
+TRAIT_shield_plus,Крепкий щит,Stronger Shield
+TRAIT_hallowed_plus,Жаркий свет,Searing Light
+TRAIT_turn_wide,Широкое изгнание,Wide Turning
+TRAIT_bell_ring,Звон колокола,Ringing Bell
+TRAIT_fan_wide,Широкий веер,Wide Fan
+TRAIT_rays_four,Четвёртый луч,Fourth Ray
+TRAIT_preserve_plus,Щедрая жизнь,Generous Life
+TRAIT_guardians_plus,Грозные стражи,Fierce Guardians
+TRAIT_uncanny_two,Двойной уворот,Double Dodge
+TRAIT_assassinate_long,Долгое убийство,Long Assassination
+TRAIT_king_gift,Дар короля,The King's Gift
+TRAIT_shadow_start,Тень,Shadow
+TRAIT_silence,Молчание,Silence
+TRAIT_miner_light,Свет штейгера,Foreman's Light
+TRAIT_wife_waits,Жена ждёт,His Wife Waits
+TRAIT_whisper,Шёпот,Whisper
+TRAIT_lamp,Светильник,Lamp
+TRAIT_bolt_splash,Брызги огня,Fire Splash
+TRAIT_rally,Клятва держит,The Oath Holds
+TRAIT_rescue,Цепь поднимает,The Chain Lifts
+TRAIT_ring,Без меры,Beyond Measure
+TRAIT_cleave_full,Полное рассечение,Full Cleave
+TRAIT_zones_long,Долгие зоны,Lasting Zones
+TRAIT_protector_plus,Надёжный защитник,Steadfast Protector
+ITEM_gate_sword,Меч стражи ворот,Gate Guard's Sword
+ITEM_tracker_sting,Жало следопыта,Tracker's Sting
+ITEM_mine_greatsword,Рудничный двуручник,Mine Greatsword
+ITEM_eshmur_hunter_bow,Лук охотника из Эшмура,Ashmoor Hunter's Bow
+ITEM_sutler_censer,Походное кадило,Camp Censer
+ITEM_chapel_mace,Булава причетника,Sexton's Mace
+ITEM_workshop_weapon,Оружие из мастерских Короля,Weapon from the King's Workshops
+ITEM_eshmur_cleaver,Тесак Эшмура,Ashmoor Cleaver
+ITEM_silver_bow,Серебряный лук контрабандистов,Smugglers' Silver Bow
+ITEM_archivist_fang,Клык архивариуса,Archivist's Fang
+ITEM_warden_mace,Молот-кадило Молчащих,Censer-Hammer of the Silent
+ITEM_guard_blade,Клинок эльдмарской гвардии,Eldmar Guard Blade
+ITEM_forge_mace,Булава литейной,Foundry Mace
+ITEM_foundry_maul,Молот литейщика,Founder's Maul
+ITEM_black_steel,Чёрная сталь,Black Steel
+ITEM_ambush_armor,Доспех засады,Ambush Armour
+ITEM_sutler_quilt,Стёганка обозника,Sutler's Gambeson
+ITEM_smuggler_jacket,Куртка контрабандиста,Smuggler's Jacket
+ITEM_village_mail,Кольчуга деревенской кузни,Village Forge Mail
+ITEM_cloak_underwater,Плащ подводного хода,Cloak of the Underwater Passage
+ITEM_blackwater_scale,Чешуя Чёрной воды,Black Water Scale
+ITEM_silent_armor,Доспех Молчащих,Armour of the Silent
+ITEM_forge_cloak,Плащ литейщика,Founder's Cloak
+ITEM_foundry_plate,Латы литейной,Foundry Plate
+ITEM_drowned_shroud,Саван утопленника,Drowned Man's Shroud
+ITEM_sutler_amulet,Ладанка обозника,Sutler's Locket
+ITEM_ashmoor_beads,Чётки храма Эшмура,Ashmoor Temple Beads
+ITEM_foreman_token,Жетон десятника,Foreman's Token
+ITEM_miner_charm,Оберег рудокопа,Miner's Charm
+ITEM_dwarf_ward,Дварфийский оберег,Dwarven Ward
+ITEM_master_seal,Печать мастера,Master's Seal
+ITEM_forge_heart,Сердце горна,Heart of the Forge
+ITEM_slag_ward,Оберег из окалины,Slag Ward
+ITEM_bone_focus,Костяной фокус,Bone Focus
+ITEM_silent_legacy,Наследие Молчащих,Legacy of the Silent
+ITEM_garret_tag,Бирка жены,His Wife's Tag
+ITEM_irena_bell,Колокол разрушенного храма,Bell of the Ruined Temple
+ITEM_crown_dagger,Кинжал с короной,Crowned Dagger
+ITEM_crown_dagger_taken,Кинжал с короной (забран),Crowned Dagger (taken)
+ITEM_silent_crown,Венец Молчащих,Crown of the Silent
+ITEM_shadowskin,Тенекожа,Shadowskin
+ITEM_pale_ring,Перстень Бледного Короля,Ring of the Pale King
+ITEM_foreman_lantern,Фонарь первого штейгера,Lantern of the First Foreman
+ITEM_sunken_shrine_spear,Острога затопленного святилища,Spear of the Sunken Shrine
+ITEM_nameless_chain,Цепь Безымянных,Chain of the Nameless
+ITEM_workshop_weapon_wizard,Посох из мастерских Короля,Staff from the King's Workshops
+ITEM_ambush_armor_fighter,Кольчуга надсмотрщика,Overseer's Mail
+ITEM_ambush_armor_cleric,Кольчуга надсмотрщика,Overseer's Mail
+ITEM_ambush_armor_rogue,Кожанка разведчика,Scout's Leathers
+ITEM_ambush_armor_wizard,Мантия с оберегами,Warded Robe
+ITEM_silent_armor_wizard,Мантия Молчащих,Robe of the Silent
+ITEM_forge_heart_caster,Сердце горна,Heart of the Forge
+ITEM_silent_legacy_fighter,Клятва Молчащих,Oath of the Silent
+ITEM_silent_legacy_rogue,Шёпот Молчащих,Whisper of the Silent
+ITEM_silent_legacy_cleric,Светильник Молчащих,Lamp of the Silent
+ITEM_silent_legacy_wizard,Посох Молчащих,Staff of the Silent

@@ -1,0 +1,198 @@
+{
+  "_doc": "Умения героев, спутников и врагов. Схема и список операций эффектов — game/docs/COMBAT_DATA.md. Имена и описания — i18n/combat.csv (ключи ABILITY_<id> и ABILITY_<id>_DESC).",
+
+  "second_wind": {"cost": "bonus", "resource": "use", "uses": 1, "target": "self",
+    "effects": [{"op": "heal", "to": "self", "dice": "1d10", "add": "level"}],
+    "ai": {"phase": "before", "priority": 30, "when": {"self_hp_below": 0.5}}},
+
+  "disengage": {"cost": "bonus", "resource": "none", "target": "self",
+    "effects": [{"op": "status", "to": "self", "status": "disengaged"}],
+    "ai": {"skip": true}},
+
+  "sacred_flame": {"cost": "action", "resource": "none", "target": "enemy", "range": 8, "dice": "1d8", "scale": "cantrip",
+    "tags": ["spell"],
+    "effects": [{"op": "save_damage", "to": "target", "stat": "dex", "half": false}]},
+
+  "healing_word": {"cost": "bonus", "resource": "slot", "target": "ally", "range": 8, "dice": "1d4+3",
+    "tags": ["spell", "heal"],
+    "effects": [{"op": "heal", "to": "target", "spell_heal": true, "item_heal": true}],
+    "ai": {"phase": "before", "priority": 20, "pick": "wounded_ally", "reach_down_ally": true, "after": "down_ally"}},
+
+  "fire_bolt": {"cost": "action", "resource": "none", "target": "enemy", "range": 10, "dice": "1d10", "scale": "cantrip",
+    "tags": ["spell"],
+    "effects": [{"op": "spell_attack", "to": "target"}]},
+
+  "magic_missile": {"cost": "action", "resource": "slot", "target": "enemy", "range": 10, "dice": "3d4+3",
+    "tags": ["spell"],
+    "effects": [{"op": "damage", "to": "target"}]},
+
+  "thunderwave": {"cost": "action", "resource": "slot", "target": "self", "radius": 1, "dice": "2d8",
+    "tags": ["spell", "area"],
+    "effects": [{"op": "save_damage", "to": "area", "who": "others", "friendly_fire": true, "stat": "con", "half": true}]},
+
+  "hallowed_ground": {"cost": "action", "resource": "slot", "target": "cell", "range": 8, "radius": 1,
+    "params": {"undead_dice": "2d6"},
+    "tags": ["spell", "area", "heal"],
+    "effects": [
+      {"op": "heal", "to": "area", "who": "allies", "dice": "1d6", "item_heal": true},
+      {"op": "damage", "to": "area", "who": "foes", "undead": true, "dice": "$undead_dice"}],
+    "ai": {"min_value": 4}},
+
+  "shield_of_faith": {"cost": "bonus", "resource": "slot", "target": "ally", "range": 8,
+    "params": {"ac": 2},
+    "target_filter": {"not_status": "shielded", "not_down": true},
+    "tags": ["spell"],
+    "effects": [{"op": "status", "to": "target", "status": "shielded", "value": "$ac"}],
+    "ai": {"phase": "after", "priority": 30, "when": {"slots_at_least": 3}, "pick": "guard_ally"}},
+
+  "trip": {"cost": "action", "resource": "use", "uses": 2, "target": "enemy", "range": 1, "attack": true,
+    "effects": [{"op": "weapon_attack", "to": "target", "on_hit": [
+      {"op": "save", "to": "target", "stat": "str", "on_fail": [{"op": "status", "to": "target", "status": "prone"}]}]}]},
+
+  "taunt": {"cost": "bonus", "resource": "use", "uses": 2, "target": "self", "radius": 3,
+    "effects": [{"op": "status", "to": "area", "who": "foes", "status": "taunted"}],
+    "ai": {"phase": "before", "priority": 50, "when": {"foes_within": [3, 2]}}},
+
+  "bomb": {"cost": "action", "resource": "use", "uses": 2, "fixed_uses": true, "target": "cell", "range": 6, "radius": 1,
+    "dice": "2d6", "scale": "bomb",
+    "tags": ["area"],
+    "effects": [{"op": "save_damage", "to": "area", "who": "all", "friendly_fire": true, "stat": "dex", "half": true}]},
+
+  "trap": {"cost": "action", "resource": "use", "uses": 2, "target": "empty_cell", "range": 3,
+    "params": {"dice": "2d6"},
+    "effects": [{"op": "zone", "kind": "trap", "dice": "$dice"}],
+    "ai": {"skip": true}},
+
+  "cursed_blade": {"cost": "action", "resource": "none", "target": "enemy", "range": 1, "attack": true,
+    "dark": "hp", "dice": "2d8", "scale": "dark5",
+    "effects": [{"op": "weapon_attack", "to": "target", "extra_dice": "$dice", "drain_extra": true}]},
+
+  "shadow_step": {"cost": "bonus", "resource": "none", "target": "self", "dark": "hp", "dice": "2d4", "scale": "dark5",
+    "effects": [
+      {"op": "status", "to": "self", "status": "hidden"},
+      {"op": "status", "to": "self", "status": "disengaged"},
+      {"op": "status", "to": "self", "status": "shadow_ready", "value": "$dice"}],
+    "ai": {"phase": "before", "priority": 60, "when": {"foe_within_move": 1, "hp_above_dark_cost": 3}}},
+
+  "wither": {"cost": "action", "resource": "none", "target": "enemy", "range": 8, "dark": "slot", "dice": "2d8", "scale": "dark5",
+    "tags": ["spell"],
+    "effects": [
+      {"op": "save_damage", "to": "target", "stat": "con", "half": true},
+      {"op": "heal", "to": "most_wounded_ally", "amount": "half_dealt"}]},
+
+  "life_drain": {"cost": "action", "resource": "none", "target": "enemy", "range": 8, "dark": "slot", "dice": "6d8", "scale": "dark5",
+    "tags": ["spell"],
+    "effects": [{"op": "spell_attack", "to": "target", "drain": true}]},
+
+  "dodge": {"cost": "action", "resource": "none", "target": "self",
+    "effects": [{"op": "status", "to": "self", "status": "dodging"}],
+    "ai": {"skip": true}},
+
+  "shove": {"cost": "action", "resource": "none", "target": "enemy", "range": 1, "attack": true,
+    "effects": [{"op": "shove", "to": "target"}],
+    "ai": {"skip": true}},
+
+  "action_surge": {"cost": "free", "resource": "use", "uses": 1, "target": "self",
+    "requires": ["action_used"],
+    "effects": [{"op": "refresh_action"}],
+    "ai": {"phase": "surge"}},
+
+  "rage": {"cost": "bonus", "resource": "use", "uses": 1, "target": "self",
+    "requires": ["not_status:raging"],
+    "effects": [{"op": "status", "to": "self", "status": "raging"}],
+    "ai": {"phase": "before", "priority": 40, "when": {"foe_within_move": 2}}},
+
+  "reckless": {"cost": "free", "resource": "none", "target": "self",
+    "requires": ["not_status:reckless", "action_free"],
+    "effects": [{"op": "status", "to": "self", "status": "reckless"}],
+    "ai": {"phase": "weapon", "when": {"self_hp_above": 0.5, "target_reachable": true}}},
+
+  "hide": {"cost": "bonus", "resource": "none", "target": "self",
+    "requires": ["no_adjacent_foe"],
+    "effects": [{"op": "hide", "dc": 15}],
+    "ai": {"phase": "before", "priority": 70, "when": {"no_foe_within": 1}}},
+
+  "poison_blade": {"cost": "bonus", "resource": "use", "uses": 3, "target": "self",
+    "requires": ["not_status:poison_ready"],
+    "effects": [{"op": "status", "to": "self", "status": "poison_ready", "value": "2d6"}],
+    "ai": {"phase": "before", "priority": 80, "when": {"foe_within_move": 1}}},
+
+  "shoot": {"cost": "action", "resource": "none", "target": "enemy", "range": 8, "attack": true,
+    "effects": [{"op": "weapon_attack", "to": "target", "weapon": "ranged"}]},
+
+  "dash": {"cost": "bonus", "resource": "none", "target": "self",
+    "effects": [{"op": "add_speed"}],
+    "ai": {"phase": "weapon", "when": {"target_out_of_reach": true}}},
+
+  "knife_fan": {"cost": "action", "resource": "none", "target": "self", "radius": 4,
+    "params": {"count": 3, "dagger": "1d4+3"},
+    "effects": [{"op": "weapon_attack", "to": "nearest_foes", "count": "$count", "weapon": {"damage": "$dagger", "kind": "ranged"}}],
+    "ai": {"kind": "fan"}},
+
+  "preserve_life": {"cost": "action", "resource": "use", "uses": 1, "target": "self", "radius": 6,
+    "params": {"per_level": 8},
+    "tags": ["heal"],
+    "effects": [{"op": "heal_pool", "per_level": "$per_level"}],
+    "ai": {"kind": "heal_pool", "min_need": 8}},
+
+  "mass_healing_word": {"cost": "bonus", "resource": "slot", "slot_cost": 2, "target": "self", "radius": 6,
+    "dice": "1d4+3",
+    "tags": ["spell", "heal"],
+    "effects": [{"op": "heal", "to": "area", "who": "allies", "wounded": true, "spell_heal": true, "item_heal": true}],
+    "ai": {"phase": "before", "priority": 10, "when": {"wounded_allies": 2}}},
+
+  "guiding_bolt": {"cost": "action", "resource": "slot", "target": "enemy", "range": 10, "dice": "3d6",
+    "tags": ["spell"],
+    "effects": [{"op": "spell_attack", "to": "target", "on_hit": [{"op": "status", "to": "target", "status": "guided"}]}]},
+
+  "turn_undead": {"cost": "action", "resource": "use", "uses": 1, "target": "self", "radius": 2,
+    "effects": [{"op": "save", "to": "area", "who": "foes", "undead": true, "not_status": "turned", "stat": "wis",
+      "on_fail": [{"op": "status", "to": "target", "status": "turned"}]}],
+    "ai": {"kind": "turn"}},
+
+  "spiritual_weapon": {"cost": "bonus", "resource": "none", "target": "enemy", "range": 6, "dice": "1d6",
+    "requires": ["status_or_slot:spirit_weapon"],
+    "tags": ["spell"],
+    "effects": [
+      {"op": "status", "to": "self", "status": "spirit_weapon", "pay_slot": true},
+      {"op": "spell_attack", "to": "target"}],
+    "ai": {"phase": "after", "priority": 20, "when": {"status_or_slots": ["spirit_weapon", 3]}, "pick": "weakest_foe"}},
+
+  "spirit_guardians": {"cost": "action", "resource": "slot", "slot_cost": 2, "target": "self", "radius": 2, "dice": "2d8",
+    "params": {"extra_dice": ""},
+    "requires": ["not_status:guardians"],
+    "tags": ["spell"],
+    "effects": [{"op": "status", "to": "self", "status": "guardians"}],
+    "aura_effects": [{"op": "save_damage", "to": "target", "stat": "wis", "half": true, "dice": "$dice", "add_dice": "$extra_dice"}],
+    "ai": {"kind": "aura"}},
+
+  "scorching_ray": {"cost": "action", "resource": "slot", "target": "enemy", "range": 8, "dice": "2d6",
+    "params": {"repeat": 3},
+    "tags": ["spell"],
+    "effects": [{"op": "spell_attack", "to": "target", "repeat": "$repeat", "retarget": true}]},
+
+  "fireball": {"cost": "action", "resource": "use", "uses": 1, "target": "cell", "range": 10, "radius": 1, "dice": "7d6",
+    "tags": ["spell", "area"],
+    "effects": [{"op": "save_damage", "to": "area", "who": "others", "friendly_fire": true, "stat": "dex", "half": true}]},
+
+  "grease": {"cost": "action", "resource": "slot", "target": "cell", "range": 8, "radius": 1,
+    "tags": ["spell", "area"],
+    "effects": [{"op": "zone", "kind": "grease"}],
+    "ai": {"kind": "zone", "foe": 4, "ally": -2, "foe_skip": ["prone", "ranged"]}},
+
+  "web": {"cost": "action", "resource": "slot", "target": "cell", "range": 8, "radius": 1,
+    "tags": ["spell", "area"],
+    "effects": [{"op": "zone", "kind": "web"}],
+    "ai": {"kind": "zone", "foe": 4, "foe_per_attack": 1, "ally": -4, "foe_skip": ["restrained"]}},
+
+  "spike_growth": {"cost": "action", "resource": "slot", "target": "cell", "range": 8, "radius": 2, "dice": "2d4",
+    "tags": ["spell", "area"],
+    "effects": [{"op": "zone", "kind": "spikes", "dice": "$dice"}],
+    "ai": {"kind": "zone", "foe_dice_mult": 1.5, "ally": -1, "foe_skip": ["ranged", "on_zone"]}},
+
+  "slow": {"cost": "action", "resource": "slot", "target": "cell", "range": 12, "radius": 3,
+    "tags": ["spell", "area"],
+    "effects": [{"op": "save", "to": "area", "who": "foes", "not_status": "slowed", "stat": "wis",
+      "on_fail": [{"op": "status", "to": "target", "status": "slowed", "value": "dc"}]}],
+    "ai": {"kind": "slow"}}
+}

@@ -1,0 +1,25 @@
+{
+  "_doc": "Состояния участников. Ключи свойств и событий окончания — game/docs/COMBAT_DATA.md. value — число или кости, заданные тем, кто наложил состояние.",
+
+  "prone":        {"defense_melee": 1, "defense_ranged": -1, "attack": -1, "turn_start": "stand_up", "ai_value": 2},
+  "dodging":      {"defense": -1, "ends": ["own_turn_start"]},
+  "hidden":       {"attack": 1, "untargetable": true, "ends": ["attack", "down"], "hide_expiry": true},
+  "disengaged":   {"no_provoke": true, "ends": ["own_turn_start"]},
+  "guided":       {"defense": 1, "ends": ["attacked", "src_turn_start"], "ai_value": 2},
+  "taunted":      {"forced_target": true, "ends": ["own_turn_end"]},
+  "raging":       {"melee_dmg": 1, "weapon_dr": 2, "preview_mitigation": 0.8, "ends": ["down"]},
+  "reckless":     {"melee_attack": 1, "defense": 1, "ends": ["own_turn_start"]},
+  "poison_ready": {"on_weapon_hit": [
+                    {"op": "bonus_dice", "dice": "$value"},
+                    {"op": "status", "to": "target", "status": "poisoned"}],
+                   "ends": ["weapon_hit"]},
+  "poisoned":     {"attack": -1, "ends": ["own_turn_end"]},
+  "shadow_ready": {"on_weapon_hit": [{"op": "bonus_dice", "dice": "$value", "drain": true}], "ends": ["weapon_hit"]},
+  "stunned":      {"skip_turn": true, "defense": 1, "no_reactions": true, "no_threat": true, "no_actions": true, "ends": ["down"]},
+  "restrained":   {"immobile": true, "attack": -1, "defense": 1},
+  "slowed":       {"ac": -2, "speed_mult": 0.5, "max_attacks": 1, "no_reactions": true, "turn_end_save": "wis"},
+  "turned":       {"flee": true, "no_reactions": true, "no_threat": true, "ends": ["damaged"]},
+  "shielded":     {"ac": "$value"},
+  "spirit_weapon": {},
+  "guardians":    {"aura_ability": "spirit_guardians"}
+}

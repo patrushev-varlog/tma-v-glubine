@@ -1,0 +1,12 @@
+<Project Sdk="Godot.NET.Sdk/4.7.2">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <!-- Шаблон экспорта Android в Godot 4.7 собран под .NET 9 (см. prototypes/stack-slice/STACK.md) -->
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <RootNamespace>TmaGame</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <!-- GodotInk: рантайм Ink от inkle (ink-engine-runtime.dll), качается при первой сборке -->
+  <Import Project="addons/GodotInk/GodotInk.props" />
+</Project>

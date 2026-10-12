@@ -1,0 +1,18 @@
+{
+  "_doc": "Журнал заданий. main — главная цель по главам (ключ перевода QUEST_<id>). side — задания, которые ведут переменные Ink: active — когда задание видно (переменная или «journal:<префикс>» — есть запись с таким префиксом), done — переменная завершения, clues — счётчик подсказок из clues_max. Записи журнала «Слухи и следы» (# journal:<id>) попадают в задание по префиксу id.",
+  "main": {
+    "prologue": "main_prologue",
+    "chapter1": "main_chapter1",
+    "chapter2": "main_chapter2",
+    "chapter3": "main_chapter3",
+    "chapter4": "main_chapter4",
+    "chapter5": "main_chapter5"
+  },
+  "side": [
+    {"id": "ch1_hunt", "chapter": 1, "active": "journal:ch1_hunt", "done": "ch1_hunt_done", "clues": "ch1_hunt_clues", "clues_max": 3},
+    {"id": "ch2_hunt", "chapter": 2, "active": "journal:ch2_hunt", "done": "ch2_hunt_done", "clues": "ch2_hunt_clues", "clues_max": 3},
+    {"id": "ch3_riddle", "chapter": 3, "active": "journal:ch3_riddle", "done": "ch3_riddle_solved"},
+    {"id": "ch4_hunt", "chapter": 4, "active": "journal:ch4_hunt", "done": "ch4_hunt_done", "clues": "ch4_hunt_clues", "clues_max": 3},
+    {"id": "ch5_hunt", "chapter": 5, "active": "journal:ch5_hunt", "done": "ch5_hunt_done", "clues": "ch5_hunt_clues", "clues_max": 3}
+  ]
+}
