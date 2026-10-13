@@ -1,0 +1,149 @@
+{
+	"arrow": {
+		"frames": 1,
+		"size": [
+			32,
+			16
+		]
+	},
+	"blood": {
+		"frames": 5,
+		"size": [
+			32,
+			32
+		]
+	},
+	"bolt": {
+		"frames": 1,
+		"size": [
+			32,
+			16
+		]
+	},
+	"bone_hit": {
+		"frames": 5,
+		"size": [
+			32,
+			32
+		]
+	},
+	"crit": {
+		"frames": 7,
+		"size": [
+			48,
+			48
+		]
+	},
+	"dust_puff": {
+		"frames": 7,
+		"size": [
+			64,
+			32
+		]
+	},
+	"dust_trail": {
+		"frames": 7,
+		"size": [
+			64,
+			32
+		]
+	},
+	"fire_bolt": {
+		"frames": 5,
+		"size": [
+			32,
+			32
+		]
+	},
+	"fire_hit": {
+		"frames": 7,
+		"size": [
+			64,
+			64
+		]
+	},
+	"hallowed_ground": {
+		"frames": 9,
+		"size": [
+			128,
+			64
+		]
+	},
+	"healing_word": {
+		"frames": 9,
+		"size": [
+			64,
+			64
+		]
+	},
+	"hit_spark": {
+		"frames": 5,
+		"size": [
+			32,
+			32
+		]
+	},
+	"magic_missile": {
+		"frames": 5,
+		"size": [
+			32,
+			32
+		]
+	},
+	"miss": {
+		"frames": 5,
+		"size": [
+			32,
+			32
+		]
+	},
+	"roof_fire": {
+		"frames": 9,
+		"size": [
+			64,
+			64
+		]
+	},
+	"sacred_flame": {
+		"frames": 7,
+		"size": [
+			64,
+			64
+		]
+	},
+	"second_wind": {
+		"frames": 9,
+		"size": [
+			64,
+			64
+		]
+	},
+	"shield_of_faith": {
+		"frames": 9,
+		"size": [
+			64,
+			64
+		]
+	},
+	"taunt": {
+		"frames": 7,
+		"size": [
+			128,
+			64
+		]
+	},
+	"thunderwave": {
+		"frames": 9,
+		"size": [
+			128,
+			64
+		]
+	},
+	"undead_death": {
+		"frames": 9,
+		"size": [
+			64,
+			64
+		]
+	}
+}

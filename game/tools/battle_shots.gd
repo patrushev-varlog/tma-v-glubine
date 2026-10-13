@@ -64,6 +64,18 @@ func _initialize() -> void:
 	s = await _battle(game, "prologue_4_gate", "fighter", "trial", {}, 3)
 	await _shot("b6_gate")
 	s.queue_free()
+
+	# Анимация: волшебник бросает огненный снаряд — снимок в полёте и после попадания.
+	s = await _battle(game, "prologue_3", "wizard", "story", {}, 4)
+	s._select_mode("fire_bolt")
+	var bolt_cells: Array[Vector2i] = s.battle.ability_targets(s.battle.current(), "fire_bolt")
+	if not bolt_cells.is_empty():
+		s._select_cell(bolt_cells[0], false)
+		await create_timer(0.36).timeout
+		await _shot("b7_fire_bolt_flight")
+		await create_timer(0.25).timeout
+		await _shot("b8_fire_bolt_hit")
+	s.queue_free()
 	quit()
 
 

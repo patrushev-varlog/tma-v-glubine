@@ -1,0 +1,730 @@
+{
+	"brandt": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			31,
+			76
+		],
+		"size": [
+			78,
+			78
+		]
+	},
+	"crossbowman": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			49
+		],
+		"size": [
+			52,
+			52
+		]
+	},
+	"garret": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			71
+		],
+		"size": [
+			74,
+			75
+		]
+	},
+	"hero_cleric_f": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"cast": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 10
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 8
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			62
+		],
+		"size": [
+			60,
+			65
+		]
+	},
+	"hero_cleric_m": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"cast": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 10
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 8
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			61
+		],
+		"size": [
+			58,
+			63
+		]
+	},
+	"hero_fighter_f": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			68
+		],
+		"size": [
+			64,
+			73
+		]
+	},
+	"hero_fighter_m": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			30,
+			69
+		],
+		"size": [
+			64,
+			75
+		]
+	},
+	"hero_rogue_f": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			64
+		],
+		"size": [
+			64,
+			71
+		]
+	},
+	"hero_rogue_m": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			39,
+			64
+		],
+		"size": [
+			71,
+			65
+		]
+	},
+	"hero_wizard_f": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"cast": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 10
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 8
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			37,
+			59
+		],
+		"size": [
+			73,
+			65
+		]
+	},
+	"hero_wizard_m": {
+		"anims": {
+			"cast": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			27,
+			69
+		],
+		"size": [
+			70,
+			79
+		]
+	},
+	"irena": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"cast": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 10
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 8
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			30,
+			69
+		],
+		"size": [
+			73,
+			73
+		]
+	},
+	"overseer": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			70
+		],
+		"size": [
+			71,
+			72
+		]
+	},
+	"raised": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			55
+		],
+		"size": [
+			58,
+			58
+		]
+	},
+	"raised_f": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			30,
+			55
+		],
+		"size": [
+			61,
+			59
+		]
+	},
+	"skeleton": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			69
+		],
+		"size": [
+			69,
+			71
+		]
+	},
+	"skeleton_archer": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			55
+		],
+		"size": [
+			59,
+			56
+		]
+	},
+	"velior": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"cast": {
+				"fps": 12,
+				"frames": 7,
+				"row": 6
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 10
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 8
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			48
+		],
+		"size": [
+			62,
+			50
+		]
+	},
+	"zombie": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 8,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			55
+		],
+		"size": [
+			54,
+			59
+		]
+	}
+}

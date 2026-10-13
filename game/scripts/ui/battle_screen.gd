@@ -62,6 +62,8 @@ func _ready() -> void:
 	Sound.for_battle()
 	board = BoardView.new()
 	board.battle = battle
+	if Game.session != null:
+		board.hero = Game.session.state.hero
 	add_child(board)
 	cam = Camera2D.new()
 	add_child(cam)
@@ -87,7 +89,8 @@ func _advance() -> void:
 		CombatAI.take_turn(battle, e)
 		_refresh()
 		if enemy_step > 0.0:
-			await get_tree().create_timer(enemy_step).timeout
+			# Ход врага виден целиком: шаги, замах и попадание доигрывают до следующего хода.
+			await get_tree().create_timer(maxf(enemy_step, board.busy_left())).timeout
 		battle.end_turn()
 	busy = false
 	if battle.outcome != "":
@@ -480,19 +483,7 @@ func _free_rect() -> Rect2:
 func _refresh() -> void:
 	if battle == null:
 		return
-	for ev in battle.take_events():
-		var target := battle.get_unit(String(ev.unit))
-		if target == null:
-			continue
-		match String(ev.type):
-			"damage":
-				board.popup(target.cell, "-%d" % int(ev.amount), Color("#ff6b5a"))
-			"heal":
-				board.popup(target.cell, "+%d" % int(ev.amount), Color("#6bff8a"))
-			"miss":
-				board.popup(target.cell, tr("BATTLE_MISS"), Color("#cccccc"))
-			"spawn":
-				board.popup(target.cell, "!", Color("#ff6b5a"))
+	board.feed(battle.take_events())
 	while log_shown < battle.log_lines.size():
 		_log.append_text(battle.log_lines[log_shown] + "\n")
 		log_shown += 1
@@ -878,6 +869,9 @@ func _close_overlay() -> void:
 
 
 func _show_result() -> void:
+	if enemy_step > 0.0 and board.busy_left() > 0.0:
+		# Последний удар и падение доигрывают, потом итог.
+		await get_tree().create_timer(board.busy_left() + 0.4).timeout
 	var col := _overlay_column()
 	var won := battle.outcome == "victory"
 	col.add_child(UiKit.heading((tr("BATTLE_VICTORY") if won else tr("BATTLE_DEFEAT")).to_upper(), UiKit.HEAD_TITLE,

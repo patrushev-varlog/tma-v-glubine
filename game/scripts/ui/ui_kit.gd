@@ -98,6 +98,28 @@ static func screen(root: Control, separation := 12) -> VBoxContainer:
 	return col
 
 
+## Картинка фоном под содержимым экрана (после screen): во весь экран с обрезкой краёв, без сглаживания,
+## с затемнением dim, чтобы текст читался. Нет файла — остаётся однотонный фон.
+static func backdrop(root: Control, path: String, dim := 0.45) -> void:
+	if not ResourceLoader.exists(path):
+		return
+	var tex := TextureRect.new()
+	tex.texture = load(path)
+	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tex.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	tex.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(tex)
+	root.move_child(tex, 1)
+	var shade := ColorRect.new()
+	shade.color = Color(0, 0, 0, dim)
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(shade)
+	root.move_child(shade, 2)
+
+
 static func margins(px: int) -> MarginContainer:
 	var m := MarginContainer.new()
 	for side in ["left", "right", "top", "bottom"]:

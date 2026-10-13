@@ -23,6 +23,7 @@ func _rebuild() -> void:
 
 func _build() -> void:
 	var col := UiKit.screen(self, 14)
+	UiKit.backdrop(self, "res://art/ui/menu_bg.png")
 	col.alignment = BoxContainer.ALIGNMENT_CENTER
 	var title := UiKit.heading(tr("GAME_TITLE").to_upper(), UiKit.HEAD_TITLE)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

@@ -45,6 +45,8 @@ var outcome := ""
 var log_lines: Array[String] = []
 ## События для интерфейса: урон, лечение, промах. Интерфейс забирает их через take_events().
 var events: Array[Dictionary] = []
+## Умение, которое сейчас выполняется: атаки внутри него не дают своего события "act".
+var _casting := ""
 ## Правила сюжетного боя из battles.json (собирает CombatData.scenario): objective — цель, кроме «убить всех»
 ## ({"type": "survive", "rounds": N}); waves — подкрепления по раундам; timed — состояния до раунда;
 ## bound — связанный союзник, который вступает в бой в раунде round или когда к нему подойдут;
@@ -430,6 +432,7 @@ func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 						log_line("%s удерживает проход: %s останавливается." % [e.name, u.name])
 						u.speed_left = 0
 						return
+		events.append({"type": "step", "unit": u.id, "from": u.cell, "to": step})
 		u.cell = step
 		u.speed_left -= 1
 		_free_bound_near(u)
@@ -613,6 +616,9 @@ func in_weapon_range(attacker: Combatant, target: Combatant) -> bool:
 
 ## Атакующий атаковал: с него спадает скрытность, с цели — метка «Направляющего снаряда».
 func _attack_made(attacker: Combatant, target: Combatant) -> void:
+	if _casting == "":
+		events.append({"type": "act", "unit": attacker.id, "anim": "attack", "aid": "",
+			"cell": target.cell if target != null else attacker.cell})
 	_end_statuses(attacker, "attack")
 	if target != null:
 		_end_statuses(target, "attacked")
@@ -768,9 +774,11 @@ func deal_damage(target: Combatant, amount: int, _kind: String) -> void:
 				_end_statuses(target, "down")
 				add_status(target, "prone", null)
 				log_line("%s выбывает из боя." % target.name)
+				events.append({"type": "down", "unit": target.id})
 				_rescue(target)
 		else:
 			target.dead = true
+			events.append({"type": "down", "unit": target.id})
 			log_line("%s повержен." % target.name)
 	_check_outcome()
 
@@ -1036,8 +1044,12 @@ func use_ability(u: Combatant, aid: String, target: Vector2i) -> bool:
 		"use":
 			u.uses[aid] = u.uses_left(aid) - 1
 	log_line("%s: %s." % [u.name, TranslationServer.translate("ABILITY_" + aid)])
+	events.append({"type": "act", "unit": u.id, "anim": "attack" if a.get("attack", false) else "cast", "aid": aid,
+		"cell": target, "self": a.target == "self"})
+	_casting = aid
 	run_effects(a.effects, {"user": u, "aid": aid, "cell": target, "target": occupant(target),
 		"params": params_of(u, aid)})
+	_casting = ""
 	if a.has("dark"):
 		_add_darkness(u)
 	return true
@@ -1323,6 +1335,7 @@ func _shove(u: Combatant, t: Combatant) -> void:
 		add_status(t, "prone", u)
 		log_line("%s падает." % t.name)
 		return
+	events.append({"type": "step", "unit": t.id, "from": t.cell, "to": dest, "push": true})
 	t.cell = dest
 	log_line("%s отлетает назад." % t.name)
 	_enter_cell(t, dest)
