@@ -15,8 +15,12 @@ No-go по любому критерию → правим ядро (бой, те
 
 ## Сборка
 
-- Демо собирает CI на каждом PR и в main: артефакты `game-windows-demo` и `game-linux-demo` в прогоне
-  workflow CI (вкладка Actions). macOS-демо — пресет «macOS Demo» локально или вручную.
+- Демо собирает CI на каждом PR и в main: артефакты `game-windows-demo`, `game-macos-demo` и `game-linux-demo`
+  в прогоне workflow CI (вкладка Actions).
+- macOS-демо — `TmaVGlubine.zip` с приложением для Intel и Apple Silicon (macOS 11+). Оно не подписано Apple, поэтому
+  при первом запуске macOS его не откроет: тестеру нужно нажать на приложение правой кнопкой → «Открыть» → «Открыть»,
+  либо в Терминале `xattr -dr com.apple.quarantine ` и перетащить приложение в окно Терминала. Подпись и нотаризация —
+  вместе со Steamworks (поток L).
 - Локально: `godot --headless --path game --export-release "Windows Desktop Demo"`.
 - Из редактора демо включается ключом: `godot --path game -- --demo`.
 - Через Steam Playtest (поток L), когда будет приложение в Steamworks; до того — архив сборки.
