@@ -1,0 +1,37 @@
+{
+ "id": "mine_lift",
+ "comment": "Глава 1, сцена 6 «Подъёмник»: площадка над стволом, клеть и рычаг (точка невозврата охоты). Сбоку — заложенный досками штрек (место охоты).",
+ "size": [14, 11],
+ "legend": {"s": "mine_stone", "g": "mine_gravel", "o": "mine_ore", "p": "mine_planks", "r": "mine_rails", "R": "mine_rails_b"},
+ "ground": [
+  "      ssss    ",
+  "     ppppppp  ",
+  "sss  ppppppp  ",
+  "ssgsspppppppp ",
+  "sssspppppppppp",
+  "     pppppppp ",
+  "     ppppppp  ",
+  "      ppppp   ",
+  "      sRs     ",
+  "      sRs     ",
+  "      sRs     "
+ ],
+ "variants": {"mine": {"tint": "#9a96b4"}},
+ "scenes": {"lift": {"variant": "mine", "spawn": [7, 10]}},
+ "objects": [
+  {"id": "drift_boards", "kind": "box", "cell": [0, 2], "explore": "ch1_hunt_site", "label": "LOC_CH1_BOARDS", "sprite": "mines/boards"},
+  {"id": "drift_fall", "kind": "box", "cell": [0, 4], "sprite": "mines/rockfall"},
+  {"id": "lift_cage", "kind": "box", "cell": [9, 2], "size": [2, 2], "sprite": "mines/lift_cage"},
+  {"id": "shaft", "kind": "box", "cell": [11, 3], "sprite": "mines/shaft"},
+  {"id": "lever", "kind": "box", "cell": [8, 1], "leave_check": 1, "sprite": "mines/winch"},
+  {"id": "beam_w", "kind": "box", "cell": [6, 0], "sprite": "mines/timber_support"},
+  {"id": "beam_e", "kind": "box", "cell": [9, 0], "sprite": "mines/timber_support"},
+  {"id": "lamp_1", "kind": "box", "cell": [5, 3], "light": 34, "sprite": "mines/lamp_post"},
+  {"id": "lamp_2", "kind": "box", "cell": [12, 5], "light": 34, "sprite": "mines/lamp_post"},
+  {"id": "crate", "kind": "decal", "cell": [6, 6], "flat": true, "sprite": "mines/tag_box"},
+  {"id": "rack", "kind": "box", "cell": [5, 1], "sprite": "mines/scaffold"},
+  {"id": "prisoner_1", "kind": "figure", "cell": [7, 6], "image": "prisoner_m", "face": "north-east", "if": "ch1_choice=riot"},
+  {"id": "prisoner_2", "kind": "figure", "cell": [9, 6], "image": "prisoner_f", "face": "north-east", "if": "ch1_choice=riot"},
+  {"id": "arch_in", "kind": "box", "cell": [6, 8], "sprite": "mines/timber_support"}
+ ]
+}

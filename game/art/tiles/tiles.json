@@ -59,6 +59,74 @@
 		24,
 		55
 	],
+	"mines/bars": [
+		10,
+		49
+	],
+	"mines/bars_b": [
+		14,
+		49
+	],
+	"mines/boards": [
+		26,
+		74
+	],
+	"mines/bunk": [
+		16,
+		31
+	],
+	"mines/cage": [
+		18,
+		61
+	],
+	"mines/guard_hut": [
+		24,
+		53
+	],
+	"mines/lamp_post": [
+		6,
+		51
+	],
+	"mines/lift_cage": [
+		38,
+		82
+	],
+	"mines/minecart": [
+		15,
+		33
+	],
+	"mines/notice_board": [
+		22,
+		54
+	],
+	"mines/ore_heap": [
+		19,
+		27
+	],
+	"mines/rockfall": [
+		25,
+		30
+	],
+	"mines/scaffold": [
+		18,
+		48
+	],
+	"mines/shaft": [
+		32,
+		64
+	],
+	"mines/tag_box": [
+		7,
+		20
+	],
+	"mines/timber_support": [
+		24,
+		76
+	],
+	"mines/winch": [
+		26,
+		72
+	],
 	"temple/altar": [
 		28,
 		52

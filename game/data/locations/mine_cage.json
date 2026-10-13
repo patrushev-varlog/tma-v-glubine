@@ -1,0 +1,34 @@
+{
+ "id": "mine_cage",
+ "comment": "Глава 1, сцена 2 «Клетка»: лагерь надсмотрщиков в широкой выработке. Кладовая крепи за нарами (закоулок 2).",
+ "size": [16, 11],
+ "legend": {"s": "mine_stone", "g": "mine_gravel", "o": "mine_ore", "p": "mine_planks", "r": "mine_rails", "R": "mine_rails_b"},
+ "ground": [
+  "  sRs           ",
+  "  sRs           ",
+  " ssRsssssss     ",
+  "ssssssgsssss    ",
+  "ssgsssssssssss  ",
+  "ssssssssssosss  ",
+  "sssssssssssss   ",
+  "sosssssgssssss  ",
+  "ssssssssssssss  ",
+  " sssssssssss    ",
+  "   sssssss      "
+ ],
+ "variants": {"mine": {"tint": "#9a96b4"}},
+ "scenes": {"cage": {"variant": "mine", "spawn": [3, 1]}},
+ "objects": [
+  {"id": "arch_in", "kind": "box", "cell": [2, 0], "sprite": "mines/timber_support"},
+  {"id": "bunks_w", "kind": "box", "cell": [0, 4], "size": [1, 4], "each": true, "sprite": "mines/bunk"},
+  {"id": "timber_store", "kind": "box", "cell": [0, 8], "explore": "ch1_nook_timber", "label": "LOC_CH1_TIMBER", "sprite": "mines/scaffold"},
+  {"id": "cage", "kind": "box", "cell": [7, 5], "sprite": "mines/cage"},
+  {"id": "hearth", "kind": "box", "cell": [7, 8], "sprite": "mines/rockfall"},
+  {"id": "lamp_1", "kind": "box", "cell": [4, 7], "light": 34, "sprite": "mines/lamp_post"},
+  {"id": "cart", "kind": "box", "cell": [11, 3], "sprite": "mines/minecart"},
+  {"id": "ore", "kind": "box", "cell": [12, 4], "sprite": "mines/ore_heap"},
+  {"id": "fall", "kind": "box", "cell": [12, 7], "sprite": "mines/rockfall"},
+  {"id": "support_s", "kind": "box", "cell": [10, 9], "sprite": "mines/timber_support"},
+  {"id": "support_n", "kind": "box", "cell": [9, 2], "sprite": "mines/timber_support"}
+ ]
+}

@@ -5,3 +5,10 @@ LOC_MOVE_PAD,Стик,Stick
 LOC_PROMPT,{key} — {action},{key} — {action}
 LOC_GOALS,На карте,On the map
 LOC_BATTLE_BEGIN,В бой,Fight
+LOC_LOOK,Осмотреть,Look around
+LOC_CH1_FACE,Осмотреть боковой забой,Search the side working
+LOC_CH1_HOLT_MAP,Осмотреть караулку Хольта,Search Holt's guardhouse
+LOC_CH1_TIMBER,Заглянуть в кладовую крепи,Look into the timber store
+LOC_CH1_HUT,Осмотреть сторожку десятника,Search the foreman's hut
+LOC_CH1_OLD_PRISONER,Поговорить со стариком у решётки,Talk to the old man by the bars
+LOC_CH1_BOARDS,Осмотреть заложенный штрек,Examine the boarded drift

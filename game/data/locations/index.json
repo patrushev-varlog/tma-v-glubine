@@ -1,4 +1,4 @@
 {
  "comment": "Сцена истории → локация. Сцены без карты идут на экране истории.",
- "scenes": {"raid": "ashmoor", "ashes": "ashmoor"}
+ "scenes": {"raid": "ashmoor", "ashes": "ashmoor", "gate": "mine_gate", "cage": "mine_cage", "barracks": "mine_barracks", "lift": "mine_lift"}
 }

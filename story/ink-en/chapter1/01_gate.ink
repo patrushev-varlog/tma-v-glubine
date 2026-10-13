@@ -77,4 +77,7 @@ On the board by the post hung an allocation sheet: which columns went to which b
     There was no column from Ashmoor on the list. It took you a moment to understand what that meant, and then you understood, and it became a little easier to breathe.
 }
 "The overseers' camp is further down the tunnel," said Garret. "It's shift change, so it'll be empty. Nearly." # spk:garret
+// On the post map the party walks freely: Holt's guardhouse (hunt clue), the side working (nook 1).
++ [Go down the tunnel to the overseers' camp. #obj:drift_on]
+-
 ->->

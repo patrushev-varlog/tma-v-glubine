@@ -67,6 +67,11 @@ const GROUND_ART := {
 		"objects": {"wall": "gate/palisade", "pillar": "gate/gatepost", "cart": "gate/prison_cart", "rubble": "gate/boulder",
 			"tree": "ford/bushes"},
 		"spans": ["cart"]},
+	# Шахты главы 1: рельсы по знаку дороги (вдоль x — floor_rails, вдоль y — road_b), нары — знак скамьи.
+	"mine": {"floor": ["mines/floor_stone", "mines/floor_stone", "mines/floor_stone", "mines/floor_gravel", "mines/floor_ore"],
+		"road": "mines/floor_rails", "road_b": "mines/floor_rails_b",
+		"objects": {"pillar": "mines/timber_support", "rubble": "mines/rockfall", "cart": "mines/minecart", "fence": "mines/bars",
+			"pew": "mines/bunk", "altar": "mines/winch", "well": "mines/shaft", "tree": "mines/ore_heap"}},
 }
 ## Верх ромба у тайла пола 64×64: центр клетки приходится на (32, 38).
 const FLOOR_OFFSET := Vector2(-32, -38)
@@ -469,6 +474,9 @@ func _floor_tile(c: Vector2i) -> Texture2D:
 			name = String(ga.get("ford", ""))
 		"road":
 			name = String(ga.get("road", ""))
+			# Рельсы во второй оси: соседи-дороги только сверху или снизу по y.
+			if ga.has("road_b") and battle.decor.get(c + Vector2i(1, 0), "") != "road" and battle.decor.get(c - Vector2i(1, 0), "") != "road":
+				name = String(ga.road_b)
 		"ash":
 			name = String(ga.get("ash", ""))
 		"water":

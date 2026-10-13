@@ -76,7 +76,7 @@ func test_demo_ends_at_chapter_1_and_save_carries_over() -> void:
 	Game.demo_forced = false
 	var tail := Game.load_from("auto")
 	assert_eq(Game.session.scene_name(), "gate", "полная игра продолжает с главы 1")
-	assert_eq(Game.screen_path(), "res://scenes/story_screen.tscn", "в полной игре дальше экран истории")
+	assert_eq(Game.screen_path(), "res://scenes/location_screen.tscn", "в полной игре дальше карта поста у ворот")
 	assert_false(tail.is_empty(), "первая строка главы 1 на экране")
 	assert_true(Game.session.state.unlocks.has("dark_gifts"), "дары перенеслись")
 

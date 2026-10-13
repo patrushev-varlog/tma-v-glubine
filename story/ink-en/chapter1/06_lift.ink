@@ -19,6 +19,10 @@ The guards at the cage raised their weapons. # battle:chapter1_3
 -> after_fight
 
 = after_fight
+// On the platform map after the fight: the boarded drift at the side (hunt site). The lever is the point
+// of no return: the game calls hunt_leave_check(1) first (explore_common.ink).
++ [Pull the cage lever. #obj:lever]
+-
 The chains creaked. The cage jerked and started down.
 The light of the platform drew away upwards, became a square, then a point. Then it was gone. Only Garret's lantern and a cold wind from below, as if down there something very large was breathing.
 { ch1_choice == "riot" && column_choice == "trail":
