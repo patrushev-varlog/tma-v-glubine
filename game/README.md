@@ -48,7 +48,9 @@ CI (`.github/workflows/ci.yml`):
 
 - `game-tests` — сборка сюжета, `dotnet build`, тесты GUT и самопроверка.
 - `export` — три сборки и демо для Windows, macOS и Linux на Linux, самопроверка сборок Linux.
-- `smoke` — запуск сборки Windows (на каждом PR) и macOS (на main и вручную).
+- `smoke` — запуск сборки Windows на каждом PR.
+- `macos` — на main и вручную: переподпись сборок macOS родным `codesign` (подпись Godot новые macOS на Apple Silicon не принимают),
+  самопроверка и замена артефактов `game-macos`, `game-macos-demo`. Рабочие сборки для Mac — из прогонов main.
 
 Готовые сборки лежат в артефактах прогона: `game-windows`, `game-macos`, `game-linux`, демо — `game-windows-demo`,
 `game-macos-demo`, `game-linux-demo`. Как проводить плейтест демо и сводить журналы тестеров — `docs/PLAYTEST.md`.

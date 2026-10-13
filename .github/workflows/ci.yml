@@ -143,29 +143,63 @@ jobs:
           path: build/game/${{ matrix.key }}/
           retention-days: 14
 
-  # Сборки Windows и macOS запускаются на своих системах. Минуты macOS в приватном репозитории
-  # идут с коэффициентом 10, поэтому macOS — только после слияния в main и по кнопке.
+  # Сборка Windows запускается на Windows на каждом PR.
   smoke:
-    name: Запуск сборки ${{ matrix.key }}
+    name: Запуск сборки windows
     needs: export
+    runs-on: windows-2022
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: game-windows
+          path: build
+      - name: Самопроверка
+        shell: pwsh
+        working-directory: build
+        run: |
+          $p = Start-Process -FilePath .\TmaVGlubine.exe -ArgumentList "--headless","--","--selftest" -Wait -PassThru -RedirectStandardOutput out.txt
+          Get-Content out.txt
+          exit $p.ExitCode
+
+  # Подпись, которую ставит Godot при экспорте с Linux, новые macOS на Apple Silicon не принимают: программу убивают
+  # при запуске («killed»). Поэтому сборки macOS переподписываются родным codesign (ad-hoc, без Apple ID),
+  # проверяются самопроверкой и заменяют артефакты. Минуты macOS в приватном репозитории идут с коэффициентом 10,
+  # поэтому это только после слияния в main и по кнопке: рабочие сборки для Mac — из прогонов main.
+  macos:
+    name: Подпись и запуск ${{ matrix.key }}
+    needs: export
+    if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
-        key: ${{ fromJSON(github.event_name == 'pull_request' && '["windows"]' || '["windows", "macos"]') }}
-    runs-on: ${{ matrix.key == 'windows' && 'windows-2022' || 'macos-14' }}
+        key: [macos, macos-demo]
+    runs-on: macos-14
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: game-${{ matrix.key }}
           path: build
-      - name: Самопроверка
-        shell: bash
+      - name: Переподпись
         working-directory: build
         run: |
-          if [ "${{ matrix.key }}" = "windows" ]; then
-            pwsh -Command '$p = Start-Process -FilePath .\TmaVGlubine.exe -ArgumentList "--headless","--","--selftest" -Wait -PassThru -RedirectStandardOutput out.txt; Get-Content out.txt; exit $p.ExitCode'
-          else
-            unzip -q TmaVGlubine.zip
-            APP=$(ls -d *.app)
-            "$APP/Contents/MacOS/$(ls "$APP/Contents/MacOS")" --headless -- --selftest
-          fi
+          ditto -x -k TmaVGlubine.zip .
+          rm TmaVGlubine.zip
+          APP=$(ls -d *.app)
+          find "$APP" -name '*.dylib' -exec codesign --force --sign - {} \;
+          codesign --force --deep --sign - "$APP"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          echo "APP=$APP" >> $GITHUB_ENV
+      - name: Самопроверка
+        working-directory: build
+        run: '"$APP/Contents/MacOS/$(ls "$APP/Contents/MacOS")" --headless -- --selftest'
+      - name: Архив
+        working-directory: build
+        run: |
+          ditto -c -k --keepParent "$APP" TmaVGlubine.zip
+          rm -rf "$APP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: game-${{ matrix.key }}
+          path: build/
+          retention-days: 14
+          overwrite: true
