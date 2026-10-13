@@ -16,6 +16,16 @@ const DANGER := Color("#e83b3b")
 const FONT_TITLE := 40
 const FONT_BODY := 22
 const FONT_SMALL := 17
+## Кегли пиксельного шрифта заголовков: пиксель шрифта — 1/8 кегля, чёткий только на кратных 8.
+const HEAD_TITLE := 40
+const HEAD_BODY := 24
+const HEAD_SMALL := 16
+
+## Шрифты (DESIGN.md, раздел 4; выбраны на прототипе локации, поток G): длинный текст — Literata,
+## заголовки и подписи — пиксельный Tiny5. Оба под OFL, тексты лицензий в fonts/.
+const FONTS := {"body": "res://fonts/Literata.ttf", "heading": "res://fonts/Tiny5.ttf"}
+
+static var _fonts := {}
 
 
 static func label(text := "", size := FONT_BODY, color := TEXT) -> Label:
@@ -25,6 +35,40 @@ static func label(text := "", size := FONT_BODY, color := TEXT) -> Label:
 	l.add_theme_color_override("font_color", color)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l
+
+
+## Надпись пиксельным шрифтом: заголовки, имена говорящих, подписи на карте.
+static func heading(text := "", size := HEAD_BODY, color := ACCENT) -> Label:
+	var l := label(text, size, color)
+	l.add_theme_font_override("font", heading_font())
+	return l
+
+
+static func body_font() -> Font:
+	return _font("body")
+
+
+static func heading_font() -> Font:
+	return _font("heading")
+
+
+static func _font(kind: String) -> Font:
+	if not _fonts.has(kind):
+		var f: FontFile = (load(String(FONTS[kind])) as FontFile).duplicate()
+		if kind == "heading":
+			f.antialiasing = TextServer.FONT_ANTIALIASING_NONE
+			f.hinting = TextServer.HINTING_NONE
+			f.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
+		_fonts[kind] = f
+	return _fonts[kind]
+
+
+## Тема всего окна: шрифт текста по умолчанию (ставит автозагрузка Game).
+static func theme() -> Theme:
+	var t := Theme.new()
+	t.default_font = body_font()
+	t.default_font_size = FONT_BODY
+	return t
 
 
 static func button(text: String, on_press: Callable = Callable(), size := FONT_BODY) -> Button:
@@ -94,8 +138,10 @@ static func fmt(key: String, values := {}) -> String:
 static func focus_first(node: Node) -> void:
 	for c in node.find_children("*", "Button", true, false):
 		if c.is_visible_in_tree() and not c.disabled:
-			var b: Button = c
+			# По id, а не захватом кнопки: если до конца кадра кнопку уберут, захват был бы освобождён.
+			var id := c.get_instance_id()
 			(func() -> void:
-				if is_instance_valid(b) and b.is_inside_tree():
+				var b := instance_from_id(id) as Button
+				if b != null and b.is_inside_tree():
 					b.grab_focus()).call_deferred()
 			return

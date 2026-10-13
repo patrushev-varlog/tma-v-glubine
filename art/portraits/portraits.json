@@ -1,6 +1,68 @@
 {
   "_comment": "Настройки портретов для art/tools/portrait.py. crop — квадрат в исходнике (x0, y0, x1, y1); face_box — лицо, ухо и шея в координатах 128; features — точки лица в координатах 128 для слоёв Тьмы (только у героя). crop_64 и face_box_64 — отдельный кадр для панели боя: голова и плечи крупнее. settings переопределяют общие настройки скрипта.",
   "hero_wizard_m": {
+    "source": "source/hero_wizard_m_v2.png",
+    "crop": [
+      24,
+      7,
+      344,
+      327
+    ],
+    "face_box": [
+      27,
+      17,
+      100,
+      103
+    ],
+    "crop_64": [
+      60,
+      28,
+      308,
+      276
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    },
+    "features": {
+      "eye_near": [
+        48,
+        54,
+        46
+      ],
+      "eye_far": [
+        73,
+        79,
+        46
+      ],
+      "iris_near": [
+        51,
+        46
+      ],
+      "iris_far": [
+        76,
+        46
+      ],
+      "temple": [
+        40,
+        38
+      ],
+      "cheek": [
+        46,
+        58
+      ],
+      "neck": [
+        57,
+        91
+      ]
+    }
+  },
+  "hero_wizard_m_v1": {
     "source": "source/hero_wizard_m.png",
     "crop": [
       80,
@@ -60,6 +122,1010 @@
     },
     "settings": {
       "bg_tolerance": 0
+    }
+  },
+  "hero_fighter_m": {
+    "source": "source/hero_fighter_m.png",
+    "crop": [
+      56,
+      11,
+      374,
+      329
+    ],
+    "face_box": [
+      27,
+      17,
+      101,
+      103
+    ],
+    "crop_64": [
+      92,
+      32,
+      338,
+      278
+    ],
+    "face_box_64": [
+      8,
+      5,
+      56,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    },
+    "features": {
+      "eye_near": [
+        48,
+        54,
+        45
+      ],
+      "eye_far": [
+        73,
+        79,
+        45
+      ],
+      "iris_near": [
+        51,
+        45
+      ],
+      "iris_far": [
+        76,
+        45
+      ],
+      "temple": [
+        40,
+        38
+      ],
+      "cheek": [
+        46,
+        58
+      ],
+      "neck": [
+        58,
+        90
+      ]
+    }
+  },
+  "hero_rogue_m": {
+    "source": "source/hero_rogue_m.png",
+    "crop": [
+      0,
+      3,
+      356,
+      359
+    ],
+    "face_box": [
+      27,
+      17,
+      101,
+      103
+    ],
+    "crop_64": [
+      41,
+      26,
+      316,
+      301
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    },
+    "features": {
+      "eye_near": [
+        48,
+        54,
+        45
+      ],
+      "eye_far": [
+        73,
+        79,
+        45
+      ],
+      "iris_near": [
+        51,
+        45
+      ],
+      "iris_far": [
+        76,
+        45
+      ],
+      "temple": [
+        40,
+        38
+      ],
+      "cheek": [
+        46,
+        58
+      ],
+      "neck": [
+        58,
+        90
+      ]
+    }
+  },
+  "hero_cleric_m": {
+    "source": "source/hero_cleric_m.png",
+    "crop": [
+      33,
+      0,
+      380,
+      347
+    ],
+    "face_box": [
+      32,
+      14,
+      106,
+      100
+    ],
+    "crop_64": [
+      87,
+      16,
+      356,
+      285
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    },
+    "features": {
+      "eye_near": [
+        54,
+        60,
+        43
+      ],
+      "eye_far": [
+        78,
+        84,
+        43
+      ],
+      "iris_near": [
+        57,
+        43
+      ],
+      "iris_far": [
+        81,
+        43
+      ],
+      "temple": [
+        46,
+        36
+      ],
+      "cheek": [
+        52,
+        55
+      ],
+      "neck": [
+        63,
+        88
+      ]
+    }
+  },
+  "hero_fighter_f": {
+    "source": "source/hero_fighter_f.png",
+    "crop": [
+      62,
+      12,
+      370,
+      320
+    ],
+    "face_box": [
+      27,
+      17,
+      100,
+      103
+    ],
+    "crop_64": [
+      97,
+      33,
+      335,
+      271
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    },
+    "features": {
+      "eye_near": [
+        48,
+        54,
+        46
+      ],
+      "eye_far": [
+        73,
+        79,
+        46
+      ],
+      "iris_near": [
+        51,
+        46
+      ],
+      "iris_far": [
+        76,
+        46
+      ],
+      "temple": [
+        40,
+        38
+      ],
+      "cheek": [
+        46,
+        58
+      ],
+      "neck": [
+        57,
+        91
+      ]
+    }
+  },
+  "hero_rogue_f": {
+    "source": "source/hero_rogue_f.png",
+    "crop": [
+      68,
+      29,
+      380,
+      341
+    ],
+    "face_box": [
+      32,
+      17,
+      106,
+      103
+    ],
+    "crop_64": [
+      118,
+      49,
+      359,
+      290
+    ],
+    "face_box_64": [
+      7,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    },
+    "features": {
+      "eye_near": [
+        54,
+        60,
+        45
+      ],
+      "eye_far": [
+        79,
+        85,
+        45
+      ],
+      "iris_near": [
+        57,
+        45
+      ],
+      "iris_far": [
+        82,
+        45
+      ],
+      "temple": [
+        46,
+        38
+      ],
+      "cheek": [
+        52,
+        58
+      ],
+      "neck": [
+        63,
+        90
+      ]
+    }
+  },
+  "hero_cleric_f": {
+    "source": "source/hero_cleric_f.png",
+    "crop": [
+      41,
+      5,
+      380,
+      344
+    ],
+    "face_box": [
+      28,
+      17,
+      102,
+      103
+    ],
+    "crop_64": [
+      84,
+      28,
+      346,
+      290
+    ],
+    "face_box_64": [
+      7,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    },
+    "features": {
+      "eye_near": [
+        50,
+        56,
+        46
+      ],
+      "eye_far": [
+        74,
+        80,
+        46
+      ],
+      "iris_near": [
+        53,
+        46
+      ],
+      "iris_far": [
+        77,
+        46
+      ],
+      "temple": [
+        42,
+        38
+      ],
+      "cheek": [
+        48,
+        58
+      ],
+      "neck": [
+        59,
+        91
+      ]
+    }
+  },
+  "garret": {
+    "source": "source/garret.png",
+    "crop": [
+      0,
+      30,
+      537,
+      567
+    ],
+    "face_box": [
+      31,
+      13,
+      112,
+      109
+    ],
+    "crop_64": [
+      72,
+      48,
+      533,
+      509
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "garret_tense": {
+    "source": "source/garret_tense.png",
+    "crop": [
+      0,
+      30,
+      537,
+      567
+    ],
+    "face_box": [
+      31,
+      13,
+      112,
+      109
+    ],
+    "crop_64": [
+      72,
+      48,
+      533,
+      509
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "velior": {
+    "source": "source/velior.png",
+    "crop": [
+      43,
+      92,
+      495,
+      544
+    ],
+    "face_box": [
+      54,
+      17,
+      127,
+      103
+    ],
+    "crop_64": [
+      145,
+      122,
+      495,
+      472
+    ],
+    "face_box_64": [
+      16,
+      5,
+      63,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m": {
+    "source": "source/spouse_m.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m_smile": {
+    "source": "source/spouse_m_smile.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m_sad": {
+    "source": "source/spouse_m_sad.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m_tense": {
+    "source": "source/spouse_m_tense.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m_away": {
+    "source": "source/spouse_m_away.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f": {
+    "source": "source/spouse_f.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_smile": {
+    "source": "source/spouse_f_smile.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_sad": {
+    "source": "source/spouse_f_sad.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_tense": {
+    "source": "source/spouse_f_tense.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_away": {
+    "source": "source/spouse_f_away.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "brandt": {
+    "source": "source/brandt.png",
+    "crop": [
+      0,
+      56,
+      380,
+      436
+    ],
+    "face_box": [
+      26,
+      6,
+      125,
+      122
+    ],
+    "crop_64": [
+      0,
+      48,
+      380,
+      428
+    ],
+    "face_box_64": [
+      13,
+      4,
+      62,
+      62
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "oldrik": {
+    "source": "source/oldrik.png",
+    "crop": [
+      0,
+      108,
+      380,
+      488
+    ],
+    "face_box": [
+      51,
+      14,
+      128,
+      109
+    ],
+    "crop_64": [
+      55,
+      121,
+      380,
+      446
+    ],
+    "face_box_64": [
+      19,
+      5,
+      64,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "oldrik_sad": {
+    "source": "source/oldrik_sad.png",
+    "crop": [
+      0,
+      108,
+      380,
+      488
+    ],
+    "face_box": [
+      51,
+      14,
+      128,
+      109
+    ],
+    "crop_64": [
+      55,
+      121,
+      380,
+      446
+    ],
+    "face_box_64": [
+      19,
+      5,
+      64,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "irena": {
+    "source": "source/irena.png",
+    "crop": [
+      0,
+      87,
+      509,
+      596
+    ],
+    "face_box": [
+      24,
+      13,
+      109,
+      111
+    ],
+    "crop_64": [
+      42,
+      99,
+      493,
+      550
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "irena_tense": {
+    "source": "source/irena_tense.png",
+    "crop": [
+      0,
+      87,
+      509,
+      596
+    ],
+    "face_box": [
+      24,
+      13,
+      109,
+      111
+    ],
+    "crop_64": [
+      42,
+      99,
+      493,
+      550
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "irena_sad": {
+    "source": "source/irena_sad.png",
+    "crop": [
+      0,
+      87,
+      509,
+      596
+    ],
+    "face_box": [
+      24,
+      13,
+      109,
+      111
+    ],
+    "crop_64": [
+      42,
+      99,
+      493,
+      550
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "hero_wizard_f": {
+    "source": "source/hero_wizard_f.png",
+    "crop": [
+      0,
+      85,
+      793,
+      878
+    ],
+    "face_box": [
+      26,
+      17,
+      100,
+      103
+    ],
+    "crop_64": [
+      88,
+      137,
+      702,
+      751
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 5
+    },
+    "features": {
+      "eye_near": [
+        48,
+        54,
+        46
+      ],
+      "eye_far": [
+        72,
+        78,
+        46
+      ],
+      "iris_near": [
+        51,
+        46
+      ],
+      "iris_far": [
+        75,
+        46
+      ],
+      "temple": [
+        40,
+        38
+      ],
+      "cheek": [
+        46,
+        58
+      ],
+      "neck": [
+        57,
+        90
+      ]
     }
   }
 }

@@ -24,6 +24,7 @@ func _ready() -> void:
 	else:
 		language = _default_language()
 	TranslationServer.set_locale(language)
+	get_tree().root.theme = UiKit.theme()
 
 
 static func _default_language() -> String:
@@ -82,6 +83,14 @@ func autosave() -> void:
 
 func save_to(slot: String) -> Error:
 	return SaveStore.write(slot, session.to_save())
+
+
+## Экран для текущего места истории: карта локации, если сцена идёт на карте, иначе экран истории.
+## Туда же возвращается экран боя после победы.
+func screen_path() -> String:
+	if session != null and LocationMap.for_scene(session.scene_name()) != "":
+		return "res://scenes/location_screen.tscn"
+	return "res://scenes/story_screen.tscn"
 
 
 func can_continue() -> bool:

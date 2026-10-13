@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dgli4abtrwrl7"
+
+[deps]
+
+files=["res://i18n/location.ru.translation", "res://i18n/location.en.translation"]
+
+source_file="res://i18n/location.csv"
+dest_files=["res://i18n/location.ru.translation", "res://i18n/location.en.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

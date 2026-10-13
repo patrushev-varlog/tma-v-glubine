@@ -19,6 +19,8 @@
 
 *Дальше по плану [review/07-next-steps.md](../review/07-next-steps.md) (поток K, 2026-10-12): портреты к демо — [art/portraits/README.md](portraits/README.md), стиль-тест на людях — [art/style-test/README.md](style-test/README.md), полный список ассетов пролога со звуком — [art/prologue/ASSETS.md](prologue/ASSETS.md).*
 
+*Стиль-тест 2026-10-13 пройден без замечаний ([итог](style-test/README.md#итог)). Генераторы закреплены: **персонажи, анимации и пол — PixelLab; препятствия, декор, иконки, предметы, интерфейс и эффекты — Retro Diffusion; портреты — Midjourney и `art/tools/portrait.py`** (раздел 8).*
+
 ---
 
 ## 1. Правила стиля (одинаковые для всех ассетов)
