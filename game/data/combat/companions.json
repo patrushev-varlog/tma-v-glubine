@@ -1,0 +1,18 @@
+{
+  "_doc": "Спутники. uses_growth — приёмы «на бой» растут на 1 с 3 и с 5 уровня (кроме fixed_uses у умения). extra_attack_at — с какого уровня два удара за действие.",
+
+  "irena": {"color": "#e8d27a", "hp": 10, "hp_per_level": 7, "ac": 16, "init": 0, "str_mod": 1, "caster": true,
+    "saves": {"str": 1, "dex": 0, "con": 2, "wis": 5},
+    "weapon": {"id": "mace", "damage": "1d6", "reach": 1, "kind": "melee", "mod": 2},
+    "abilities": ["sacred_flame", "healing_word", "hallowed_ground", "shield_of_faith"]},
+
+  "garret": {"color": "#c97b4a", "hp": 14, "hp_per_level": 8, "ac": 17, "init": 0, "str_mod": 3, "extra_attack_at": 5,
+    "saves": {"str": 5, "dex": 0, "con": 4, "wis": 0},
+    "weapon": {"id": "longsword", "damage": "1d8", "reach": 1, "kind": "melee"},
+    "abilities": ["trip", "taunt"], "uses_growth": true, "traits": ["hold_the_line"]},
+
+  "velior": {"color": "#6fb07a", "hp": 10, "hp_per_level": 5, "ac": 14, "init": 3, "str_mod": 0, "sneak": true,
+    "saves": {"str": 0, "dex": 5, "con": 1, "wis": 1},
+    "weapon": {"id": "shortsword", "damage": "1d6", "reach": 1, "kind": "melee"},
+    "abilities": ["bomb", "trap"], "uses_growth": true}
+}

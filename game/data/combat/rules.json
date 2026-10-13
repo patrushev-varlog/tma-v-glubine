@@ -1,0 +1,18 @@
+{
+  "_doc": "Числа правил боя (DESIGN.md, разделы 3 и 6). party_budget — бюджет опыта врагов (без босса) при неполном отряде, проценты; boss_hp_cut — минус хиты босса, проценты; hunt_hp — +проценты хитов врагов после завершённой охоты главы.",
+  "max_level": 5,
+  "slots_by_level": [0, 2, 3, 4, 5, 6],
+  "story_enemy_damage": 0.6,
+  "dark_first_gift": 2,
+  "dark_gifts_per_battle": 3,
+  "combat_dark_cap": 20,
+  "parties": ["full", "no_velior", "no_irena", "duo"],
+  "party_budget": {"full": 100, "no_velior": 75, "no_irena": 60, "duo": 45},
+  "boss_hp_cut": {"full": 0, "no_velior": 15, "no_irena": 30, "duo": 45},
+  "hunt_hp": 10,
+  "basic_actions": ["dodge", "shove"],
+  "hero_color": "#7aa7e8",
+  "enemy_color": "#b9505a",
+  "undead_color": "#a596d6",
+  "darkness_stages": [[75, "abyss"], [50, "gloom"], [25, "dusk"], [0, "shadow"]]
+}

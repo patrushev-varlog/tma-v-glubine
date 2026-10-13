@@ -1,0 +1,7 @@
+{
+  "name": "tma-game-tools",
+  "private": true,
+  "type": "module",
+  "description": "Ink: сборка JSON для Godot, проверка свежести",
+  "dependencies": { "inkjs": "2.3.2" }
+}

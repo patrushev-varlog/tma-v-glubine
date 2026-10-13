@@ -1,0 +1,105 @@
+keys,ru,en
+GAME_TITLE,Тьма в глубине,What the Deep Keeps
+GAME_SUBTITLE,Партийная тактическая RPG,A party-based tactical RPG
+MENU_CONTINUE,Продолжить,Continue
+MENU_NEW,Новая игра,New game
+MENU_LOAD,Загрузить,Load
+MENU_LANGUAGE,Язык: {lang},Language: {lang}
+MENU_QUIT,Выйти,Quit
+MENU_BACK,Назад,Back
+LANG_ru,Русский,Русский
+LANG_en,English,English
+LANG_STORY_RU_ONLY,Сюжет пока только на русском: английский текст пишется.,The story is Russian-only for now: the English text is in progress.
+CREATE_TITLE,Новый герой,New hero
+CREATE_CLASS,Класс,Class
+CLASS_fighter_DESC,Держит удар и бьёт в ответ. Ветки: Страж и Берсерк.,Takes the hits and hits back. Paths: Guardian and Berserker.
+CLASS_rogue_DESC,"Скрытые удары, яд и тени. Ветки: Убийца и Ловкач.","Sneak attacks, poison and shadows. Paths: Assassin and Trickster."
+CLASS_cleric_DESC,Лечит отряд и жжёт нежить. Ветки: Жизнь и Свет.,Heals the party and burns the dead. Paths: Life and Light.
+CLASS_wizard_DESC,"Огонь, зоны и контроль поля. Ветки: Воплотитель и Сковыватель.","Fire, zones and battlefield control. Paths: Evoker and Binder."
+CREATE_HERO_SEX,Герой,Hero
+SEX_m,Мужчина,Man
+SEX_f,Женщина,Woman
+CREATE_NAME,Имя героя,Hero's name
+CREATE_NAME_PLACEHOLDER,Введите имя,Enter a name
+CREATE_SPOUSE_WIFE,Имя жены,Wife's name
+CREATE_SPOUSE_HUSBAND,Имя мужа,Husband's name
+CREATE_SPOUSE_OWN,Своё имя…,Custom name…
+CREATE_SPOUSE_OWN_NOTE,"Своё имя в тексте не склоняется: где нужен другой падеж, история говорит «она» или «он».",A custom name is used as typed; elsewhere the story says “she” or “he”.
+CREATE_DIFFICULTY,Сложность,Difficulty
+DIFF_story_DESC,"Враги бьют слабее, их меньше. Для тех, кто пришёл за историей.",Weaker and fewer enemies. For those who came for the story.
+DIFF_trial_DESC,"Полные отряды врагов, они бьют прицельно. Без переигровки боя.",Full enemy squads that pick their targets. No battle retries.
+CREATE_START,Начать,Begin
+CREATE_NEED_NAME,Введите имя героя и супруга.,Enter the hero's and the spouse's names.
+STORY_NEXT,Дальше,Continue
+STORY_MENU,Меню,Menu
+STORY_SAVE,Сохранить,Save
+STORY_QUICKSAVE,Быстрое сохранение,Quick save
+STORY_SAVED,Сохранено: {slot},Saved: {slot}
+STORY_JOURNAL,Журнал,Journal
+STORY_TO_MENU,В главное меню,Main menu
+STORY_END,Конец истории.,The end.
+STORY_CLOSE,Закрыть,Close
+STORY_HINTS,{next} — дальше · {journal} — журнал · {menu} — меню,{next} — continue · {journal} — journal · {menu} — menu
+CHAPTER_0,Пролог,Prologue
+CHAPTER_1,Глава 1. Верхние шахты,Chapter 1. The Upper Mines
+CHAPTER_2,Глава 2. Затопленные выработки,Chapter 2. The Flooded Workings
+CHAPTER_3,Глава 3. Дварфийские залы,Chapter 3. The Dwarven Halls
+CHAPTER_4,Глава 4. Кузницы плоти,Chapter 4. The Flesh Forges
+CHAPTER_5,Глава 5. Дно,Chapter 5. The Bottom
+BATTLE_TITLE,Бой: {id},Battle: {id}
+BATTLE_STUB_NOTE,"Экрана боя ещё нет: бой проводит ИИ по тем же правилам, обе стороны. Отряд: {party}, уровень {level}.","The battle screen isn't here yet: the AI fights both sides by the same rules. Party: {party}, level {level}."
+BATTLE_AUTO,Провести бой,Fight
+BATTLE_WON,Победа за {rounds} раунд(ов). Тьма за бой: +{dark}.,Victory in {rounds} round(s). Darkness from the battle: +{dark}.
+BATTLE_LOST,Поражение. Бой можно начать заново.,Defeat. The battle can be fought again.
+BATTLE_RETRY,Ещё раз,Try again
+BATTLE_CONTINUE,Дальше,Continue
+JOURNAL_TITLE,Журнал,Journal
+JOURNAL_QUESTS,Задания,Quests
+JOURNAL_PARTY,Отряд: {party}. Уровень {level}. Серебро: {silver}.,Party: {party}. Level {level}. Silver: {silver}.
+JOURNAL_ITEMS,Вещи: {items},Items: {items}
+JOURNAL_NO_ITEMS,Вещей пока нет.,No items yet.
+QUEST_DONE,выполнено,done
+QUEST_CLUES,Подсказки: {n} из {max},Clues: {n} of {max}
+QUEST_main_prologue,Вернуть похищенных из Эшмура,Bring back the ones taken from Ashmoor
+QUEST_main_chapter1,Спуститься через Верхние шахты,Get down through the Upper Mines
+QUEST_main_chapter2,Пройти Затопленные выработки,Cross the Flooded Workings
+QUEST_main_chapter3,Найти путь через Дварфийские залы,Find a way through the Dwarven Halls
+QUEST_main_chapter4,Пройти Кузницы плоти,Pass the Flesh Forges
+QUEST_main_chapter5,Дойти до Дна,Reach the Bottom
+QUEST_ch1_hunt,Фонарь первого штейгера,Lantern of the First Foreman
+QUEST_ch2_hunt,Острога затопленного святилища,Spear of the Sunken Shrine
+QUEST_ch3_riddle,Дверь с загадкой,The riddle door
+QUEST_ch4_hunt,Цепь Безымянных,Chain of the Nameless
+QUEST_ch5_hunt,Печать совета,The Council Seal
+LOAD_TITLE,Загрузить,Load game
+SAVE_TITLE,Сохранить,Save game
+SLOT_auto,Автосохранение,Autosave
+SLOT_quick,Быстрое сохранение,Quick save
+SLOT_manual,Слот {n},Slot {n}
+SLOT_EMPTY,пусто,empty
+SLOT_INFO,{chapter} · уровень {level} · {date},{chapter} · level {level} · {date}
+SPEAKER_edric,Эдрик,Edric
+SPEAKER_liara,Лиара,Liara
+SPEAKER_garret,Гаррет,Garret
+SPEAKER_irena,Ирена,Irena
+SPEAKER_velior,Велиор,Velior
+SPEAKER_meb,Мэб,Meb
+SPEAKER_brandt,Брандт,Brandt
+SPEAKER_oldrik,Олдрик,Oldrik
+SPEAKER_shrine_priest,Отец Мерен,Father Meren
+SPEAKER_renna,Ренна Сол,Renna Sol
+SPEAKER_tobin,Тобин,Tobin
+SPEAKER_gessar,Гессар,Gessar
+SPEAKER_prisoner,Узник,Prisoner
+SPEAKER_holt,Хольт,Holt
+SPEAKER_boatman,Лодочник,Boatman
+SPEAKER_voice,Голос,Voice
+SPEAKER_smuggler,Контрабандист,Smuggler
+SPEAKER_hunter,Охотник,Hunter
+SPEAKER_fugitive,Беглый,Fugitive
+SPEAKER_dwarf_dead,Мёртвый дварф,Dead dwarf
+SPEAKER_boy,Мальчик,Boy
+SPEAKER_smith,Кузнец,Smith
+SPEAKER_overseer,Надсмотрщик,Overseer
+SPEAKER_sutler,Маркитант,Sutler
+SPEAKER_neighbor,Соседка,Neighbor
