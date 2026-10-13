@@ -1,0 +1,36 @@
+{
+  "group_id": "bf217a7f-75ba-4da2-8c63-caceedd14b61",
+  "states": [
+    {
+      "character": {
+        "id": "347929b4-0812-4388-8880-a4058a254542",
+        "name": "Idle",
+        "prompt": "an old gaunt female mine prisoner, barrack elder, ragged grey sackcloth, cropped grey hair, missing teeth, hard defiant face, arms crossed, both hands empty, no weapon in hands, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T19:45:33.928686+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T19:50:08.376879"
+}

@@ -1,0 +1,36 @@
+{
+  "group_id": "00ce3dc3-1164-49fb-a71a-7c7ac569f65a",
+  "states": [
+    {
+      "character": {
+        "id": "62a37e92-5606-4ed9-85b0-37b5f37c48cb",
+        "name": "Idle",
+        "prompt": "a broad village blacksmith in his forties, leather apron over a linen shirt, rolled sleeves, short dark beard, soot on the face, both hands empty, no weapon in hands, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T19:46:58.965533+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T19:52:38.885672"
+}
