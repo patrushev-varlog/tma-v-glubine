@@ -39,6 +39,9 @@ ENEMY_wight,Умертвие,Wight
 ENEMY_bone_archer,Костяной стрелок,Bone Archer
 ENEMY_ogre_zombie,Зомби-огр,Ogre Zombie
 ENEMY_flesh_golem,Мясной голем,Flesh Golem
+ENEMY_raised,Поднятый,Risen
+ENEMY_crossbowman,Арбалетчик,Crossbowman
+ENEMY_brandt,Брандт,Brandt
 DIFF_story,История,Story
 DIFF_trial,Испытание,Trial
 DARK_shadow,Тень,Shadow
@@ -128,6 +131,12 @@ ABILITY_spike_growth,Каменные шипы,Spike Growth
 ABILITY_spike_growth_DESC,"Зона 5×5 до конца боя: каждый шаг по ней — 2d4 колющего урона. Задевает и своих, если пойдут через неё.",5×5 area until the end of the battle: every step in it deals 2d4 piercing damage. Hits allies too if they walk through it.
 ABILITY_slow,Замедление,Slow
 ABILITY_slow_DESC,"Заклинание 3 круга: враги в зоне 7×7 — спасбросок Мудрости или −2 КД, половина движения, одна атака за ход и без атак при возможности. Спасбросок в конце каждого их хода.","3rd-level spell: enemies in a 7×7 area make a Wisdom save or get −2 AC, half movement, one attack per turn and no opportunity attacks. They repeat the save at the end of each of their turns."
+ABILITY_lasso,Аркан,Lasso
+ABILITY_lasso_DESC,"Раз за бой, до 3 клеток. Спасбросок Ловкости СЛ 12: при провале цель не может сойти с места, а атаки по ней с преимуществом. В конце своего хода — спасбросок Силы, чтобы вырваться.","Once per battle, up to 3 cells. Dexterity save DC 12: on a failure the target cannot move and attacks against it have advantage. At the end of its turn it makes a Strength save to break free."
+ABILITY_pinning_shot,Сбивающий болт,Knockdown Bolt
+ABILITY_pinning_shot_DESC,"Дважды за бой. Выстрел из арбалета; при попадании спасбросок Силы СЛ 12, иначе цель падает.","Twice per battle. A crossbow shot; on a hit the target makes a Strength save DC 12 or falls prone."
+ABILITY_drive_on,Подгонять!,Drive Them On!
+ABILITY_drive_on_DESC,"Бонусное действие, дважды за бой. Союзники в 4 клетках совершают следующую атаку с преимуществом.","Bonus action, twice per battle. Allies within 4 cells make their next attack with advantage."
 STATUS_prone,лежит,prone
 STATUS_dodging,уклоняется,dodging
 STATUS_hidden,спрятан,hidden
@@ -146,6 +155,11 @@ STATUS_turned,бежит,fleeing
 STATUS_shielded,щит веры,shield of faith
 STATUS_spirit_weapon,духовное оружие,spiritual weapon
 STATUS_guardians,духовные стражи,spirit guardians
+STATUS_lassoed,на аркане,lassoed
+STATUS_driven,подгоняем,driven on
+STATUS_hesitant,не поднимает руку,hesitant
+STATUS_bound,связан,bound
+STATUS_surprised,застигнут врасплох,surprised
 TRAIT_protector,Защитник,Protector
 TRAIT_protector_DESC,Союзники рядом со Стражем получают +2 к КД.,Allies next to the Guardian get +2 AC.
 TRAIT_hold_the_line,Удержать проход,Hold the Line
@@ -254,3 +268,14 @@ ITEM_silent_legacy_fighter,Клятва Молчащих,Oath of the Silent
 ITEM_silent_legacy_rogue,Шёпот Молчащих,Whisper of the Silent
 ITEM_silent_legacy_cleric,Светильник Молчащих,Lamp of the Silent
 ITEM_silent_legacy_wizard,Посох Молчащих,Staff of the Silent
+BATTLE_LOG_RESCUED,"Соседи с вилами добивают мертвецов.","Neighbours with pitchforks finish off the dead."
+BATTLE_LOG_AMBUSH,"Засада! Враги застигнуты врасплох.","Ambush! The enemy is caught off guard."
+BATTLE_LOG_TIMED_END,"{name} снова действует в полную силу.","{name} acts freely again."
+BATTLE_LOG_IRENA_FIGHTS,"«Простите меня». {name} поднимает руку на мёртвых.","""Forgive me."" {name} raises her hand against the dead."
+BATTLE_LOG_BREAKS_FREE,"{name} рвёт верёвки и вступает в бой.","{name} tears free of the ropes and joins the fight."
+BATTLE_LOG_CUT_FREE,"{by} разрезает верёвки: {name} в бою.","{by} cuts the ropes: {name} joins the fight."
+BATTLE_LOG_WAVE,"Подкрепление!","Reinforcements!"
+BATTLE_LOG_BRANDT,"От ворот бегут Брандт и стража.","Brandt and the guards come running from the gate."
+BATTLE_LOG_GATE_DEAD,"Из ворот рудника выходят мертвецы.","The dead walk out of the mine gate."
+BATTLE_LOG_SURVIVED,"Соседи ушли в лес. Пора уходить и вам.","The neighbours have reached the woods. Time for you to go too."
+BATTLE_OBJ_P4_CAMP,"Продержитесь {rounds} раунда, пока соседи уходят в лес.","Hold out for {rounds} rounds while the neighbours escape into the woods."

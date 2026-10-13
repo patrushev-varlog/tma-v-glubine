@@ -512,3 +512,64 @@ func test_slow() -> void:
 	w.cell = Vector2i(4, 0)
 	b.attack(d, w)
 	assert_true(d.action_used, "один удар за действие вместо двух")
+
+
+# --- Враги пролога (B8) ---------------------------------------------------
+
+## Герой, который проваливает любые спасброски.
+func _clumsy(cls: String, cell: Vector2i) -> Combatant:
+	var h := A.at(CombatData.make_hero(cls, 1), cell)
+	for k in ["str", "dex", "con", "wis"]:
+		h.saves[k] = -30
+	return h
+
+
+func test_lasso() -> void:
+	var o := CombatData.make_enemy("overseer", 1)
+	var h := _clumsy("fighter", Vector2i(3, 0))
+	var b := A.make([o, h])
+	assert_true(b.ability_targets(o, "lasso").has(h.cell), "аркан достаёт на 3 клетки")
+	assert_true(b.use_ability(o, "lasso", h.cell), "аркан")
+	assert_true(h.has_status("lassoed"), "провал Ловкости — на аркане")
+	assert_eq(b.attack_preview(o, h).adv, 1, "по пойманному — с преимуществом")
+	assert_false(b.can_use(o, "lasso"), "раз за бой")
+	b.end_turn()
+	assert_eq(h.speed_left, 0, "пойманный не сходит с места")
+	h.saves["str"] = 99
+	b.end_turn()
+	assert_false(h.has_status("lassoed"), "в конце своего хода вырывается спасброском Силы")
+
+
+func test_pinning_shot() -> void:
+	var x := CombatData.make_enemy("crossbowman", 1)
+	x.weapon["to_hit"] = 99
+	var h := _clumsy("wizard", Vector2i(6, 0))
+	h.max_hp = 99
+	h.hp = 99
+	var b := A.make([x, h])
+	assert_true(b.use_ability(x, "pinning_shot", h.cell), "сбивающий болт")
+	assert_true(h.hp < 99 and h.has_status("prone"), "попал и сбил с ног")
+	assert_eq(x.uses_left("pinning_shot"), 1, "дважды за бой")
+	var o := A.at(CombatData.make_enemy("overseer", 1), Vector2i(9, 9))
+	b.units.append(o)
+	x.cell = Vector2i(0, 0)
+	x.action_used = false
+	x.attacks_left = 0
+	h.cell = Vector2i(11, 0)
+	CombatAI._main_action(b, x, false)
+	assert_true(Battle.dist(x.cell, h.cell) > 1, "арбалетчик подходит на выстрел, а не вплотную")
+
+
+func test_drive_on() -> void:
+	var br := CombatData.make_enemy("brandt", 1)
+	var o1 := A.at(CombatData.make_enemy("overseer", 1), Vector2i(2, 0))
+	var o2 := A.at(CombatData.make_enemy("overseer", 2), Vector2i(0, 3))
+	var far := A.at(CombatData.make_enemy("overseer", 3), Vector2i(8, 8))
+	var h := A.at(CombatData.make_hero("fighter", 1), Vector2i(3, 0))
+	var b := A.make([br, o1, o2, far, h])
+	assert_true(CombatAI._when(b, br, "drive_on", {"allies_within": [4, 2]}), "двое своих рядом — Брандт подгоняет")
+	assert_true(b.use_ability(br, "drive_on", br.cell), "подгонять")
+	assert_true(o1.has_status("driven") and o2.has_status("driven") and not far.has_status("driven"), "свои в 4 клетках")
+	assert_eq(b.attack_preview(o1, h).adv, 1, "следующая атака с преимуществом")
+	b.attack(o1, h)
+	assert_false(o1.has_status("driven"), "после атаки проходит")

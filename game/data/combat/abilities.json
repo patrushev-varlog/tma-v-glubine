@@ -194,5 +194,16 @@
     "tags": ["spell", "area"],
     "effects": [{"op": "save", "to": "area", "who": "foes", "not_status": "slowed", "stat": "wis",
       "on_fail": [{"op": "status", "to": "target", "status": "slowed", "value": "dc"}]}],
-    "ai": {"kind": "slow"}}
+    "ai": {"kind": "slow"}},
+
+  "lasso":        {"cost": "action", "resource": "use", "uses": 1, "fixed_uses": true, "target": "enemy", "range": 3,
+    "effects": [{"op": "save", "to": "target", "stat": "dex", "dc": 12,
+      "on_fail": [{"op": "status", "to": "target", "status": "lassoed", "value": "dc"}]}]},
+  "pinning_shot": {"cost": "action", "resource": "use", "uses": 2, "fixed_uses": true, "target": "enemy", "range": 8, "attack": true,
+    "effects": [{"op": "weapon_attack", "to": "target",
+      "on_hit": [{"op": "save", "to": "target", "stat": "str", "dc": 12,
+        "on_fail": [{"op": "status", "to": "target", "status": "prone"}]}]}]},
+  "drive_on":     {"cost": "bonus", "resource": "use", "uses": 2, "fixed_uses": true, "target": "self", "radius": 4,
+    "effects": [{"op": "status", "to": "area", "who": "allies", "status": "driven"}],
+    "ai": {"phase": "before", "priority": 40, "when": {"allies_within": [4, 2]}}}
 }

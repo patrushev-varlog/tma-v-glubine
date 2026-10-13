@@ -21,5 +21,10 @@
   "turned":       {"flee": true, "no_reactions": true, "no_threat": true, "ends": ["damaged"]},
   "shielded":     {"ac": "$value"},
   "spirit_weapon": {},
-  "guardians":    {"aura_ability": "spirit_guardians"}
+  "guardians":    {"aura_ability": "spirit_guardians"},
+  "lassoed":      {"immobile": true, "defense": 1, "turn_end_save": "str", "ends": ["down"], "ai_value": 4},
+  "driven":       {"attack": 1, "ends": ["attack", "src_turn_start"]},
+  "hesitant":     {"no_harm": true},
+  "bound":        {"untargetable": true, "no_threat": true, "no_reactions": true, "no_actions": true, "immobile": true},
+  "surprised":    {"skip_turn": true, "no_reactions": true}
 }

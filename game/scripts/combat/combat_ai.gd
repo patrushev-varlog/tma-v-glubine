@@ -196,11 +196,13 @@ static func _move_toward(b: Battle, u: Combatant, target: Combatant, want_range:
 
 
 static func _approach_and_attack(b: Battle, u: Combatant, target: Combatant, do_attack: Callable) -> void:
-	if Battle.dist(u.cell, target.cell) > u.reach():
-		_move_toward(b, u, target, u.reach())
+	# Стрелок с умениями (арбалетчик) подходит на выстрел, а не вплотную.
+	var want := int(u.weapon.get("range", 1)) if u.is_ranged() else u.reach()
+	if not b.in_weapon_range(u, target):
+		_move_toward(b, u, target, want)
 	if not u.conscious():
 		return
-	if Battle.dist(u.cell, target.cell) <= u.reach() and target.conscious():
+	if b.in_weapon_range(u, target) and target.conscious():
 		do_attack.call()
 	_finish_attacks(b, u)
 
@@ -303,6 +305,13 @@ static func _when(b: Battle, u: Combatant, aid: String, when: Dictionary) -> boo
 					if Battle.dist(f.cell, u.cell) <= int(v[0]):
 						close += 1
 				if close < int(v[1]):
+					return false
+			"allies_within":
+				var near_allies := 0
+				for o in b.allies_of(u):
+					if o != u and o.conscious() and Battle.dist(o.cell, u.cell) <= int(v[0]):
+						near_allies += 1
+				if near_allies < int(v[1]):
 					return false
 			"hp_above_dark_cost":
 				if u.hp <= int(v) * b.dark_hp_cost(u):
@@ -514,6 +523,14 @@ static func _single_value(b: Battle, u: Combatant, aid: String, t: Combatant) ->
 				value += _on_hit_value(e, t)
 				if e.get("drain_extra", false):
 					value += pv.chance * avg * 0.5
+			"save":
+				# Контроль без урона («Аркан»): шанс провала × польза состояния.
+				if e.get("not_undead", false) and t.undead:
+					return 0.0
+				var fail_s := 1.0 - Dice.hit_chance(t.save_bonus(String(e.stat)), b._dc(e, u), 0, false)
+				for x in e.get("on_fail", []):
+					if x.op == "status" and not t.has_status(String(x.status)):
+						value += fail_s * float(CombatData.status_def(String(x.status)).get("ai_value", 0))
 			"spell_attack":
 				var ch := Dice.hit_chance(u.spell_attack, b.ac_of(t), b.advantage_for(u, t, true))
 				value = ch * avg * int(CombatData.resolve(e.get("repeat", 1), p))

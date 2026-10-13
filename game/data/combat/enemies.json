@@ -1,9 +1,10 @@
 {
-  "_doc": "Враги. xp — опыт по SRD (по нему урезается состав под неполный отряд); boss — главный враг боя: его не убирают, а снижают хиты. attacks — ударов за действие. weapon.on_hit — эффекты при попадании (как у умений). abilities и traits — те же умения и приёмы, что у героев (abilities.json, traits.json).",
+  "_doc": "Враги. xp — опыт по SRD (по нему урезается состав под неполный отряд); boss — главный враг боя: его не убирают, а снижают хиты. attacks — ударов за действие. weapon.on_hit — эффекты при попадании (как у умений). abilities и traits — те же умения и приёмы, что у героев (abilities.json, traits.json). Враги пролога (B8): raised — поднятые соседи и прихожане, у надсмотрщика аркан, арбалетчик колонны, Брандт.",
 
   "overseer":        {"xp": 25, "hp": 11, "ac": 12, "init": 1, "speed": 6,
     "saves": {"str": 1, "dex": 1, "con": 1, "wis": 0},
-    "weapon": {"id": "saber", "to_hit": 3, "damage": "1d6+1", "reach": 1, "kind": "melee"}},
+    "weapon": {"id": "saber", "to_hit": 3, "damage": "1d6+1", "reach": 1, "kind": "melee"},
+    "abilities": ["lasso"]},
   "overseer_chief":  {"xp": 200, "hp": 22, "ac": 14, "init": 2, "speed": 6,
     "saves": {"str": 4, "dex": 2, "con": 2, "wis": 2},
     "weapon": {"id": "longsword", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"}},
@@ -41,5 +42,17 @@
     "weapon": {"id": "club", "to_hit": 6, "damage": "2d8+4", "reach": 1, "kind": "melee"}},
   "flesh_golem":     {"xp": 1800, "boss": true, "hp": 95, "ac": 10, "init": -1, "speed": 5, "attacks": 2,
     "saves": {"str": 4, "dex": -1, "con": 4, "wis": 0},
-    "weapon": {"id": "fist", "to_hit": 7, "damage": "2d8+4", "reach": 1, "kind": "melee"}}
+    "weapon": {"id": "fist", "to_hit": 7, "damage": "2d8+4", "reach": 1, "kind": "melee"}},
+
+  "raised":          {"xp": 25, "hp": 9, "ac": 8, "init": -2, "speed": 4, "undead": true,
+    "saves": {"str": 1, "dex": -2, "con": 2, "wis": -1},
+    "weapon": {"id": "slam", "to_hit": 3, "damage": "1d6", "reach": 1, "kind": "melee"}},
+  "crossbowman":     {"xp": 50, "hp": 11, "ac": 12, "init": 2, "speed": 6,
+    "saves": {"str": 0, "dex": 2, "con": 1, "wis": 0},
+    "weapon": {"id": "crossbow", "to_hit": 4, "damage": "1d8+2", "range": 8, "kind": "ranged"},
+    "abilities": ["pinning_shot"]},
+  "brandt":          {"xp": 200, "boss": true, "hp": 26, "ac": 15, "init": 1, "speed": 6,
+    "saves": {"str": 3, "dex": 1, "con": 2, "wis": 1},
+    "weapon": {"id": "longsword", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"},
+    "abilities": ["drive_on"]}
 }
