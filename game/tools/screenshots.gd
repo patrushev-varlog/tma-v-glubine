@@ -47,7 +47,7 @@ func _initialize() -> void:
 	story._clear_bottom()
 	story._battle_panel(game.session.pending_battle)
 	await _frames(4)
-	await _shot("4_battle_stub")
+	await _shot("4_battle_ahead")
 	story._open_journal()
 	await _frames(4)
 	await _shot("5_journal")

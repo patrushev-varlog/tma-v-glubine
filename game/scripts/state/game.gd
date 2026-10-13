@@ -7,6 +7,8 @@ signal language_changed(lang: String)
 const SETTINGS_PATH := "user://settings.cfg"
 
 var language := "ru"
+## Экран боя: действие по второму клику на ту же клетку (первый — прогноз). На тач-экране так всегда.
+var battle_double_click := false
 var session: StorySession = null
 ## Строки, которые экран истории покажет первыми после загрузки (см. StorySession.load_save).
 var pending_tail: Array[Dictionary] = []
@@ -18,6 +20,7 @@ func _ready() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load(SETTINGS_PATH) == OK:
 		language = String(cfg.get_value("game", "language", _default_language()))
+		battle_double_click = bool(cfg.get_value("battle", "double_click", false))
 	else:
 		language = _default_language()
 	TranslationServer.set_locale(language)
@@ -41,6 +44,14 @@ func set_language(lang: String) -> Array[Dictionary]:
 		tail = session.load_save(session.to_save(), story_language())
 	language_changed.emit(lang)
 	return tail
+
+
+func set_battle_double_click(on: bool) -> void:
+	battle_double_click = on
+	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS_PATH)
+	cfg.set_value("battle", "double_click", on)
+	cfg.save(SETTINGS_PATH)
 
 
 func story_language() -> String:
@@ -102,6 +113,11 @@ func battle_scenario(battle_id: String) -> Dictionary:
 	var sc := CombatData.scenario(bid, String(st.hero.get("class", "fighter")), String(st.hero.get("archetype", "")),
 		session.party_key(), st.difficulty, "kit", session.flags())
 	sc["combat_darkness"] = st.combat_darkness
+	var hero_name := String(st.hero.get("name", ""))
+	if hero_name != "":
+		var h: Combatant = sc.units[0]
+		h.name = hero_name
+		h.letter = hero_name.left(1)
 	return sc
 
 

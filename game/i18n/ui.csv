@@ -46,13 +46,68 @@ CHAPTER_2,Глава 2. Затопленные выработки,Chapter 2. The
 CHAPTER_3,Глава 3. Дварфийские залы,Chapter 3. The Dwarven Halls
 CHAPTER_4,Глава 4. Кузницы плоти,Chapter 4. The Flesh Forges
 CHAPTER_5,Глава 5. Дно,Chapter 5. The Bottom
-BATTLE_TITLE,Бой: {id},Battle: {id}
-BATTLE_STUB_NOTE,"Экрана боя ещё нет: бой проводит ИИ по тем же правилам, обе стороны. Отряд: {party}, уровень {level}.","The battle screen isn't here yet: the AI fights both sides by the same rules. Party: {party}, level {level}."
-BATTLE_AUTO,Провести бой,Fight
-BATTLE_WON,Победа за {rounds} раунд(ов). Тьма за бой: +{dark}.,Victory in {rounds} round(s). Darkness from the battle: +{dark}.
-BATTLE_LOST,Поражение. Бой можно начать заново.,Defeat. The battle can be fought again.
-BATTLE_RETRY,Ещё раз,Try again
+BATTLE_AHEAD,Впереди бой.,A battle lies ahead.
+BATTLE_PARTY,Отряд: {party}.,Party: {party}.
+BATTLE_START,В бой,Fight
+BATTLE_ROUND,Раунд {n},Round {n}
+BATTLE_OBJ_KILL_ALL,Цель: победить всех врагов.,Goal: defeat every enemy.
+BATTLE_OBJ_SURVIVE,Продержитесь {rounds} раунда.,Hold out for {rounds} rounds.
+BATTLE_OBJ_PROGRESS,(раунд {n} из {max}),(round {n} of {max})
+BATTLE_WAVE_AT,Подкрепление врагов: раунд {n},Enemy reinforcements: round {n}
+BATTLE_LOG,Журнал,Log
+BATTLE_MOVE_ATTACK,"Движение и атака оружием","Move and weapon attack"
+BATTLE_END_TURN,Конец хода,End turn
+BATTLE_COST_action,действие,action
+BATTLE_COST_bonus,бонусное действие,bonus action
+BATTLE_COST_free,без действия,free
+BATTLE_DOWN,выбыл,down
+BATTLE_HP_AC,Хиты {hp}/{max} · КД {ac},HP {hp}/{max} · AC {ac}
+BATTLE_SLOTS,ячейки {n}/{max},slots {n}/{max}
+BATTLE_GEAR,Экипировка: {items},Gear: {items}
+BATTLE_MISS,промах,miss
+BATTLE_UNIT_INFO,"{name}: хиты {hp}/{max}, КД {ac}","{name}: HP {hp}/{max}, AC {ac}"
+BATTLE_TURN_HINT,"Ход: {name}. Можно пройти {n} кл.","{name}'s turn. {n} cells of movement left."
+BATTLE_TURN_HINT_ACTION,"Наведи на врага, чтобы увидеть шанс, или выбери умение.","Hover over an enemy to see the odds, or pick an ability."
+BATTLE_PV_ATTACK,"Атака: {name}. Шанс {chance}%, урон {min}–{max}.{extra}","Attack {name}. {chance}% to hit, {min}–{max} damage.{extra}"
+BATTLE_PV_APPROACH,"Подойти и атаковать: {name}. Шанс {chance}%, урон {min}–{max}.{extra}","Close in and attack {name}. {chance}% to hit, {min}–{max} damage.{extra}"
+BATTLE_PV_TOO_FAR,"{name} слишком далеко.","{name} is out of reach."
+BATTLE_PV_ACTION_SPENT,"Действие на этот ход уже потрачено.","This turn's action is already spent."
+BATTLE_PV_NO_HARM,"{name} пока не поднимет руку на мёртвых: только защита и лечение.","{name} won't raise a hand against the dead yet: only protection and healing."
+BATTLE_PV_MOVE,"Пройти {n} кл.","Move {n} cells."
+BATTLE_PV_PROVOKES,"Враги рядом ударят вслед: {n}.","Enemies will strike as you leave: {n}."
+BATTLE_PV_NO_PATH,Сюда не дойти.,Can't get there.
+BATTLE_PV_BOUND_HINT,"Встань рядом, чтобы разрезать верёвки.","Stand next to him to cut the ropes."
+BATTLE_PV_BAD_CELL,"сюда нельзя, выбери подсвеченную клетку","not here, pick a highlighted cell"
+BATTLE_PV_PICK_TARGET,Выбери цель.,Pick a target.
+BATTLE_PV_SELF_AGAIN,"Нажми умение ещё раз, чтобы применить.","Press the ability again to use it."
+BATTLE_PV_ADV,Преимущество.,Advantage.
+BATTLE_PV_DISADV,Помеха.,Disadvantage.
+BATTLE_PV_SNEAK,Скрытая атака.,Sneak attack.
+BATTLE_PV_CHANCE_DMG,"шанс {chance}%, урон {min}–{max}{extra}","{chance}% to hit, {min}–{max} damage{extra}"
+BATTLE_PV_SAVE_FAIL,"провалит спасбросок: {chance}%","fails the save: {chance}%"
+BATTLE_PV_DMG,"урон {min}–{max}","{min}–{max} damage"
+BATTLE_PV_HEAL,"лечение {min}–{max}","heals {min}–{max}"
+BATTLE_PV_FALLS,упадёт у стены,falls against the wall
+BATTLE_PV_HITS,"заденет врагов: {n}, своих: {own}","hits {n} enemies, {own} allies"
+BATTLE_PV_DARK_SLOT,тёмный дар: цена — ячейка,dark gift: costs a slot
+BATTLE_PV_DARK_HP,тёмный дар: цена — {hp} хитов,dark gift: costs {hp} HP
+BATTLE_HINTS_KEYBOARD,"Наведение — прогноз, клик — действие · 1–9 — умения · E — конец хода · F — к герою · колесо и правая кнопка — камера · Esc — меню","Hover to preview, click to act · 1–9 abilities · E end turn · F find hero · wheel and right button move the camera · Esc menu"
+BATTLE_HINTS_PAD,"Крестовина — клетка · {a} — действие · {b} — отмена · LB/RB — умения · {y} — конец хода · {x} — к герою · {menu} — меню","D-pad: cell · {a} act · {b} cancel · LB/RB abilities · {y} end turn · {x} find hero · {menu} menu"
+BATTLE_VICTORY,Победа,Victory
+BATTLE_DEFEAT,Поражение,Defeat
+BATTLE_RESULT_STATS,"Раундов: {rounds}. Выбыло из отряда: {down}.","Rounds: {rounds}. Party members down: {down}."
+BATTLE_RESCUED_NOTE,"Ты упал(а), но соседи с вилами добили мертвецов.","You fell, but neighbours with pitchforks finished off the dead."
+BATTLE_STORY_DEFEAT,"Бой можно начать заново.","You can fight this battle again."
+BATTLE_TRIAL_DEFEAT,"На «Испытании» бой не переигрывается: загрузи последнее сохранение. Можно перейти на «Историю».","On Trial a battle can't be replayed: load the last save. You can switch to Story."
+BATTLE_RETRY,Переиграть бой,Fight again
+BATTLE_LOAD_LAST,Загрузить последнее сохранение,Load the last save
+BATTLE_LOAD_AS_STORY,Перейти на «Историю» и загрузить,Switch to Story and load
 BATTLE_CONTINUE,Дальше,Continue
+BATTLE_MENU,Бой на паузе,Battle paused
+BATTLE_RESUME,Продолжить бой,Resume
+BATTLE_DOUBLE_CLICK,Подтверждать действие вторым кликом,Confirm actions with a second click
+BATTLE_DOUBLE_CLICK_NOTE,"Первый клик покажет прогноз, второй по той же клетке — выполнит. На тач-экране так всегда.","The first click shows the forecast, a second click on the same cell acts. Always on with touch."
+BATTLE_TO_MENU,"Выйти в главное меню (бой продолжится с начала хода)","Quit to main menu (the battle resumes from the start of the turn)"
 JOURNAL_TITLE,Журнал,Journal
 JOURNAL_QUESTS,Задания,Quests
 JOURNAL_PARTY,Отряд: {party}. Уровень {level}. Серебро: {silver}.,Party: {party}. Level {level}. Silver: {silver}.
