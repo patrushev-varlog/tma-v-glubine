@@ -38,6 +38,7 @@ def main():
     shutil.copy(A / "anchors/approved/timber_support.png", T / "timber_support.png")
     # Рельсы в генерации идут вдоль оси x; зеркало — вдоль оси y (как плетень fence / fence_b в прологе).
     Image.open(T / "floor_rails.png").transpose(Image.FLIP_LEFT_RIGHT).save(T / "floor_rails_b.png")
+    Image.open(T / "bars.png").transpose(Image.FLIP_LEFT_RIGHT).save(T / "bars_b.png")
     sc = SCENE
     Wd, H = N * 64 + 64, N * 32 + 220
     S = Image.new("RGBA", (Wd, H), sc["bg"] + (255,))
