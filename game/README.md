@@ -47,11 +47,11 @@ godot --headless --path game --export-release "Linux" ../build/game/linux/TmaVGl
 CI (`.github/workflows/ci.yml`):
 
 - `game-tests` — сборка сюжета, `dotnet build`, тесты GUT и самопроверка.
-- `export` — три сборки и демо для Windows и Linux на Linux, самопроверка сборок Linux.
+- `export` — три сборки и демо для Windows, macOS и Linux на Linux, самопроверка сборок Linux.
 - `smoke` — запуск сборки Windows (на каждом PR) и macOS (на main и вручную).
 
 Готовые сборки лежат в артефактах прогона: `game-windows`, `game-macos`, `game-linux`, демо — `game-windows-demo`,
-`game-linux-demo`. Как проводить плейтест демо и сводить журналы тестеров — `docs/PLAYTEST.md`.
+`game-macos-demo`, `game-linux-demo`. Как проводить плейтест демо и сводить журналы тестеров — `docs/PLAYTEST.md`.
 
 ## Устройство
 
