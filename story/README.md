@@ -9,7 +9,7 @@
 - [exploration-plan.md](exploration-plan.md) — исследование локаций и охоты за скрытыми легендарками по главам.
 - `ink/` — диалоги на Ink. Точка входа всей истории `ink/game.ink`, общие переменные и функции форм по полу `ink/common.ink`, сцены в `ink/prologue/`, `ink/chapter1/`, `ink/chapter2/`, `ink/chapter3/`, `ink/chapter4/` и `ink/chapter5/`.
 
-Английский текст — в `ink-en/`, с той же структурой файлов и той же логикой, что `ink/` (правила перевода и проверка совпадения — в [prototypes/stack-slice/STACK.md](../prototypes/stack-slice/STACK.md), раздел 3). Пока переведена сцена 1 пролога.
+Английский текст — в `ink-en/`, с той же структурой файлов и той же логикой, что `ink/` (правила перевода и проверка совпадения — в [prototypes/stack-slice/STACK.md](../prototypes/stack-slice/STACK.md), раздел 3). Переведён весь пролог (7 сцен), имена — в [ink-en/GLOSSARY.md](ink-en/GLOSSARY.md).
 
 Проверка без Godot: Ink компилируется `inkjs` (`npx inkjs-compiler story/ink/game.ink -o /tmp/game.json`).
 

@@ -30,6 +30,16 @@ const TARGETS = [
   { id: "slice.en", src: path.join(SLICE, "ink/slice.en.ink") },
 ];
 
+// Только для проверки parity: компилируются в памяти, JSON в проект не пишется.
+const PARITY_ONLY = [
+  { id: "prologue.ru", src: path.join(SLICE, "ink/prologue.ru.ink") },
+  { id: "prologue.en", src: path.join(SLICE, "ink/prologue.en.ink") },
+];
+const PARITY_PAIRS = [
+  ["slice.ru", "slice.en"],
+  ["prologue.ru", "prologue.en"],
+];
+
 export const CLASSES = ["fighter", "rogue", "cleric", "wizard"];
 export const SETUPS = [];
 for (const cls of CLASSES)
@@ -79,7 +89,10 @@ function makeRng(seed) {
   };
 }
 
-export function transcript(json, setup, seed, names, { shape = false } = {}) {
+// hi: выбор по старшим битам генератора. У LCG по модулю 2^31 младший бит чередуется, и выбор
+// из двух вариантов по «% 2» идёт строго через раз: часть веток не проигрывается никогда.
+// Эталонные прогоны (reference) оставлены как были, чтобы не расходиться с тестами в Godot.
+export function transcript(json, setup, seed, names, { shape = false, hi = false } = {}) {
   let story = new Story(json);
   const vs = story.variablesState;
   vs.$("hero_class", setup.cls);
@@ -98,7 +111,7 @@ export function transcript(json, setup, seed, names, { shape = false } = {}) {
     }
     const choices = story.currentChoices;
     if (choices.length === 0) break;
-    const idx = rng() % choices.length;
+    const idx = (hi ? rng() >> 16 : rng()) % choices.length;
     out.push(shape ? `C|${choices.length}|>${idx}` : `C|${choices.map((c) => c.text).join("|")}|>${idx}`);
     story.ChooseChoiceIndex(idx);
     picks++;
@@ -160,8 +173,9 @@ function reference() {
 
 // Русский и английский должны давать одинаковую «форму»: те же строки с теми же тегами,
 // то же число вариантов в каждом выборе и одинаковые флаги в конце.
-function parity(jsons = null, pairs = [["slice.ru", "slice.en"]]) {
-  const load = (id) => (jsons && jsons[id]) || fs.readFileSync(storyPath(id), "utf8");
+function parity(jsons = null, pairs = PARITY_PAIRS) {
+  const extra = Object.fromEntries(PARITY_ONLY.map((t) => [t.id, t.src]));
+  const load = (id) => (jsons && jsons[id]) || (extra[id] ? compile(extra[id]) : fs.readFileSync(storyPath(id), "utf8"));
   let bad = 0;
   for (const [a, b] of pairs) {
     const ja = load(a);
@@ -176,16 +190,17 @@ function parity(jsons = null, pairs = [["slice.ru", "slice.en"]]) {
     const names = na.filter((n) => n !== "spouse_name");
     let runs = 0;
     for (const setup of SETUPS)
-      for (const seed of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) {
-        const ta = transcript(ja, setup, seed, names, { shape: true }).text.split("\n");
-        const tb = transcript(jb, setup, seed, names, { shape: true }).text.split("\n");
+      for (const seed of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+      for (const hi of [false, true]) {
+        const ta = transcript(ja, setup, seed, names, { shape: true, hi }).text.split("\n");
+        const tb = transcript(jb, setup, seed, names, { shape: true, hi }).text.split("\n");
         runs++;
         const n = Math.max(ta.length, tb.length);
         for (let i = 0; i < n; i++) {
           if (ta[i] !== tb[i]) {
             if (bad < 3) {
-              const fa = transcript(ja, setup, seed, names).text.split("\n");
-              const fb = transcript(jb, setup, seed, names).text.split("\n");
+              const fa = transcript(ja, setup, seed, names, { hi }).text.split("\n");
+              const fb = transcript(jb, setup, seed, names, { hi }).text.split("\n");
               console.log(`${a} / ${b}: расхождение, ${JSON.stringify(setup)} seed ${seed}, шаг ${i + 1}`);
               console.log(`  ${a}: ${(fa[i] ?? "(конец)").trim()}\n  ${b}: ${(fb[i] ?? "(конец)").trim()}`);
             }
