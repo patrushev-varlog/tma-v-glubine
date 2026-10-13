@@ -1,0 +1,36 @@
+{
+  "group_id": "85817f59-ff12-4af2-b87f-a9b685a10779",
+  "states": [
+    {
+      "character": {
+        "id": "ea504dbe-a5a7-47d9-87db-53d58b6530fa",
+        "name": "Idle",
+        "prompt": "a woman in her early thirties, villager who once served as a soldier, brown hair cut short at the neck, dented steel breastplate over a padded quilted gambeson, short dark-blue cloak pinned at the shoulder, round wooden shield with an iron rim strapped to the left forearm, worn boots, determined, both hands empty, fists clenched, no weapon in hands, no sheaths, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T10:17:30.927402+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T10:20:10.398929"
+}

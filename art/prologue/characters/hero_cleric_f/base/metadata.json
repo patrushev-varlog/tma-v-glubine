@@ -1,0 +1,36 @@
+{
+  "group_id": "50c37f05-1b9a-4da3-89f6-e910a99e45ff",
+  "states": [
+    {
+      "character": {
+        "id": "88da0672-29f8-4a9d-aab8-005aef28c057",
+        "name": "Idle",
+        "prompt": "a woman in her early thirties, village priestess, hair under a simple grey head scarf, grey-white vestments over a chainmail shirt, dark-blue stole over the shoulders, small wooden candle-flame pendant, small round wooden shield with a painted candle-flame symbol strapped to the left forearm, calm, both hands empty, fists clenched, no weapon in hands, no sheaths, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T10:17:30.077316+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T10:20:35.907649"
+}
