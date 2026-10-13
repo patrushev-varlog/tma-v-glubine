@@ -190,3 +190,20 @@ def animate_template(char_name, char_id, anim, template, directions=("south-east
     log({"kind": "animation", "name": f"{char_name}/{anim}", "id": r["animation_group_id"], "template": template,
          "status": [j.get("status") for j in jobs], "cost": cost})
     return r["animation_group_id"], jobs
+
+
+def character_state(name, char_id, edit, out_dir, seed=None, size=None):
+    """Поза-состояние готового персонажа (create-character-state): та же правка во всех направлениях."""
+    body = {"character_id": char_id, "edit_description": edit, "state_name": name[:100],
+            "use_color_palette_from_reference": True}
+    if seed is not None:
+        body["seed"] = seed
+    if size:
+        body["override_frame_size"] = {"width": size, "height": size}
+    r = call("POST", "/create-character-state", body)
+    j = wait_job(_job_id(r))
+    cid = r.get("character_id") or (j.get("last_response") or {}).get("character_id")
+    log({"kind": "character_state", "name": name, "id": cid, "source": char_id, "status": j.get("status"),
+         "cost": (j.get("usage") or {}).get("generations"), "description": edit})
+    character_zip(cid, out_dir)
+    return cid, j
