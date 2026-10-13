@@ -26,6 +26,23 @@ const C_SPAWN := Color(0.95, 0.35, 0.3, 0.55)
 const C_SPIKES := Color(0.75, 0.7, 0.65, 0.8)
 const C_WEB := Color(0.9, 0.9, 0.95, 0.6)
 const C_GREASE := Color(0.85, 0.75, 0.2, 0.55)
+## Пол боёв пролога по battles.json "ground": [клетка, соседняя клетка, кромка]. Заглушки до тайлов (поток K3).
+const GROUNDS := {
+	"yard": [Color("#4a4034"), Color("#453b30"), Color("#5a4e40")],
+	"temple": [Color("#46464c"), Color("#404046"), Color("#55555c")],
+	"ford": [Color("#3c4a34"), Color("#38452f"), Color("#4a5a40")],
+	"camp": [Color("#2f3a30"), Color("#2b352c"), Color("#3b483b")],
+	"gate": [Color("#3d3a37"), Color("#38352f"), Color("#4b4743")],
+}
+## Пол, по которому можно ходить (знаки , : ;).
+const FLOOR_DECOR := {"ford": Color("#4b6b78"), "road": Color("#5a5040"), "ash": Color("#2a2826")}
+## Препятствия по виду: [цвет, высота, отступ от края клетки]. Высота 0 — плоское (вода).
+const OBSTACLE_LOOK := {
+	"wall": [Color("#5d564c"), 18.0, 3.0], "pillar": [Color("#7a7670"), 30.0, 9.0], "pew": [Color("#6b4f35"), 8.0, 5.0],
+	"altar": [Color("#8a8170"), 12.0, 3.0], "rubble": [Color("#5f5a52"), 6.0, 6.0], "tree": [Color("#2f5130"), 26.0, 5.0],
+	"fence": [Color("#6e5a3e"), 10.0, 7.0], "cart": [Color("#3a2f28"), 14.0, 4.0], "well": [Color("#6a6a6a"), 12.0, 7.0],
+	"fire": [Color("#d0682a"), 6.0, 9.0], "water": [Color("#2c4a5c"), 0.0, 0.0],
+}
 
 var battle: Battle
 var reach_cells: Array[Vector2i] = []
@@ -79,11 +96,24 @@ func _outline(c: Vector2i, color: Color, width: float, inset := 1.0) -> void:
 func _draw() -> void:
 	if battle == null:
 		return
+	var floor: Array = GROUNDS.get(battle.ground, [C_FLOOR, C_FLOOR_ALT, C_EDGE])
 	for x in battle.width:
 		for y in battle.height:
 			var c := Vector2i(x, y)
-			draw_colored_polygon(_diamond(c), C_FLOOR if (x + y) % 2 == 0 else C_FLOOR_ALT)
-			_outline(c, C_EDGE, 1.0, 0.0)
+			var kind := String(battle.decor.get(c, ""))
+			var col: Color = floor[0] if (x + y) % 2 == 0 else floor[1]
+			if FLOOR_DECOR.has(kind):
+				col = FLOOR_DECOR[kind]
+			elif kind == "water":
+				col = OBSTACLE_LOOK.water[0]
+			draw_colored_polygon(_diamond(c), col)
+			_outline(c, floor[2], 1.0, 0.0)
+	for c in battle.decor:
+		if battle.decor[c] == "fire":
+			draw_set_transform(cell_to_world(c), 0.0, Vector2(1.0, 0.5))
+			draw_circle(Vector2.ZERO, 44.0, Color(1.0, 0.55, 0.2, 0.10))
+			draw_circle(Vector2.ZERO, 28.0, Color(1.0, 0.6, 0.25, 0.12))
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	for c in battle.zones.grease:
 		draw_colored_polygon(_diamond(c, 1), C_GREASE)
 	for c in battle.zones.spikes:
@@ -124,7 +154,8 @@ func _draw() -> void:
 	# Препятствия и участники — по глубине, чтобы ближние перекрывали дальних.
 	var by_depth := {}
 	for o in battle.obstacles:
-		by_depth.get_or_add(o.x + o.y, []).append(o)
+		if battle.decor.get(o, "") != "water":
+			by_depth.get_or_add(o.x + o.y, []).append(o)
 	for u in battle.units:
 		if not u.dead:
 			by_depth.get_or_add(u.cell.x + u.cell.y, []).append(u)
@@ -139,16 +170,18 @@ func _draw() -> void:
 
 
 func _draw_obstacle(c: Vector2i) -> void:
-	var top := _diamond(c, 3)
-	var lift := Vector2(0, -18)
+	var look: Array = OBSTACLE_LOOK.get(String(battle.decor.get(c, "wall")), OBSTACLE_LOOK.wall)
+	var base: Color = look[0]
+	var top := _diamond(c, look[2])
+	var lift := Vector2(0, -float(look[1]))
 	var left := PackedVector2Array([top[3], top[2], top[2] + lift, top[3] + lift])
 	var right := PackedVector2Array([top[2], top[1], top[1] + lift, top[2] + lift])
-	draw_colored_polygon(left, C_OBSTACLE.darkened(0.2))
-	draw_colored_polygon(right, C_OBSTACLE)
+	draw_colored_polygon(left, base.darkened(0.2))
+	draw_colored_polygon(right, base)
 	var lifted := PackedVector2Array()
 	for v in top:
 		lifted.append(v + lift)
-	draw_colored_polygon(lifted, C_OBSTACLE_TOP)
+	draw_colored_polygon(lifted, base.lightened(0.18) if battle.decor.has(c) else C_OBSTACLE_TOP)
 
 
 func _texture(kind: String) -> Texture2D:

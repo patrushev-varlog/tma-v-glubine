@@ -59,6 +59,11 @@ func _initialize() -> void:
 		guard += 1
 	await _shot("b5_camp_reinforcements")
 	s.queue_free()
+
+	# Колонна у ворот рудника: телега посреди поля, из ворот в 3-м раунде выйдут мертвецы.
+	s = await _battle(game, "prologue_4_gate", "fighter", "trial", {}, 3)
+	await _shot("b6_gate")
+	s.queue_free()
 	quit()
 
 

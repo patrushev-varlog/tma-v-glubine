@@ -59,6 +59,7 @@ func _ready() -> void:
 	if battle == null:
 		get_tree().change_scene_to_file.call_deferred("res://scenes/main_menu.tscn")
 		return
+	Sound.for_battle()
 	board = BoardView.new()
 	board.battle = battle
 	add_child(board)
@@ -636,12 +637,7 @@ func _refresh_party() -> void:
 		row.add_theme_constant_override("separation", 6)
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.add_child(row)
-		# Портрет-заглушка, пока портретов из потока K нет.
-		var face := ColorRect.new()
-		face.color = h.color if h.conscious() else Color("#555555")
-		face.custom_minimum_size = Vector2(36, 44)
-		face.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_child(face)
+		row.add_child(_face(h))
 		var box := VBoxContainer.new()
 		box.add_theme_constant_override("separation", 2)
 		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -669,6 +665,23 @@ func _refresh_party() -> void:
 			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
 				_focus(cell))
 		_party.add_child(panel)
+
+
+## Портрет 64 px (art/portraits); у кого портрета нет — цветная плашка. Выбывший — серый.
+func _face(h: Combatant) -> Control:
+	var hero: Dictionary = Game.session.state.hero if Game.session != null else {"class": h.kind}
+	var id := Portraits.id_for("hero" if h.is_hero else h.kind, "", hero)
+	if id == "":
+		var plate := ColorRect.new()
+		plate.color = h.color if h.conscious() else Color("#555555")
+		plate.custom_minimum_size = Vector2(36, 44)
+		plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return plate
+	var face := Portraits.view(id, 64, 1)
+	face.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	if not h.conscious():
+		face.modulate = Color(0.45, 0.45, 0.45)
+	return face
 
 
 func _small(text: String, size: int, color: Color) -> Label:
@@ -874,6 +887,8 @@ func _show_result() -> void:
 		if not h.conscious():
 			down += 1
 	col.add_child(UiKit.label(UiKit.fmt("BATTLE_RESULT_STATS", {"rounds": battle.round_num, "down": down}), UiKit.FONT_SMALL))
+	if not won:
+		PlaytestLog.event("battle_lost", {"battle": battle.id, "rounds": battle.round_num, "difficulty": battle.difficulty})
 	if won and battle.stage.get("rescued", false):
 		col.add_child(UiKit.label(tr("BATTLE_RESCUED_NOTE"), UiKit.FONT_SMALL, UiKit.MUTED))
 	if won:
@@ -916,7 +931,7 @@ func _load_last(as_story: bool) -> void:
 	Game.pending_tail = Game.load_from(slot)
 	if as_story:
 		Game.session.state.difficulty = "story"
-	get_tree().change_scene_to_file("res://scenes/story_screen.tscn")
+	get_tree().change_scene_to_file(Game.screen_path())
 
 
 func _open_menu() -> void:
@@ -932,6 +947,7 @@ func _open_menu() -> void:
 	dbl.toggled.connect(func(on: bool) -> void: Game.set_battle_double_click(on))
 	col.add_child(dbl)
 	col.add_child(UiKit.label(tr("BATTLE_DOUBLE_CLICK_NOTE"), UiKit.FONT_SMALL, UiKit.MUTED))
+	GameMenus.volume_sliders(col)
 	col.add_child(UiKit.button(tr("BATTLE_TO_MENU"), func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")))
 	UiKit.focus_first(col)

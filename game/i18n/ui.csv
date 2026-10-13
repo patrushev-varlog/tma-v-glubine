@@ -158,3 +158,14 @@ SPEAKER_smith,Кузнец,Smith
 SPEAKER_overseer,Надсмотрщик,Overseer
 SPEAKER_sutler,Маркитант,Sutler
 SPEAKER_neighbor,Соседка,Neighbor
+DEMO_END_TEXT,"Здесь заканчивается демо. Колонна ушла на дно, и тебе туда же.","This is where the demo ends. The column went down into the deep, and so must you."
+DEMO_END_SAVE,"Прогресс сохранён: полная игра продолжит отсюда, с главы 1, со всеми твоими выборами.","Your progress is saved: the full game picks up right here, at Chapter 1, with every choice you made."
+DEMO_WISHLIST,Добавить в желаемое в Steam,Wishlist on Steam
+DEMO_STEAM_SOON,Страница игры в Steam скоро появится.,The Steam page is coming soon.
+DEMO_PLAYTEST_LOG,"Для тестеров: пришлите файл {path}","For playtesters: please send us the file {path}"
+DEMO_OPEN_FOLDER,Открыть папку с файлом,Show the file
+MENU_DEMO,Демо: пролог,Demo: the prologue
+LANG_STORY_EN_PROLOGUE,"История на английском — пролог; главы 1–5 пока по-русски, перевод идёт.","The prologue is in English; chapters 1–5 are still Russian-only while the translation is in progress."
+VOLUME_MUSIC,Музыка,Music
+VOLUME_AMBIENT,Окружение,Ambience
+VOLUME_SFX,Звуки,Sounds

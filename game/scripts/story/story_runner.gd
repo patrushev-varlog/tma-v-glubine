@@ -22,7 +22,7 @@ var _story  # GodotInk.InkStory
 var _vars: PackedStringArray = []
 
 
-## Языки, для которых есть полная история. Английская появится, когда story/ink-en/game.ink будет готов.
+## Языки, для которых собрана история (story/ink-en/game.ink: английский пролог, главы пока по-русски).
 static func languages() -> PackedStringArray:
 	var out := PackedStringArray()
 	for lang in STORIES:

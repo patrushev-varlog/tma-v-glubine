@@ -51,9 +51,29 @@ static func pause_menu(root: Control, actions: Dictionary) -> Control:
 	col.add_child(UiKit.button(tr_("STORY_QUICKSAVE"), actions.quicksave))
 	col.add_child(UiKit.button(tr_("STORY_SAVE"), actions.save))
 	col.add_child(UiKit.button(tr_("STORY_TO_MENU"), actions.to_menu))
+	volume_sliders(col)
 	col.add_child(UiKit.button(tr_("STORY_CLOSE"), actions.close))
 	UiKit.focus_first(col)
 	return f[0]
+
+
+## Громкость музыки, окружения и звуков: ползунки с подписью (сохраняются в настройках).
+static func volume_sliders(col: Container) -> void:
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 12)
+	for bus in Sound.BUSES:
+		grid.add_child(UiKit.label(tr_("VOLUME_" + bus.to_upper()), UiKit.FONT_SMALL))
+		var sl := HSlider.new()
+		sl.min_value = 0.0
+		sl.max_value = 1.0
+		sl.step = 0.05
+		sl.value = float(Sound.volume[bus])
+		sl.custom_minimum_size = Vector2(220, 28)
+		sl.focus_mode = Control.FOCUS_ALL
+		sl.value_changed.connect(func(v: float) -> void: Sound.set_volume(bus, v))
+		grid.add_child(sl)
+	col.add_child(grid)
 
 
 static func tr_(key: String) -> String:

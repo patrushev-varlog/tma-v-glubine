@@ -93,6 +93,11 @@ jobs:
             key: macos
           - preset: Linux
             key: linux
+          # Демо для плейтеста и Steam (пролог): Windows — для тестеров, Linux — для самопроверки.
+          - preset: Windows Desktop Demo
+            key: windows-demo
+          - preset: Linux Demo
+            key: linux-demo
     steps:
       - uses: actions/checkout@v4
         with:
@@ -127,8 +132,8 @@ jobs:
           $GODOT --headless --path . --export-release "${{ matrix.preset }}"
           ls -la ../build/game/${{ matrix.key }}
       - name: Самопроверка сборки Linux
-        if: matrix.key == 'linux'
-        working-directory: build/game/linux
+        if: matrix.key == 'linux' || matrix.key == 'linux-demo'
+        working-directory: build/game/${{ matrix.key }}
         run: ./TmaVGlubine.x86_64 --headless -- --selftest
       - uses: actions/upload-artifact@v4
         with:

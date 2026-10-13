@@ -10,11 +10,13 @@ config/description="Партийная тактическая RPG в изоме�
 run/main_scene="res://scenes/main_menu.tscn"
 config/features=PackedStringArray("4.7", "C#", "Mobile")
 config/icon="res://icon.svg"
+config/version="0.1.0"
 
 [autoload]
 
 InputSetup="*res://scripts/input/input_setup.gd"
 Game="*res://scripts/state/game.gd"
+Sound="*res://scripts/audio/sound.gd"
 
 [display]
 
@@ -46,3 +48,9 @@ locale/fallback="ru"
 renderer/rendering_method="mobile"
 textures/canvas_textures/default_texture_filter=0
 textures/vram_compression/import_etc2_astc=true
+
+[tma]
+
+; Страница игры в Steam для кнопки «Добавить в желаемое» в конце демо. Ставится, когда в Steamworks
+; появится приложение (поток L плана review/07-next-steps.md); пока пусто — кнопка не показывается.
+steam_url=""

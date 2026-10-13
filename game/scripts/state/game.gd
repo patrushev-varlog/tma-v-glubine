@@ -25,6 +25,49 @@ func _ready() -> void:
 		language = _default_language()
 	TranslationServer.set_locale(language)
 	get_tree().root.theme = UiKit.theme()
+	# Тесты, самопроверка и инструменты (godot -s …) не пишут в журнал плейтеста.
+	if OS.get_cmdline_args().has("-s") or OS.get_cmdline_user_args().has("--selftest"):
+		PlaytestLog.enabled = false
+	get_tree().auto_accept_quit = false
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		PlaytestLog.event("quit", _where())
+		get_tree().quit()
+
+
+## Где игрок сейчас — для журнала плейтеста.
+func _where() -> Dictionary:
+	if session == null:
+		return {"scene": ""}
+	return {"scene": session.scene_name(), "battle": battle.id if battle != null else "", "darkness": session.darkness()}
+
+
+# --- Демо -------------------------------------------------------------------------
+
+## Демо (DESIGN.md, раздел 8): пролог целиком, в конце титр главы 1 и ссылка на страницу в Steam.
+## Сборки демо — пресеты «… Demo» в export_presets.cfg (свой признак "demo"); из редактора — «-- --demo».
+const DEMO_END_SCENE := "res://scenes/demo_end.tscn"
+
+
+## Включить демо без сборки демо (тесты).
+var demo_forced := false
+
+
+func is_demo() -> bool:
+	return demo_forced or OS.has_feature("demo") or OS.get_cmdline_user_args().has("--demo")
+
+
+## Демо закончилось: история вошла в первую сцену главы 1. Автосохранение на входе в эту сцену уже
+## записано, с него полная игра продолжит (формат сохранений у демо и игры один).
+func demo_over() -> bool:
+	return is_demo() and session != null and session.chapter_name() != "prologue"
+
+
+## Страница игры в Steam (настройка tma/steam_url в project.godot). Пусто, пока нет приложения в Steamworks.
+static func steam_url() -> String:
+	return String(ProjectSettings.get_setting("tma/steam_url", ""))
 
 
 static func _default_language() -> String:
@@ -65,6 +108,8 @@ func story_language() -> String:
 func new_game(setup: Dictionary) -> void:
 	_set_session(StorySession.new())
 	session.new_game(setup, story_language())
+	PlaytestLog.event("new_game", {"class": String(setup.hero.get("class", "")), "hero_f": bool(setup.hero.get("hero_f", false)),
+		"difficulty": String(setup.get("difficulty", "story"))})
 
 
 func _set_session(s: StorySession) -> void:
@@ -72,8 +117,11 @@ func _set_session(s: StorySession) -> void:
 	session.scene_entered.connect(_on_scene_entered)
 
 
-func _on_scene_entered(_scene: String) -> void:
+func _on_scene_entered(scene: String) -> void:
 	autosave()
+	PlaytestLog.event("scene", {"scene": scene, "darkness": session.darkness()})
+	if demo_over():
+		PlaytestLog.event("demo_end", {"darkness": session.darkness(), "choice": String(session.flag("column_choice"))})
 
 
 func autosave() -> void:
@@ -88,6 +136,8 @@ func save_to(slot: String) -> Error:
 ## Экран для текущего места истории: карта локации, если сцена идёт на карте, иначе экран истории.
 ## Туда же возвращается экран боя после победы.
 func screen_path() -> String:
+	if demo_over():
+		return DEMO_END_SCENE
 	if session != null and LocationMap.for_scene(session.scene_name()) != "":
 		return "res://scenes/location_screen.tscn"
 	return "res://scenes/story_screen.tscn"
@@ -103,7 +153,9 @@ func load_from(slot: String) -> Array[Dictionary]:
 	if d.is_empty():
 		return []
 	_set_session(StorySession.new())
-	return session.load_save(d, story_language())
+	var tail := session.load_save(d, story_language())
+	PlaytestLog.event("load", {"slot": slot, "scene": session.scene_name()})
+	return tail
 
 
 # --- Бой --------------------------------------------------------------------------
@@ -139,6 +191,7 @@ func start_battle(seed_value := -1) -> Battle:
 	battle = Battle.new()
 	battle.setup(battle_scenario(session.pending_battle), seed_value, session.state.difficulty)
 	battle_return_scene = screen_path()
+	PlaytestLog.event("battle_start", {"battle": battle.id, "difficulty": battle.difficulty})
 	return battle
 
 
@@ -157,6 +210,9 @@ func auto_battle(seed_value := -1) -> Dictionary:
 
 ## Победа в бою: история продолжается, бой засчитан, боевая Тьма уходит в шкалу.
 func finish_battle(darkness: int) -> void:
+	if battle != null:
+		PlaytestLog.event("battle_won", {"battle": battle.id, "rounds": battle.round_num, "darkness": darkness,
+			"rescued": bool(battle.stage.get("rescued", false))})
 	session.win_battle(darkness)
 	battle = null
 	SaveStore.remove("battle")
