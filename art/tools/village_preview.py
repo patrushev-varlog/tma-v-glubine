@@ -11,7 +11,7 @@ N = 8
 M = ["ggggpggg", "ggggpggg", "ggggpggg", "gggpgggg", "ggpggggg", "gpggooog", "pgggooog", "pggggggg"]
 KEY = {"p": "floor_path", "g": "floor_grass", "o": "floor_garden"}
 OBJS = {(1, 1): "house", (6, 1): "house_burning", (3, 3): "well", (0, 4): "woodpile", (7, 3): "bell_tower",
-        (4, 4): "fence", (5, 4): "fence", (6, 4): "fence", (3, 5): "tools"}
+        (4, 3): "fence", (4, 4): "fence", (4, 5): "fence", (3, 5): "tools"}
 CHARS = {(2, 5): C / "hero_fighter_m/composited/idle/south-east/00.png",
          (4, 2): W1 / "zombie/rotations/north-west.png", (5, 2): C / "parishioner_m/base/Idle/rotations/north-west.png",
          (1, 6): C / "neighbor/base/Idle/rotations/north-east.png"}

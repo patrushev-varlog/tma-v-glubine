@@ -11,13 +11,13 @@ NIGHT = "night, cold moonlight with warm firelight from the left, "
 
 TILES = {
  "floor_path": (FLAT + "packed dirt village path with grass tufts and a small puddle, night, low contrast, seamless edges", "thin tile"),
- "floor_grass": (FLAT + "trampled muted green grass with a few fallen brown leaves, night, low contrast, seamless edges", "thin tile"),
+ "floor_grass": (FLAT + "calm uniform short dark muted green grass, very low detail, almost no pattern, night, low contrast, seamless edges", "thin tile"),
  "floor_garden": (FLAT + "dug-up dark soil with small cabbages growing in it, night, low contrast, seamless edges", "thin tile"),
  "edge": ("ground block with a dark earth cross-section on the sides and trampled grass on top, night", "thick tile"),
 }
 OBJECTS = {
- "house": ("small timber-and-wattle village cottage with a thatched roof and a small shuttered window glowing warm", 128, 128),
- "house_burning": ("small timber-and-wattle village cottage on fire, bright flames on the thatched roof, sparks", 128, 128),
+ "house": ("timber-and-wattle village cottage with a dark thatched roof and a small shuttered window glowing warm, the cottage fills the whole canvas", 160, 160),
+ "house_burning": ("timber-and-wattle village cottage on fire, bright flames on the dark thatched roof, sparks, the cottage fills the whole canvas", 160, 160),
  "fence": ("short straight section of a woven wattle fence", 64, 64),
  "woodpile": ("stacked firewood logs under a small lean-to roof", 64, 64),
  "well": ("old round stone village well with a wooden crank and a bucket", 64, 64),
