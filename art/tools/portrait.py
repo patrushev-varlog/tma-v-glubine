@@ -11,6 +11,9 @@
 
     python3 art/tools/portrait.py                 все портреты из portraits.json
     python3 art/tools/portrait.py hero_wizard_m   один портрет
+    python3 art/tools/portrait.py --frame irena source/irena.png
+        новый исходник: найти лицо (OpenCV), записать кадр и точки лица в portraits.json
+        и сразу собрать портрет. Нужен opencv-python-headless 4.x.
 
 Результат: art/portraits/<id>/ — base_128.png, base_64.png, слои dark_*.png (только у героя),
 preview.png (увеличенный лист для просмотра). Нужны Pillow и numpy.
@@ -62,8 +65,23 @@ def nearest(colors_lab: np.ndarray, pal_lab: np.ndarray, chroma: float) -> np.nd
     return d.argmin(-1)
 
 
+def cut(src: Path, crop: list[int]) -> Image.Image:
+    """Квадрат из исходника. Если кадр выходит за край (узкие генерации), края дополняются средним
+    цветом фона из верхних углов; дальше они уходят в фон вместе с ним."""
+    im = np.asarray(Image.open(src).convert("RGB"))
+    h, w = im.shape[:2]
+    x0, y0, x1, y1 = crop
+    pad = ((max(0, -y0), max(0, y1 - h)), (max(0, -x0), max(0, x1 - w)), (0, 0))
+    if any(v for a in pad[:2] for v in a):
+        k = max(4, min(h, w) // 16)
+        bg = np.concatenate([im[:k, :k].reshape(-1, 3), im[:k, -k:].reshape(-1, 3)]).mean(0).astype(np.uint8)
+        im = np.stack([np.pad(im[..., c], pad[:2], constant_values=bg[c]) for c in range(3)], -1)
+        x0, x1, y0, y1 = x0 + pad[1][0], x1 + pad[1][0], y0 + pad[0][0], y1 + pad[0][0]
+    return Image.fromarray(im[y0:y1, x0:x1])
+
+
 def prepare(src: Path, crop: list[int], size: int, cfg: dict) -> np.ndarray:
-    small = Image.open(src).convert("RGB").crop(tuple(crop)).resize((size, size), Image.LANCZOS)
+    small = cut(src, crop).resize((size, size), Image.LANCZOS)
     a = np.asarray(small).astype(float) / 255
     small = ImageEnhance.Color(Image.fromarray((255 * a ** cfg["gamma"]).astype(np.uint8))).enhance(cfg["saturation"])
     return np.asarray(small).astype(float)
@@ -206,8 +224,59 @@ def build(pid: str, entry: dict, pal: np.ndarray) -> None:
     print(f"{pid}: {colors} цветов, файлы в {out.relative_to(ART.parent)}")
 
 
+# Кадр от найденного лица: ширина лица — такая доля стороны квадрата, глаза — на такой доле высоты.
+FACE_SHARE = {128: 0.48, 64: 0.62}
+EYES_AT = {128: 0.36, 64: 0.38}
+
+
+def auto_frame(pid: str, source: str) -> dict:
+    """Кадр 128 и 64, рамка лица и точки лица (у героя) по самому крупному лицу на исходнике.
+    Квадрат не шире исходника: у узких генераций лицо выходит крупнее."""
+    import cv2
+
+    img = cv2.imread(str(ART / "portraits" / source), cv2.IMREAD_GRAYSCALE)
+    h, w = img.shape
+    casc = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    found = casc.detectMultiScale(img, 1.05, 5, minSize=(w // 6, w // 6))
+    if not len(found):
+        raise SystemExit(f"{pid}: лицо не найдено, кадр задаётся в portraits.json руками")
+    fx, fy, fw, fh = (int(v) for v in max(found, key=lambda r: r[2]))
+    eye_y = fy + 0.42 * fh
+
+    def square(size: int) -> list[int]:
+        side = min(int(fw / FACE_SHARE[size]), w)
+        x0 = min(max(0, round(fx + fw / 2 - side / 2)), w - side)
+        y0 = max(0, round(eye_y - EYES_AT[size] * side))
+        return [x0, y0, x0 + side, y0 + side]
+
+    def at(c: list[int], size: int, x: float, y: float) -> list[int]:
+        return [int((x - c[0]) / (c[2] - c[0]) * size), int((y - c[1]) / (c[3] - c[1]) * size)]
+
+    def face_box(c: list[int], size: int) -> list[int]:
+        a, b = at(c, size, fx - 0.1 * fw, fy - 0.05 * fh), at(c, size, fx + 1.1 * fw, fy + 1.35 * fh)
+        return [max(0, a[0]), max(0, a[1]), min(size, b[0]), min(size, b[1])]
+
+    c128, c64 = square(128), square(64)
+    entry = {"source": source, "crop": c128, "face_box": face_box(c128, 128), "crop_64": c64,
+             "face_box_64": face_box(c64, 64), "settings": {"bg_tolerance": 12}}
+    if pid.startswith("hero_"):  # точки для слоёв Тьмы, по пропорциям лица анфас; уточняются руками
+        near, far = at(c128, 128, fx + 0.3 * fw, eye_y), at(c128, 128, fx + 0.7 * fw, eye_y)
+        entry["features"] = {
+            "eye_near": [near[0] - 3, near[0] + 3, near[1]], "eye_far": [far[0] - 3, far[0] + 3, far[1]],
+            "iris_near": near, "iris_far": far, "temple": at(c128, 128, fx + 0.12 * fw, fy + 0.3 * fh),
+            "cheek": at(c128, 128, fx + 0.22 * fw, fy + 0.62 * fh), "neck": at(c128, 128, fx + 0.4 * fw, fy + 1.15 * fh)}
+    return entry
+
+
 def main() -> None:
     pal = np.asarray(Image.open(PALETTE).convert("RGB")).reshape(-1, 3).astype(float)
+    if sys.argv[1:2] == ["--frame"]:
+        pid, source = sys.argv[2], sys.argv[3]
+        data = json.loads(CONFIG.read_text())
+        data[pid] = auto_frame(pid, source)
+        CONFIG.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+        build(pid, data[pid], pal)
+        return
     entries = {k: v for k, v in json.loads(CONFIG.read_text()).items() if not k.startswith("_")}
     wanted = sys.argv[1:] or [k for k, v in entries.items() if (ART / "portraits" / v["source"]).exists()]
     for pid in wanted:
