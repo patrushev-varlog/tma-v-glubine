@@ -111,6 +111,8 @@ var _anim := {}
 var _fx: Array[Dictionary] = []
 ## Отложенные всплывающие надписи: [{t, cell, text, color}].
 var _popups: Array[Dictionary] = []
+## Отложенные звуки (Sound.sfx), в такт анимациям: [{t, id}].
+var _sounds: Array[Dictionary] = []
 ## Объекты на группу клеток: передняя клетка группы → [тайл, нижняя точка в мире]; прочие клетки группы — в _span_skip.
 var _spans := {}
 var _span_skip := {}
@@ -273,6 +275,13 @@ func _process(delta: float) -> void:
 			_popups.remove_at(i)
 		else:
 			i += 1
+	i = 0
+	while i < _sounds.size():
+		if float(_sounds[i].t) <= _clock:
+			Sound.sfx(String(_sounds[i].id))
+			_sounds.remove_at(i)
+		else:
+			i += 1
 	_fx = _fx.filter(func(f: Dictionary) -> bool: return _clock < float(f.t0) + float(f.dur))
 	for st in _anim.values():
 		while not st.steps.is_empty() and _clock >= float(st.steps[0].t0) + STEP_TIME:
@@ -287,6 +296,7 @@ func _process(delta: float) -> void:
 func feed(events: Array) -> void:
 	var impact := -1.0
 	var weapon_blow := false
+	var hit_sound := ""
 	for ev in events:
 		var u := battle.get_unit(String(ev.unit))
 		if u == null:
@@ -313,6 +323,15 @@ func feed(events: Array) -> void:
 				impact = now + IMPACT_AT
 				var aid := String(ev.aid)
 				weapon_blow = aid == ""
+				var wid := String(u.weapon.get("id", ""))
+				if weapon_blow and Battle.dist(u.cell, cell) > 1 and not u.ranged_weapon.is_empty():
+					wid = String(u.ranged_weapon.get("id", wid))
+				var table := "weapons" if weapon_blow else "abilities"
+				var key := wid if weapon_blow else aid
+				_sound(Sound.sfx_id(table, key, 0), now)
+				hit_sound = Sound.sfx_id(table, key, 1)
+				if weapon_blow and u.undead and u.kind in ["zombie", "raised", "drowned", "ghoul"] and randf() < 0.4:
+					_sound("undead_groan", now)
 				var fxd: Dictionary = ABILITY_FX.get(aid, {})
 				var proj := String(fxd.get("proj", ""))
 				if proj == "" and weapon_blow and RANGED_PROJ.has(u.kind) and Battle.dist(u.cell, cell) > 1:
@@ -337,21 +356,41 @@ func feed(events: Array) -> void:
 					"damage":
 						_popups.append({"t": t, "cell": u.cell, "text": "-%d" % int(ev.amount), "color": Color("#ff6b5a")})
 						st.hit_t = t
+						_sound(hit_sound, t)
+						if weapon_blow and (u.kind.begins_with("skeleton") or u.kind == "bone_archer"):
+							_sound("hit_bone", t)
 						if weapon_blow:
 							_add_fx("hit_spark", cell_to_world(u.cell) + Vector2(0, -26), t)
 							_add_fx("bone_hit" if u.kind.begins_with("skeleton") or u.kind == "bone_archer" else "blood",
 								cell_to_world(u.cell) + Vector2(0, -22), t + 0.05)
 					"heal":
 						_popups.append({"t": t, "cell": u.cell, "text": "+%d" % int(ev.amount), "color": Color("#6bff8a")})
+						if weapon_blow:
+							_sound("heal", t)
 					"miss":
 						_popups.append({"t": t, "cell": u.cell, "text": tr("BATTLE_MISS"), "color": Color("#cccccc")})
 						_add_fx("miss", cell_to_world(u.cell) + Vector2(0, -30), t)
+						_sound("miss", t)
 			"down":
 				st.down_t = maxf(impact, _clock) + 0.15
+				var bony: bool = u.kind.begins_with("skeleton") or u.kind == "bone_archer"
+				_sound("bones_collapse" if bony else "body_fall", float(st.down_t))
+				if u.dead and u.undead and not bony:
+					_sound("undead_death", float(st.down_t))
 				if u.dead and u.undead:
 					_add_fx("undead_death", cell_to_world(u.cell) + Vector2(0, -20), float(st.down_t) + 0.5)
 			"spawn":
 				_popups.append({"t": _clock, "cell": u.cell, "text": "!", "color": Color("#ff6b5a")})
+				_sound("spawn", _clock)
+
+
+func _sound(id: String, t: float) -> void:
+	if id == "":
+		return
+	for s in _sounds:
+		if s.id == id and absf(float(s.t) - t) < 0.05:
+			return
+	_sounds.append({"t": t, "id": id})
 
 
 ## Сколько ещё идут начатые анимации: экран боя ждёт их перед следующим ходом врага.

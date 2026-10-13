@@ -13,6 +13,7 @@ static func _frame(root: Control) -> Array:
 
 ## Журнал: отряд, вещи, задания.
 static func journal(root: Control, on_close: Callable) -> Control:
+	Sound.sfx("book")
 	var f := _frame(root)
 	var col: VBoxContainer = f[1]
 	var s := Game.session

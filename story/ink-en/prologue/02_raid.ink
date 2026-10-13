@@ -6,7 +6,7 @@ VAR raid_rushed = false     // ran for the cart
 VAR raid_called = false     // called out the name
 
 === raid ===
-The bell rang again. Close now: on the chapel by the well. It rang fast and ragged, the way a bell rings not for a service but because there is nothing else left to do.
+The bell rang again. Close now: on the chapel by the well. It rang fast and ragged, the way a bell rings not for a service but because there is nothing else left to do. # sfx:bell_chapel
 {sp()} was already standing at the window.
 "There's fire," {s("he", "she")} said. "Oldric's house is burning. And the Haskers'." # spk:spouse # mood:tense
 * [Grab a weapon and go out.]

@@ -56,7 +56,7 @@ Irena looked at you as if you had struck her. Then she nodded.
     She looked at your hands, at the blood on your sleeve, and did not ask why.
 -
 "A week ago a man with the royal seal came here," said Irena. "A scribe. He wrote down my parishioners. And last night they rose. All at once, as if someone had called them by that list." # spk:irena # mood:tense
-She lifted the staff, and the cracked bell gave a dull clink.
+She lifted the staff, and the cracked bell gave a dull clink. # sfx:handbell
 "I'm coming with you. I want to look into the eyes of whoever draws up lists like that. And ask what he wants with my parishioners." # spk:irena
 { hero_class == "wizard":
     She straightened the bell on her staff and added:

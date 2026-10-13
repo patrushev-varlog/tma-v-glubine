@@ -271,6 +271,7 @@ func _advance() -> void:
 
 func _show_line(item: Dictionary) -> void:
 	_mode = "line"
+	Sound.sfx(String(item.get("sfx", "")))
 	_set_active({})
 	var who := String(item.get("speaker", ""))
 	_speaker.text = _speaker_name(who).to_upper()
@@ -282,7 +283,7 @@ func _show_line(item: Dictionary) -> void:
 	_text.add_theme_color_override("font_color", UiKit.HERO if who == "hero" else (UiKit.SPEAKER if who != "" else UiKit.TEXT))
 	_last_line = String(item.text)
 	_clear_buttons()
-	_buttons.add_child(UiKit.button(tr("STORY_NEXT"), _advance))
+	_buttons.add_child(UiKit.button(tr("STORY_NEXT"), _advance, UiKit.FONT_BODY, "page_turn"))
 	_panel.show()
 	UiKit.focus_first(_buttons)
 
@@ -471,6 +472,7 @@ func _process(_delta: float) -> void:
 
 
 func _on_step(c: Vector2i) -> void:
+	Sound.sfx(Sound.sfx_id("steps", String(_map.ground.get(c, ""))), -6.0)
 	Game.session.map_pos = {"location": _map.id, "x": c.x, "y": c.y}
 	_update_prompt()
 
@@ -557,6 +559,7 @@ func _close_overlay() -> void:
 
 func _save(slot: String) -> void:
 	if Game.save_to(slot) == OK:
+		Sound.sfx("save")
 		_status.text = UiKit.fmt("STORY_SAVED", {"slot": SlotPanel.slot_name(slot)})
 
 

@@ -59,7 +59,7 @@ func _ready() -> void:
 	if battle == null:
 		get_tree().change_scene_to_file.call_deferred("res://scenes/main_menu.tscn")
 		return
-	Sound.for_battle()
+	Sound.for_battle(battle.ground)
 	board = BoardView.new()
 	board.battle = battle
 	if Game.session != null:
@@ -874,6 +874,7 @@ func _show_result() -> void:
 		await get_tree().create_timer(board.busy_left() + 0.4).timeout
 	var col := _overlay_column()
 	var won := battle.outcome == "victory"
+	Sound.sfx("victory" if won else "defeat")
 	col.add_child(UiKit.heading((tr("BATTLE_VICTORY") if won else tr("BATTLE_DEFEAT")).to_upper(), UiKit.HEAD_TITLE,
 		UiKit.ACCENT if won else UiKit.DANGER))
 	var down := 0

@@ -161,5 +161,5 @@ The lamp was burning down. Already in bed, in the dark, {sp()} said quietly, as 
 * [Say nothing and hold {s("him", "her")}.]
     You held {s("him", "her")} tighter than you meant to. {sp()} did not ask again.
 -
-{evening_roof: The rain drummed on the bark above the chimney.|The water kept dripping, into two bowls now.} Somewhere far off, beyond the forest, a bell struck. Once. Then it was quiet.
+{evening_roof: The rain drummed on the bark above the chimney.|The water kept dripping, into two bowls now.} Somewhere far off, beyond the forest, a bell struck. Once. Then it was quiet. # sfx:bell_far
 ->->

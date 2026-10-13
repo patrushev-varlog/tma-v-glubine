@@ -109,7 +109,7 @@ func _advance() -> void:
 			if item.has("scene"):
 				Sound.for_scene(String(item.scene))
 			_add_line(item)
-			_bottom.add_child(UiKit.button(tr("STORY_NEXT"), _advance))
+			_bottom.add_child(UiKit.button(tr("STORY_NEXT"), _advance, UiKit.FONT_BODY, "page_turn"))
 		"choices":
 			for i in item.options.size():
 				_bottom.add_child(UiKit.button(String(item.options[i]), _choose.bind(i)))
@@ -133,6 +133,7 @@ func _choose(i: int) -> void:
 
 
 func _add_line(item: Dictionary) -> void:
+	Sound.sfx(String(item.get("sfx", "")))
 	# Реплики в тексте уже с атрибуцией («— сказал Эйвин»), поэтому говорящего отмечаем цветом,
 	# портретом и именем слева; на строках рассказчика портрет последнего говорящего гаснет.
 	var who := String(item.get("speaker", ""))
@@ -233,6 +234,7 @@ func _close_overlay() -> void:
 
 func _save(slot: String) -> void:
 	if Game.save_to(slot) == OK:
+		Sound.sfx("save")
 		_status.text = UiKit.fmt("STORY_SAVED", {"slot": SlotPanel.slot_name(slot)})
 
 
