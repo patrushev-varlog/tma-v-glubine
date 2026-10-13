@@ -28,14 +28,21 @@ def _headers():
     return h
 
 
-def call(method, path, body=None, timeout=300):
+def call(method, path, body=None, timeout=300, retries=90):
+    """Запрос к API. На тарифе Tier 2 не больше 10 задач сразу: при 429 ждём и повторяем."""
     data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(API + path, data=data, method=method, headers=_headers())
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.loads(r.read() or b"{}")
-    except urllib.error.HTTPError as e:
-        raise RuntimeError(f"{method} {path}: {e.code} {e.read()[:800]!r}") from None
+    for attempt in range(retries):
+        req = urllib.request.Request(API + path, data=data, method=method, headers=_headers())
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return json.loads(r.read() or b"{}")
+        except urllib.error.HTTPError as e:
+            msg = e.read()[:800]
+            busy = e.code in (429, 502, 503, 504) or (e.code == 500 and b"Failed to start" in msg)
+            if busy and attempt < retries - 1:
+                time.sleep(20)
+                continue
+            raise RuntimeError(f"{method} {path}: {e.code} {msg!r}") from None
 
 
 def log(entry):
@@ -169,3 +176,17 @@ def map_object(name, description, out, w=64, h=64, view="high top-down", palette
     log({"kind": "map_object", "name": name, "id": oid, "cost": (j.get("usage") or {}).get("generations"),
          "file": str(out), "description": description})
     return out
+
+
+def animate_template(char_name, char_id, anim, template, directions=("south-east", "north-east"), group=None):
+    """Шаблонная анимация в режиме skeleton-v3 (схема 2a, п. 3). group — дополнить существующую."""
+    body = {"character_id": char_id, "mode": "skeleton-v3", "template_animation_id": template,
+            "animation_name": anim, "directions": list(directions)}
+    if group:
+        body["animation_group_id"] = group
+    r = call("POST", "/characters/animations", body)
+    jobs = [wait_job(j) for j in r["background_job_ids"]]
+    cost = sum((j.get("usage") or {}).get("generations") or 0 for j in jobs)
+    log({"kind": "animation", "name": f"{char_name}/{anim}", "id": r["animation_group_id"], "template": template,
+         "status": [j.get("status") for j in jobs], "cost": cost})
+    return r["animation_group_id"], jobs
