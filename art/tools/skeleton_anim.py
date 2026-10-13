@@ -56,6 +56,29 @@ def thrust_keypoints(base, d):
     return [[{"x": min(max(x / SIZE, 0), 1), "y": min(max(y / SIZE, 0), 1), "label": j} for j, (x, y) in p_.items()]
             for p_ in poses]
 SIZE = 64
+SHOOT_ACTION = "raising the crossbow to the shoulder, aiming forward and shooting, small recoil"
+
+
+def shoot_keypoints(base, d):
+    """Выстрел из арбалета: стойка → арбалет вверх → прицел у плеча → отдача → прицел → стойка.
+
+    Обе кисти поднимаются к уровню плеча и выносятся вперёд; при отдаче корпус и кисти уходят назад."""
+    fx, fy = FORWARD[d]
+    def pose(lift, reach, lean):
+        k = {j: list(v) for j, v in base.items()}
+        for j in ("NOSE", "NECK", "LEFT EYE", "RIGHT EYE", "LEFT EAR", "RIGHT EAR", "LEFT SHOULDER", "RIGHT SHOULDER"):
+            k[j][0] += lean * fx; k[j][1] += lean * fy
+        for side, extra in (("RIGHT", 0.0), ("LEFT", 4.0)):
+            w = k[f"{side} ARM"]
+            sh = k[f"{side} SHOULDER"]
+            w[0] += (reach + extra * (lift > 0)) * fx
+            w[1] += (reach + extra * (lift > 0)) * fy - lift * (w[1] - sh[1] - 2)
+            k[f"{side} ELBOW"] = [(sh[0] + w[0]) / 2 - 1.5 * fx, (sh[1] + w[1]) / 2 + 2]
+        return k
+    poses = [pose(0.5, 1, 0), pose(1.0, 3, 0), pose(1.0, 1, -1.5), pose(1.0, 3, 0), pose(0.4, 1, 0),
+             {j: list(v) for j, v in base.items()}]
+    return [[{"x": min(max(x / SIZE, 0), 1), "y": min(max(y / SIZE, 0), 1), "label": j} for j, (x, y) in p_.items()]
+            for p_ in poses]
 
 
 def _frames(ref, anim, d):
@@ -94,7 +117,7 @@ def transfer(ref_base, ref_frames, hero_base):
 
 
 def hero_description(name):
-    for l in p.LOG.read_text().splitlines():
+    for l in reversed(p.LOG.read_text().splitlines()):  # последняя версия персонажа
         e = json.loads(l)
         if e.get("kind") == "character" and e["name"] == name:
             desc = e.get("description") or p.call("GET", f"/characters/{e['id']}")["prompt"]
@@ -103,8 +126,8 @@ def hero_description(name):
 
 
 def run(hero, anim, dirs=DIRS, seed=0):
-    if anim == "thrust":
-        src, key, action = None, None, THRUST_ACTION
+    if anim in ("thrust", "shoot"):
+        src, key, action = None, None, THRUST_ACTION if anim == "thrust" else SHOOT_ACTION
     else:
         src, key, action = SOURCES[anim]
         ref = json.loads(Path(src).read_text())
@@ -113,8 +136,8 @@ def run(hero, anim, dirs=DIRS, seed=0):
     for d in dirs:
         rot = PRO / hero / "base" / "Idle" / "rotations" / f"{d}.png"
         hero_base = estimate(rot)
-        if anim == "thrust":
-            kps = thrust_keypoints(hero_base, d)
+        if anim in ("thrust", "shoot"):
+            kps = (thrust_keypoints if anim == "thrust" else shoot_keypoints)(hero_base, d)
         else:
             frames = _frames(ref, key, d)
             ref_base = frames[0]  # первый кадр — стойка; холсты стойки и удара у образцов разного размера

@@ -36,16 +36,20 @@ WEAPONS = {
     "shortsword": (A / "prologue/weapons/shortsword_v_5.png", 2, "blade"),
     "mace": (A / "prologue/weapons/mace_v_5.png", 2, "mace"),
     "staff": (A / "wave1/characters/hero_wizard_evoker/weapon.png", 1, "staff"),
+    "pitchfork": (A / "prologue/weapons/pitchfork_v_6.png", 59 / 44, "staff"),  # до роста посоха
 }
 HERO_WEAPON = {"fighter": "longsword", "rogue": "shortsword", "cleric": "mace", "wizard": "staff"}
+# Персонажи вне классов героев: оружие, рука, держится ли как посох (вертикально, удар копьём).
+NPC_WEAPON = {"neighbor": ("pitchfork", "RIGHT ARM")}
+STANCE_POLE = {"south-east": -12.0, "north-east": 12.0}  # древко в правой руке, по другую сторону от лица
 
 
 def weapon(name):
     """Обрезанный спрайт оружия и точка хвата (x, y) в нём."""
     f, step, rule = WEAPONS[name]
     im = Image.open(f).convert("RGBA")
-    if step > 1:  # исходник нарисован крупными пикселями 2×2
-        im = im.resize((im.width // step, im.height // step), Image.NEAREST)
+    if step != 1:  # исходник крупнее нужного (у мечей и булавы — пиксели 2×2)
+        im = im.resize((round(im.width / step), round(im.height / step)), Image.NEAREST)
     im = im.crop(im.getbbox())
     a = np.array(im)[..., 3] > 0
     widths = a.sum(1)
@@ -115,9 +119,16 @@ def frames_of(hero):
 
 
 def run(hero):
-    cls = hero.split("_")[1]
-    wimg, grip = weapon(HERO_WEAPON[cls])
-    hand = STAFF_HAND if cls == "wizard" else "RIGHT ARM"
+    if hero in NPC_WEAPON:
+        wname, hand = NPC_WEAPON[hero]
+        pole, stance = True, STANCE_POLE
+    else:
+        cls = hero.split("_")[1]
+        wname = HERO_WEAPON[cls]
+        pole = cls == "wizard"
+        hand = STAFF_HAND if pole else "RIGHT ARM"
+        stance = STANCE_STAFF if pole else STANCE
+    wimg, grip = weapon(wname)
     side = hand.split()[0]
     mid_grip = (wimg.width / 2, 0.6 * wimg.height)
     cache_f = PRO / hero / "skeletons.json"
@@ -129,7 +140,7 @@ def run(hero):
         if not idle:
             continue
         sk = skeleton(idle[0], cache, f"idle/{d}/0")
-        offsets[d] = (STANCE_STAFF if cls == "wizard" else STANCE)[d] - forearm_angle(sk, side)
+        offsets[d] = stance[d] - forearm_angle(sk, side)
     done = 0
     for (anim, d), files in sorted(fr.items()):
         if d not in offsets:
@@ -144,9 +155,9 @@ def run(hero):
                 wrist = [(sk["RIGHT ARM"][k] + sk["LEFT ARM"][k]) / 2 for k in (0, 1)]
                 ang, g = FORWARD_ANGLE[d], mid_grip
             elif anim == "thrust":
-                ang = STANCE_STAFF[d] if cls == "wizard" else STANCE[d]
-            elif anim == "hit" and cls == "wizard":  # шаблон урона крутит предплечье, посох держим ровно
-                ang = STANCE_STAFF[d]
+                ang = stance[d]
+            elif anim == "hit" and pole:  # шаблон урона крутит предплечье, древко держим ровно
+                ang = stance[d]
             out = PRO / hero / "composited" / anim / d / f"{i:02d}.png"
             out.parent.mkdir(parents=True, exist_ok=True)
             place(f, wimg, g, wrist, ang).save(out)

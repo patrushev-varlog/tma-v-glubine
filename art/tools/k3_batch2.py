@@ -1,5 +1,8 @@
 """K3, партия 2: шаблонные анимации героев (стойка, ходьба, урон, выбывание), SE и NE.
 
+    python3 art/tools/k3_batch2.py                 # все герои
+    python3 art/tools/k3_batch2.py crossbowman ...  # перечисленные персонажи
+
 Повторный запуск доделывает недостающее: что уже есть, смотрится в самом персонаже в PixelLab.
 """
 import sys, json, concurrent.futures as cf
@@ -12,11 +15,12 @@ TEMPLATES = {"idle": "breathing-idle", "walk": "walking-6-frames", "hit": "takin
 DIRS = ("south-east", "north-east")
 
 
-def heroes():
+def heroes(names=None):
+    """Последний id каждого персонажа из журнала: герои или перечисленные имена."""
     ids = {}
     for l in p.LOG.read_text().splitlines():
         e = json.loads(l)
-        if e.get("kind") == "character" and e["name"].startswith("hero_"):
+        if e.get("kind") == "character" and (e["name"] in names if names else e["name"].startswith("hero_")):
             ids[e["name"]] = e["id"]
     return ids
 
@@ -39,7 +43,7 @@ def run(name, cid, anim, tpl, missing, group):
 
 
 if __name__ == "__main__":
-    H = heroes()
+    H = heroes(sys.argv[1:])
     tasks = [(n, c, *t) for n, c in H.items() for t in todo(c)]
     print(len(tasks), "задач", flush=True)
     with cf.ThreadPoolExecutor(4) as ex:
