@@ -1,0 +1,36 @@
+{
+  "group_id": "9741d531-381d-4ba6-894e-8171862ea8e6",
+  "states": [
+    {
+      "character": {
+        "id": "030d39b5-939a-4239-8185-830fffa77d83",
+        "name": "Idle",
+        "prompt": "a man in his early thirties, villager who once served as a soldier, short brown hair, stubble, dented steel breastplate over a padded quilted gambeson, short dark-blue cloak pinned at the shoulder, round wooden shield with an iron rim strapped to the left forearm, worn boots, determined, both hands empty, fists clenched, no weapon in hands, no sheaths, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T10:17:30.247425+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T10:19:45.451279"
+}
