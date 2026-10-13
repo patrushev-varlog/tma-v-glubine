@@ -5,6 +5,7 @@ extends Control
 
 func _ready() -> void:
 	var col := UiKit.screen(self, 14)
+	UiKit.backdrop(self, "res://art/ui/menu_bg.png", 0.6)
 	col.alignment = BoxContainer.ALIGNMENT_CENTER
 	var title := UiKit.heading(tr("CHAPTER_1").to_upper(), UiKit.HEAD_TITLE)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

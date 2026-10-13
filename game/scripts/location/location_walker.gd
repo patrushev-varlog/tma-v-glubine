@@ -1,7 +1,8 @@
 class_name LocationWalker
 extends Node2D
-## Герой на карте: идёт по клеткам пути, по одной клетке за шаг. Заглушка вместо спрайта —
-## фигура кодом (тень, тело, голова), цвет тела по классу героя.
+## Герой на карте: идёт по клеткам пути, по одной клетке за шаг. Рисуется листом анимаций (UnitArt:
+## стойка и ходьба, четыре направления); нет листа — фигура кодом (тень, тело, голова), цвет по классу.
+## Тем же узлом стоят на карте анимированные NPC и мертвецы (без пути).
 
 signal stepped(cell: Vector2i)
 signal arrived(cell: Vector2i)
@@ -15,6 +16,10 @@ var body := Color("#7aa7e8")
 var head := Color("#e6d6b8")
 ## Куда смотрит (−1 — влево, 1 — вправо): фигура отражается.
 var facing := 1.0
+## Лист анимаций (UnitArt) и направление взгляда по клеткам: (1, 0) — ЮВ, (0, -1) — СВ, отражения — ЮЗ и СЗ.
+var sprite := ""
+var dir := Vector2i(1, 0)
+var _t := 0.0
 
 var _path: Array[Vector2i] = []
 var _tween: Tween = null
@@ -52,6 +57,7 @@ func _next_step() -> void:
 		return
 	var to: Vector2i = _path.pop_front()
 	var d := to - cell
+	dir = d
 	var target := view.cell_center(to)
 	if absf(target.x - position.x) > 1.0:
 		facing = signf(target.x - position.x)
@@ -64,9 +70,35 @@ func _next_step() -> void:
 	queue_redraw()
 
 
+static func dir_of(face: String) -> Vector2i:
+	return {"se": Vector2i(1, 0), "ne": Vector2i(0, -1), "sw": Vector2i(0, 1), "nw": Vector2i(-1, 0)}.get(face, Vector2i(1, 0))
+
+
+func _process(delta: float) -> void:
+	if sprite != "":
+		_t += delta
+		queue_redraw()
+
+
 func _draw() -> void:
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(facing, 1.0))
-	draw_person(self, body, head)
+	var info := UnitArt.unit(sprite) if sprite != "" else {}
+	if info.is_empty():
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(facing, 1.0))
+		draw_person(self, body, head)
+		draw_set_transform(Vector2.ZERO)
+		return
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.45))
+	draw_circle(Vector2.ZERO, 11.0, Color(0, 0, 0, 0.3))
+	var a: Dictionary = info.anims.walk if is_moving() else info.anims.idle
+	var frame := int(_t * float(a.fps)) % int(a.frames)
+	var sx := dir.x - dir.y
+	var sy := dir.x + dir.y
+	var size := Vector2(info.size[0], info.size[1])
+	var foot := Vector2(info.foot[0], info.foot[1])
+	var row := int(a.row) + (1 if sy < 0 else 0)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(-1.0 if sx < 0 else 1.0, 1.0))
+	draw_texture_rect_region(UnitArt.unit_texture(sprite), Rect2(Vector2(0, 4) - foot, size),
+		Rect2(Vector2(frame * size.x, row * size.y), size))
 	draw_set_transform(Vector2.ZERO)
 
 

@@ -59,6 +59,7 @@ func build(m: LocationMap, hero_cell: Vector2i, hero_look: Dictionary) -> void:
 	hero.view = self
 	hero.body = Color(hero_look.get("body", "#7aa7e8"))
 	hero.head = Color(hero_look.get("head", "#e6d6b8"))
+	hero.sprite = String(hero_look.get("sprite", ""))
 	hero.place(hero_cell)
 	props.add_child(hero)
 
@@ -96,6 +97,43 @@ func _process(delta: float) -> void:
 
 
 func _add_object(o: Dictionary) -> void:
+	# Графика K3: рисунок объекта (тайл art/tiles), анимированный персонаж или статичный — вместо заглушки.
+	var sprite := String(o.get("sprite", ""))
+	if sprite == "" and String(o.kind) == "tree":
+		sprite = "ford/willow" if (o.cell.x * 7 + o.cell.y * 3) % 3 != 0 else "ford/bushes"
+	if sprite != "" and UnitArt.tile(sprite) != null:
+		var layer := _decals if o.get("flat", false) else props
+		if o.get("each", false):
+			for c in map.cells_of(o):
+				layer.add_child(_SpriteObj.make(sprite, cell_center(c) + Vector2(0, 2)))
+		else:
+			var cells := map.cells_of(o)
+			var center := Vector2.ZERO
+			var bottom := -1e9
+			for c in cells:
+				center += cell_center(c)
+				bottom = maxf(bottom, cell_center(c).y + LocationArt.TILE.y * 0.5)
+			center /= cells.size()
+			var y := center.y + 2.0 if cells.size() == 1 else bottom - 4.0
+			layer.add_child(_SpriteObj.make(sprite, Vector2(center.x, y)))
+		return
+	if o.has("unit") and not UnitArt.unit(String(o.unit)).is_empty():
+		var u := LocationWalker.new()
+		u.view = self
+		u.sprite = String(o.unit)
+		u.dir = LocationWalker.dir_of(String(o.get("face", "se")))
+		u.place(o.cell)
+		props.add_child(u)
+		return
+	if o.has("image"):
+		var path := "res://art/units/static/%s/%s.png" % [String(o.image), String(o.get("face", "south-east"))]
+		if ResourceLoader.exists(path):
+			# Холст 64×64, ноги на 23 px ниже центра.
+			var img := _SpriteObj.make("", cell_center(o.cell) + Vector2(0, 4))
+			img.tex = load(path)
+			img.offset = Vector2(-32, -55)
+			props.add_child(img)
+			return
 	match String(o.kind):
 		"box":
 			for c in map.cells_of(o):
@@ -115,6 +153,26 @@ func _add_object(o: Dictionary) -> void:
 			var s := _Standing.new()
 			s.setup(self, o)
 			props.add_child(s)
+
+
+# --- Рисунок объекта: нижняя точка рисунка стоит в position (по ней сортируется глубина) ---
+
+class _SpriteObj extends Node2D:
+	var tex: Texture2D
+	var offset := Vector2.ZERO
+
+	static func make(name: String, bottom: Vector2) -> _SpriteObj:
+		var s := _SpriteObj.new()
+		s.position = bottom.round()
+		if name != "":
+			s.tex = UnitArt.tile(name)
+			var a := UnitArt.tile_anchor(name)
+			s.offset = -Vector2(float(a[0]), float(a[1])) if a.size() == 2 else -Vector2(s.tex.get_width() * 0.5, s.tex.get_height())
+		return s
+
+	func _draw() -> void:
+		if tex != null:
+			draw_texture(tex, offset)
 
 
 # --- Отметки на полу: наведение, путь, объекты для осмотра ------------------------

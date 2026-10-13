@@ -95,10 +95,12 @@ func _object_ids() -> Array:
 	return _map.objects.map(func(o: Dictionary) -> String: return String(o.id))
 
 
-## Цвет тела героя-заглушки по классу (как в прототипе боя).
+## Лист героя (класс и пол) и цвет тела заглушки по классу (как в прототипе боя), если листа нет.
 func _hero_look() -> Dictionary:
 	var body := {"fighter": "#b33831", "rogue": "#4f6e3f", "cleric": "#e6d6b8", "wizard": "#4d65b4"}
-	return {"body": body.get(String(Game.session.state.hero.get("class", "")), "#7aa7e8"), "head": "#f5c8a0"}
+	var hero: Dictionary = Game.session.state.hero
+	return {"body": body.get(String(hero.get("class", "")), "#7aa7e8"), "head": "#f5c8a0",
+		"sprite": "hero_%s_%s" % [String(hero.get("class", "fighter")), "f" if bool(hero.get("hero_f", false)) else "m"]}
 
 
 func _attach_hero() -> void:

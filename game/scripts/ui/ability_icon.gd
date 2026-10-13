@@ -1,11 +1,11 @@
 class_name AbilityIcon
 extends Button
-## Кнопка умения на панели боя: иконка, клавиша, сколько осталось. Пока иконок из потока K нет,
-## рисуется заглушка: плашка по типу действия и две буквы названия. Готовая иконка подхватится
-## из res://art/icons/abilities/<id>.png.
+## Кнопка умения на панели боя: иконка, клавиша, сколько осталось. Иконка 32×32 из
+## res://art/icons/abilities/<id>.png (K3) рисуется вдвое; у кнопки «ходить и бить» — move_attack.
+## Нет иконки (умения глав, тёмные дары) — заглушка: плашка по типу действия и две буквы названия.
 
 const ART := "res://art/icons/abilities/%s.png"
-const SIZE := Vector2(60, 60)
+const SIZE := Vector2(68, 68)
 ## Цвет плашки: действие, бонусное, без действия, тёмный дар, конец хода.
 const KIND_COLORS := {
 	"action": Color("#8a4b3c"), "bonus": Color("#8a6d32"), "free": Color("#3f6a5a"),
@@ -31,8 +31,8 @@ static func make(aid: String, kind_: String, abbr_: String, hotkey_: String, bad
 	b.custom_minimum_size = SIZE
 	b.flat = true
 	b.focus_mode = Control.FOCUS_NONE
-	var p := ART % aid
-	if aid != "" and ResourceLoader.exists(p):
+	var p := ART % (aid if aid != "" else "move_attack")
+	if ResourceLoader.exists(p):
 		b._tex = load(p)
 	return b
 
@@ -61,7 +61,10 @@ func _draw() -> void:
 	var font := get_theme_default_font()
 	var fg := Color(1, 1, 1, 0.45 if disabled else 1.0)
 	if _tex != null:
-		draw_texture_rect(_tex, r.grow(-6), false, fg)
+		var icon := Rect2((size - Vector2(64, 64)) * 0.5, Vector2(64, 64))
+		draw_texture_rect(_tex, icon, false, fg if not disabled else Color(0.5, 0.5, 0.5, 0.8))
+		if selected:
+			draw_rect(r.grow(-1.5), Color("#f9c22b"), false, 3.0)
 	else:
 		draw_string(font, Vector2(0, size.y * 0.5 + 9), abbr, HORIZONTAL_ALIGNMENT_CENTER, size.x, 24, fg)
 	if hotkey != "":

@@ -1,0 +1,166 @@
+{
+	"ford/boulder": [
+		17,
+		46
+	],
+	"ford/bushes": [
+		20,
+		53
+	],
+	"ford/campfire": [
+		25,
+		42
+	],
+	"ford/fallen_tree": [
+		25,
+		40
+	],
+	"ford/willow": [
+		29,
+		112
+	],
+	"gate/boulder": [
+		17,
+		46
+	],
+	"gate/bound_villagers": [
+		37,
+		63
+	],
+	"gate/campfire": [
+		19,
+		36
+	],
+	"gate/crates": [
+		16,
+		40
+	],
+	"gate/gatepost": [
+		29,
+		112
+	],
+	"gate/hitching_post": [
+		22,
+		46
+	],
+	"gate/list_scrap": [
+		13,
+		17
+	],
+	"gate/palisade": [
+		24,
+		44
+	],
+	"gate/prison_cart": [
+		38,
+		84
+	],
+	"gate/tent": [
+		24,
+		55
+	],
+	"temple/altar": [
+		28,
+		52
+	],
+	"temple/candelabrum": [
+		7,
+		54
+	],
+	"temple/column": [
+		27,
+		73
+	],
+	"temple/pew": [
+		12,
+		42
+	],
+	"temple/pew_broken": [
+		38,
+		39
+	],
+	"temple/roof_debris": [
+		48,
+		56
+	],
+	"village_morning/bell_tower": [
+		16,
+		76
+	],
+	"village_morning/cart_abandoned": [
+		26,
+		47
+	],
+	"village_morning/cellar_hatch": [
+		26,
+		35
+	],
+	"village_morning/fence": [
+		20,
+		48
+	],
+	"village_morning/fence_b": [
+		20,
+		48
+	],
+	"village_morning/grave": [
+		13,
+		29
+	],
+	"village_morning/house": [
+		69,
+		140
+	],
+	"village_morning/house_burned": [
+		69,
+		138
+	],
+	"village_morning/list_scrap": [
+		13,
+		17
+	],
+	"village_morning/tools": [
+		14,
+		40
+	],
+	"village_morning/well": [
+		20,
+		49
+	],
+	"village_morning/woodpile": [
+		25,
+		52
+	],
+	"village_night/bell_tower": [
+		16,
+		76
+	],
+	"village_night/fence": [
+		20,
+		48
+	],
+	"village_night/fence_b": [
+		20,
+		48
+	],
+	"village_night/house": [
+		69,
+		140
+	],
+	"village_night/house_burning": [
+		70,
+		139
+	],
+	"village_night/tools": [
+		14,
+		40
+	],
+	"village_night/well": [
+		20,
+		49
+	],
+	"village_night/woodpile": [
+		25,
+		52
+	]
+}
