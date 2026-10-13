@@ -753,6 +753,8 @@ func _build_hud() -> void:
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Тема окна (шрифты из UiKit) не доходит до интерфейса внутри CanvasLayer: ставим её сюда же.
+	root.theme = get_tree().root.theme
 	_hud.add_child(root)
 
 	var top := PanelContainer.new()
@@ -851,6 +853,7 @@ func _overlay_column() -> VBoxContainer:
 	add_child(_overlay)
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.theme = get_tree().root.theme
 	_overlay.add_child(root)
 	return UiKit.overlay(root)
 
@@ -864,7 +867,7 @@ func _close_overlay() -> void:
 func _show_result() -> void:
 	var col := _overlay_column()
 	var won := battle.outcome == "victory"
-	col.add_child(UiKit.label(tr("BATTLE_VICTORY") if won else tr("BATTLE_DEFEAT"), UiKit.FONT_TITLE,
+	col.add_child(UiKit.heading((tr("BATTLE_VICTORY") if won else tr("BATTLE_DEFEAT")).to_upper(), UiKit.HEAD_TITLE,
 		UiKit.ACCENT if won else UiKit.DANGER))
 	var down := 0
 	for h in battle.heroes():
@@ -920,7 +923,7 @@ func _open_menu() -> void:
 	if busy and battle.outcome == "":
 		return
 	var col := _overlay_column()
-	col.add_child(UiKit.label(tr("BATTLE_MENU"), UiKit.FONT_BODY, UiKit.ACCENT))
+	col.add_child(UiKit.heading(tr("BATTLE_MENU"), UiKit.HEAD_BODY))
 	col.add_child(UiKit.button(tr("BATTLE_RESUME"), _close_overlay))
 	var dbl := CheckButton.new()
 	dbl.text = tr("BATTLE_DOUBLE_CLICK")

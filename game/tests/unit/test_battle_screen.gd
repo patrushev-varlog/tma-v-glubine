@@ -27,6 +27,11 @@ func after_each() -> void:
 		_screen = null
 	Game.abandon_battle()
 	Game.battle = null
+	Game.session = null
+
+
+func after_all() -> void:
+	SaveStore.dir = SaveStore.DIR
 
 
 ## Экран боя на первом ходу отряда (враги ходят без пауз).

@@ -110,7 +110,7 @@ func load_from(slot: String) -> Array[Dictionary]:
 
 const BATTLE_SCENE := "res://scenes/battle_screen.tscn"
 
-## Куда вернуться после боя. Экран, который открывает бой (история, локация), ставит сюда свою сцену.
+## Куда вернуться после боя: start_battle ставит сюда экран текущей сцены (screen_path).
 var battle_return_scene := "res://scenes/story_screen.tscn"
 
 
@@ -138,6 +138,7 @@ func dark_gifts_open() -> bool:
 func start_battle(seed_value := -1) -> Battle:
 	battle = Battle.new()
 	battle.setup(battle_scenario(session.pending_battle), seed_value, session.state.difficulty)
+	battle_return_scene = screen_path()
 	return battle
 
 

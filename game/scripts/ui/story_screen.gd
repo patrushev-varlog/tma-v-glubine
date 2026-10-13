@@ -149,7 +149,6 @@ func _battle_panel(battle_id: String) -> void:
 
 
 func _fight() -> void:
-	Game.battle_return_scene = "res://scenes/story_screen.tscn"
 	Game.start_battle()
 	get_tree().change_scene_to_file(Game.BATTLE_SCENE)
 

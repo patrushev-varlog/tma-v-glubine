@@ -150,6 +150,16 @@ func _screen(first: Dictionary) -> Node:
 	return sc
 
 
+## Экран локации после возврата с экрана боя: хвоста истории нет, он продолжает сам.
+func _screen_resume() -> Node:
+	Game.pending_tail = []
+	var sc: Node = load("res://scenes/location_screen.tscn").instantiate()
+	sc.change_screen = func(path: String) -> void: sc.set_meta("went", path)
+	add_child_autofree(sc)
+	await wait_physics_frames(3)
+	return sc
+
+
 ## Нажимать «Далее» и первый вариант, пока экран не придёт в нужный режим.
 func _until(sc: Node, mode: String, limit := 200) -> void:
 	for i in limit:
@@ -175,12 +185,15 @@ func test_raid_battle_and_back() -> void:
 	assert_false(sc._map.object("dead_1").is_empty(), "мертвецы у изгороди")
 	_until(sc, "battle")
 	assert_eq(sc._mode, "battle", "дошли до боя")
-	sc._start_battle(Game.session.pending_battle)
+	sc._start_battle()
 	await wait_seconds(0.5)
-	assert_not_null(sc._overlay, "рамка боя открыта")
-	sc._end_battle(1)
-	await wait_seconds(0.9)
+	assert_eq(sc.get_meta("went", ""), Game.BATTLE_SCENE, "переход на экран боя")
+	assert_not_null(Game.battle, "бой начат")
+	assert_eq(Game.battle_return_scene, "res://scenes/location_screen.tscn", "после боя — обратно на карту")
+	Game.finish_battle(1)
 	assert_eq(Game.session.state.battles.get("prologue_1", 0), 1, "бой засчитан")
+	sc.queue_free()
+	sc = await _screen_resume()
 	assert_eq(sc._mode, "line", "после боя история идёт дальше на карте")
 	assert_true(sc._map.object("dead_1").is_empty(), "мертвецов на карте больше нет")
 	assert_false(sc._map.object("brandt").is_empty(), "у телеги Брандт")

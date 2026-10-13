@@ -216,6 +216,7 @@ func popup(c: Vector2i, text: String, color: Color) -> void:
 	l.add_theme_color_override("font_color", color)
 	l.add_theme_color_override("font_outline_color", Color.BLACK)
 	l.add_theme_constant_override("outline_size", 4)
+	l.add_theme_font_override("font", UiKit.heading_font())
 	l.add_theme_font_size_override("font_size", 18)
 	l.position = cell_to_world(c) + Vector2(-20, -90)
 	l.z_index = 10
