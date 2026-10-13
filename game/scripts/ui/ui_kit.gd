@@ -21,17 +21,10 @@ const HEAD_TITLE := 40
 const HEAD_BODY := 24
 const HEAD_SMALL := 16
 
-## Шрифты (DESIGN.md, раздел 4; выбор на прототипе локации, поток G): длинный текст — читаемый
-## шрифт с кириллицей, заголовки и подписи — пиксельный. Все под OFL, тексты лицензий в fonts/.
-## Несколько наборов — для сравнения на скриншотах; лишние уберём, когда выбор утвердят.
-const FONT_SETS := {
-	"literata": {"body": "res://fonts/Literata.ttf", "heading": "res://fonts/Tiny5.ttf"},
-	"alegreya": {"body": "res://fonts/Alegreya.ttf", "heading": "res://fonts/Tiny5.ttf"},
-	"pt_serif": {"body": "res://fonts/PTSerif.ttf", "heading": "res://fonts/PressStart2P.ttf"},
-}
-const DEFAULT_FONT_SET := "literata"
+## Шрифты (DESIGN.md, раздел 4; выбраны на прототипе локации, поток G): длинный текст — Literata,
+## заголовки и подписи — пиксельный Tiny5. Оба под OFL, тексты лицензий в fonts/.
+const FONTS := {"body": "res://fonts/Literata.ttf", "heading": "res://fonts/Tiny5.ttf"}
 
-static var font_set := DEFAULT_FONT_SET
 static var _fonts := {}
 
 
@@ -60,16 +53,14 @@ static func heading_font() -> Font:
 
 
 static func _font(kind: String) -> Font:
-	var key: String = font_set + "/" + kind
-	if not _fonts.has(key):
-		var sets: Dictionary = FONT_SETS.get(font_set, FONT_SETS[DEFAULT_FONT_SET])
-		var f: FontFile = (load(String(sets[kind])) as FontFile).duplicate()
+	if not _fonts.has(kind):
+		var f: FontFile = (load(String(FONTS[kind])) as FontFile).duplicate()
 		if kind == "heading":
 			f.antialiasing = TextServer.FONT_ANTIALIASING_NONE
 			f.hinting = TextServer.HINTING_NONE
 			f.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
-		_fonts[key] = f
-	return _fonts[key]
+		_fonts[kind] = f
+	return _fonts[kind]
 
 
 ## Тема всего окна: шрифт текста по умолчанию (ставит автозагрузка Game).

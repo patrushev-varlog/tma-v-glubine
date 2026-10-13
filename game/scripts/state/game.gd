@@ -21,12 +21,6 @@ func _ready() -> void:
 	else:
 		language = _default_language()
 	TranslationServer.set_locale(language)
-	# Набор шрифтов: FONT_SET из окружения (снимки для сравнения) или [ui] font_set в settings.cfg.
-	UiKit.font_set = OS.get_environment("FONT_SET")
-	if UiKit.font_set == "":
-		UiKit.font_set = String(cfg.get_value("ui", "font_set", UiKit.DEFAULT_FONT_SET))
-	if not UiKit.FONT_SETS.has(UiKit.font_set):
-		UiKit.font_set = UiKit.DEFAULT_FONT_SET
 	get_tree().root.theme = UiKit.theme()
 
 
