@@ -88,3 +88,5 @@
 {"t": "2026-10-13T11:54:57Z", "kind": "skeleton_anim", "name": "hero_fighter_f/attack/south-east", "id": "3aaece9d-223a-4aa5-9d3b-8e89b38cd96d", "status": "completed", "frames": 6, "cost": 3.0}
 {"t": "2026-10-13T11:56:41Z", "kind": "skeleton_anim", "name": "hero_wizard_f/cast/north-east", "id": "1aaa79d1-debf-43c3-8bdd-744ee12754aa", "status": "completed", "frames": 6, "cost": 3.0}
 {"t": "2026-10-13T11:58:22Z", "kind": "skeleton_anim", "name": "hero_wizard_f/cast/south-east", "id": "04b679ce-1244-48e0-bc91-405f9f38199d", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-13T12:31:56Z", "kind": "skeleton_anim", "name": "hero_wizard_f/thrust/south-east", "id": "19b88be2-019e-4d04-b72f-1d03a16aa686", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-13T12:33:52Z", "kind": "skeleton_anim", "name": "hero_wizard_f/thrust/north-east", "id": "f528871e-97b9-4cea-9cb0-0cacd670c951", "status": "completed", "frames": 6, "cost": 3.0}

@@ -20,6 +20,41 @@ SOURCES = {
     "cast": (W1 / "hero_wizard_evoker/unarmed/skeletons.json", "cast", "raising an empty hand and thrusting it forward to cast a spell"),
 }
 DIRS = ("south-east", "north-east")
+# Направление «вперёд» на экране для изометрии: ЮВ — вправо-вниз, СВ — вправо-вверх.
+FORWARD = {"south-east": (1.0, 0.5), "north-east": (1.0, -0.5)}
+THRUST_ACTION = "thrusting both empty fists forward from the hip like a spear thrust, lunging forward"
+
+
+def thrust_keypoints(base, d):
+    """Удар копьём от бедра: стойка → кисти к правому бедру → глубже назад → выпад вперёд → держит → стойка.
+
+    base — скелет стойки героя в пикселях. Позы заданы смещениями от бедра и плеч, поэтому
+    подходят любому герою обычного роста."""
+    fx, fy = FORWARD[d]
+    hip = base["RIGHT HIP"] if d == "south-east" else base["LEFT HIP"]  # заднее бедро
+    def pose(back, reach, lean, step):
+        k = {j: list(v) for j, v in base.items()}
+        for j in k:  # корпус наклоняется: верх тела смещается
+            if j in ("NOSE", "NECK", "LEFT EYE", "RIGHT EYE", "LEFT EAR", "RIGHT EAR", "LEFT SHOULDER", "RIGHT SHOULDER"):
+                k[j][0] += lean * fx; k[j][1] += lean * fy
+        if reach is None:  # обе кисти у заднего бедра, локти отведены назад
+            for side, ahead in (("RIGHT", 0.0), ("LEFT", 4.0)):
+                k[f"{side} ARM"] = [hip[0] + (ahead - back) * fx, hip[1] + 1 + (ahead - back) * fy]
+                sh = k[f"{side} SHOULDER"]
+                k[f"{side} ELBOW"] = [(sh[0] + k[f"{side} ARM"][0]) / 2 - 3 * fx, (sh[1] + k[f"{side} ARM"][1]) / 2 + 1]
+        else:  # руки выброшены вперёд и чуть вниз
+            for side, extra in (("RIGHT", 0.0), ("LEFT", 4.0)):
+                sh = k[f"{side} SHOULDER"]
+                k[f"{side} ARM"] = [sh[0] + (reach + extra) * fx, sh[1] + 9 + (reach + extra) * fy]
+                k[f"{side} ELBOW"] = [(sh[0] + k[f"{side} ARM"][0]) / 2, (sh[1] + k[f"{side} ARM"][1]) / 2 + 1]
+        if step:  # передняя нога шагает вперёд
+            for j in ("LEFT KNEE", "LEFT LEG") if d == "south-east" else ("RIGHT KNEE", "RIGHT LEG"):
+                k[j][0] += step * fx; k[j][1] += step * fy
+        return k
+    poses = [pose(0, None, -1, 0), pose(2, None, -2, 0), pose(0, 9, 2, 3), pose(0, 10, 2, 3), pose(0, 4, 1, 1),
+             {j: list(v) for j, v in base.items()}]
+    return [[{"x": min(max(x / SIZE, 0), 1), "y": min(max(y / SIZE, 0), 1), "label": j} for j, (x, y) in p_.items()]
+            for p_ in poses]
 SIZE = 64
 
 
@@ -68,16 +103,22 @@ def hero_description(name):
 
 
 def run(hero, anim, dirs=DIRS, seed=0):
-    src, key, action = SOURCES[anim]
-    ref = json.loads(Path(src).read_text())
+    if anim == "thrust":
+        src, key, action = None, None, THRUST_ACTION
+    else:
+        src, key, action = SOURCES[anim]
+        ref = json.loads(Path(src).read_text())
     desc = hero_description(hero)
     results = {}
     for d in dirs:
         rot = PRO / hero / "base" / "Idle" / "rotations" / f"{d}.png"
         hero_base = estimate(rot)
-        frames = _frames(ref, key, d)
-        ref_base = frames[0]  # первый кадр — стойка; холсты стойки и удара у образцов разного размера
-        kps = transfer(ref_base, frames, hero_base)
+        if anim == "thrust":
+            kps = thrust_keypoints(hero_base, d)
+        else:
+            frames = _frames(ref, key, d)
+            ref_base = frames[0]  # первый кадр — стойка; холсты стойки и удара у образцов разного размера
+            kps = transfer(ref_base, frames, hero_base)
         body = {"description": desc, "action": action, "direction": d, "view": "low top-down",
                 "first_frame": p.b64img(rot),
                 "first_frame_keypoints": [{"x": x / SIZE, "y": y / SIZE, "label": j} for j, (x, y) in hero_base.items()],

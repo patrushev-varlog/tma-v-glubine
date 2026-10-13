@@ -24,7 +24,11 @@ A = p.ROOT / "art"
 PRO = A / "prologue" / "characters"
 PAD = 16
 STANCE = {"south-east": 105.0, "north-east": 75.0}
-STANCE_STAFF = {"south-east": 15.0, "north-east": 15.0}  # посох в стойке почти вертикален, как у волшебника первой волны
+# Посох (вариант C, 2026-10-13): в левой руке, с другой стороны от лица, почти вертикально,
+# хват ниже середины. Удар — копьём от бедра: посох в обеих руках, навершие вперёд.
+STANCE_STAFF = {"south-east": 12.0, "north-east": -12.0}
+STAFF_HAND, STAFF_GRIP = "LEFT ARM", 0.62
+FORWARD_ANGLE = {"south-east": 116.6, "north-east": 63.4}  # «вперёд» в изометрии, 0° — вверх
 ATTACK_SE = [105, -40, -10, 50, 125, 105]
 
 WEAPONS = {
@@ -52,7 +56,7 @@ def weapon(name):
     elif rule == "mace":
         gy = int(round(0.72 * h))
     else:
-        gy = h // 2
+        gy = int(round(STAFF_GRIP * h))
     xs = np.nonzero(a[gy])[0]
     gx = (xs.min() + xs.max()) / 2 if len(xs) else im.width / 2
     return im, (gx, gy)
@@ -66,9 +70,9 @@ def skeleton(img, cache, key):
     return cache[key]
 
 
-def forearm_angle(sk):
-    ex, ey = sk["RIGHT ELBOW"]
-    wx, wy = sk["RIGHT ARM"]
+def forearm_angle(sk, side="RIGHT"):
+    ex, ey = sk[f"{side} ELBOW"]
+    wx, wy = sk[f"{side} ARM"]
     return math.degrees(math.atan2(wx - ex, -(wy - ey)))  # 0 — вверх, по часовой
 
 
@@ -113,6 +117,9 @@ def frames_of(hero):
 def run(hero):
     cls = hero.split("_")[1]
     wimg, grip = weapon(HERO_WEAPON[cls])
+    hand = STAFF_HAND if cls == "wizard" else "RIGHT ARM"
+    side = hand.split()[0]
+    mid_grip = (wimg.width / 2, 0.6 * wimg.height)
     cache_f = PRO / hero / "skeletons.json"
     cache = json.loads(cache_f.read_text()) if cache_f.exists() else {}
     fr = frames_of(hero)
@@ -122,19 +129,27 @@ def run(hero):
         if not idle:
             continue
         sk = skeleton(idle[0], cache, f"idle/{d}/0")
-        offsets[d] = (STANCE_STAFF if cls == "wizard" else STANCE)[d] - forearm_angle(sk)
+        offsets[d] = (STANCE_STAFF if cls == "wizard" else STANCE)[d] - forearm_angle(sk, side)
     done = 0
     for (anim, d), files in sorted(fr.items()):
         if d not in offsets:
             continue
         for i, f in enumerate(files):
             sk = skeleton(f, cache, f"{anim}/{d}/{i}")
-            ang = forearm_angle(sk) + offsets[d]
+            ang = forearm_angle(sk, side) + offsets[d]
+            wrist, g = sk[hand], grip
             if anim == "attack" and d == "south-east" and len(files) == len(ATTACK_SE):
                 ang = ATTACK_SE[i]
+            if anim == "thrust" and 0 < i < len(files) - 1:  # обе руки на древке
+                wrist = [(sk["RIGHT ARM"][k] + sk["LEFT ARM"][k]) / 2 for k in (0, 1)]
+                ang, g = FORWARD_ANGLE[d], mid_grip
+            elif anim == "thrust":
+                ang = STANCE_STAFF[d] if cls == "wizard" else STANCE[d]
+            elif anim == "hit" and cls == "wizard":  # шаблон урона крутит предплечье, посох держим ровно
+                ang = STANCE_STAFF[d]
             out = PRO / hero / "composited" / anim / d / f"{i:02d}.png"
             out.parent.mkdir(parents=True, exist_ok=True)
-            place(f, wimg, grip, sk["RIGHT ARM"], ang).save(out)
+            place(f, wimg, g, wrist, ang).save(out)
             done += 1
         cache_f.write_text(json.dumps(cache))
     return done
