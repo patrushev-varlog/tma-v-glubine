@@ -97,12 +97,17 @@ static func spouse_forms(spouse_id: String, female: bool, lang: String) -> Dicti
 # --- Ход истории ----------------------------------------------------------------
 
 ## Следующее, что показать игроку:
-##   {"type": "line", "text", "tags", "speaker", "mood", "scene"} — строка (scene — только у первой строки сцены);
+##   {"type": "line", "text", "tags", "speaker", "mood", "sfx", "scene"} — строка (scene — только у первой строки
+##     сцены; sfx — звук по тегу # sfx:<id>, экран играет его вместе со строкой);
 ##   {"type": "choices", "options": PackedStringArray, "objects": Array[String]} — objects[i] — объект
 ##     на карте для варианта i (тег #obj:) или "", если вариант — обычная кнопка;
 ##   {"type": "battle", "id"} — нужен исход боя (win_battle);
 ##   {"type": "explore_end"} — осмотр закончился, основной сюжет стоит там же;
 ##   {"type": "end"} — история закончилась.
+## Звуки строк с находками и записями в журнал (теги # silver:, # item:, # journal:).
+const AUTO_SFX := {"silver": "coin", "item": "pickup", "journal": "journal"}
+
+
 func next() -> Dictionary:
 	if pending_battle != "":
 		return {"type": "battle", "id": pending_battle}
@@ -110,7 +115,7 @@ func next() -> Dictionary:
 		var line := runner.next_line()
 		var tags: PackedStringArray = line.tags
 		state.apply_tags(tags, line.text)
-		var out := {"type": "line", "text": line.text, "tags": tags, "speaker": "", "mood": ""}
+		var out := {"type": "line", "text": line.text, "tags": tags, "speaker": "", "mood": "", "sfx": ""}
 		for t in tags:
 			var kv := t.split(":", true, 1)
 			if kv.size() < 2:
@@ -120,6 +125,12 @@ func next() -> Dictionary:
 					out.speaker = kv[1].strip_edges()
 				"mood":
 					out.mood = kv[1].strip_edges()
+				"sfx":
+					out.sfx = kv[1].strip_edges()
+				"silver", "item", "journal":
+					# Находка или запись в журнале звучит сама, если у строки нет своего звука.
+					if out.sfx == "" and not kv[1].strip_edges().begins_with("-"):
+						out.sfx = AUTO_SFX[kv[0].strip_edges()]
 				"battle":
 					pending_battle = kv[1].strip_edges()
 		var scene := _check_scene()

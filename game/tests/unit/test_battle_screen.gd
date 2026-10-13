@@ -155,3 +155,19 @@ func test_resume_after_quit() -> void:
 	assert_eq(Game.battle.id, "prologue_1", "тот же бой")
 	assert_eq(Game.battle.current().cell, cell, "с начала того же хода")
 	assert_eq(Game.session.pending_battle, "prologue_1", "история стоит на этом бою")
+
+
+## Звук идёт в такт анимации: замах сразу, попадание или промах — на ударе (data/audio.json "sfx").
+func test_attack_plays_weapon_sounds() -> void:
+	var s: Node = await _open()
+	var b: Battle = s.battle
+	var u := b.current()
+	var foe := _nearest_foe(b)
+	assert_eq(Sound.sfx_id("weapons", String(u.weapon.id), 0), "swing", "у меча звук замаха")
+	s.board.feed([{"type": "act", "unit": u.id, "anim": "attack", "aid": "", "cell": foe.cell},
+		{"type": "damage", "unit": foe.id, "amount": 3}])
+	var ids: Array = s.board._sounds.map(func(x: Dictionary) -> String: return x.id)
+	assert_true(ids.has("swing") and ids.has("hit_blade"), "в очереди замах и удар: %s" % [ids])
+	await wait_seconds(0.6)
+	assert_true(s.board._sounds.is_empty(), "очередь проиграна")
+	assert_eq(Sound.last_sfx, "hit_blade", "последним прозвучал удар")

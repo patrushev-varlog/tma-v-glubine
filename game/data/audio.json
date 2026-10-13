@@ -1,15 +1,305 @@
 {
  "comment": "Музыка и эмбиент по сценам (art/prologue/ASSETS.md, раздел 7). Файлы — audio/music/<id>.ogg и audio/ambient/<id>.ogg; пока файла нет, там тишина. Сцена без записи оставляет то, что играло.",
- "menu": {"music": "home"},
- "battle": {"music": "battle", "ambient": ""},
- "demo_end": {"music": "dread", "ambient": ""},
+ "menu": {
+  "music": "home"
+ },
+ "battle": {
+  "music": "battle",
+  "ambient": ""
+ },
+ "battle_grounds": {
+  "comment": "Поверх \"battle\": шум окружения по полю боя (battles.json \"ground\").",
+  "yard": {
+   "ambient": "raid_night"
+  },
+  "temple": {
+   "ambient": "temple"
+  },
+  "ford": {
+   "ambient": "stream"
+  },
+  "camp": {
+   "ambient": "camp"
+  },
+  "gate": {
+   "ambient": "camp"
+  }
+ },
+ "demo_end": {
+  "music": "dread",
+  "ambient": ""
+ },
  "scenes": {
-  "evening": {"music": "home", "ambient": "rain"},
-  "raid": {"music": "", "ambient": "raid_night"},
-  "ashes": {"music": "home", "ambient": "ashes_wind"},
-  "temple": {"music": "dread", "ambient": "temple"},
-  "deserter": {"music": "", "ambient": "stream"},
-  "column": {"music": "dread", "ambient": "camp"},
-  "interrogation_scene": {"music": "dread", "ambient": "camp"}
+  "evening": {
+   "music": "home",
+   "ambient": "rain"
+  },
+  "raid": {
+   "music": "",
+   "ambient": "raid_night"
+  },
+  "ashes": {
+   "music": "home",
+   "ambient": "ashes_wind"
+  },
+  "temple": {
+   "music": "dread",
+   "ambient": "temple"
+  },
+  "deserter": {
+   "music": "",
+   "ambient": "stream"
+  },
+  "column": {
+   "music": "dread",
+   "ambient": "camp"
+  },
+  "interrogation_scene": {
+   "music": "dread",
+   "ambient": "camp"
+  }
+ },
+ "sfx": {
+  "comment": "Короткие звуки: файлы audio/sfx/<id>.ogg или <id>_1.ogg, <id>_2.ogg… (варианты). weapons и abilities — пары [замах или каст, попадание]; пустая строка — без звука. Полный список id — audio/LICENSES.md.",
+  "weapons": {
+   "longsword": [
+    "swing",
+    "hit_blade"
+   ],
+   "shortsword": [
+    "swing",
+    "hit_blade"
+   ],
+   "saber": [
+    "swing",
+    "hit_blade"
+   ],
+   "mace": [
+    "swing",
+    "hit_blunt"
+   ],
+   "staff": [
+    "swing",
+    "hit_blunt"
+   ],
+   "club": [
+    "swing",
+    "hit_blunt"
+   ],
+   "warhammer": [
+    "swing",
+    "hit_blunt"
+   ],
+   "fist": [
+    "swing",
+    "hit_blunt"
+   ],
+   "slam": [
+    "swing",
+    "hit_blunt"
+   ],
+   "claws": [
+    "swing",
+    "hit_claw"
+   ],
+   "grasp": [
+    "swing",
+    "hit_claw"
+   ],
+   "shortbow": [
+    "bow_shot",
+    "arrow_hit"
+   ],
+   "longbow": [
+    "bow_shot",
+    "arrow_hit"
+   ],
+   "crossbow": [
+    "crossbow_shot",
+    "arrow_hit"
+   ],
+   "ray_of_sickness": [
+    "cast_dark",
+    "hit_dark"
+   ]
+  },
+  "abilities": {
+   "sacred_flame": [
+    "cast_holy",
+    "hit_holy"
+   ],
+   "guiding_bolt": [
+    "cast_holy",
+    "hit_holy"
+   ],
+   "spiritual_weapon": [
+    "cast_holy",
+    "hit_blunt"
+   ],
+   "spirit_guardians": [
+    "cast_holy",
+    ""
+   ],
+   "turn_undead": [
+    "cast_holy",
+    ""
+   ],
+   "hallowed_ground": [
+    "cast_holy",
+    ""
+   ],
+   "shield_of_faith": [
+    "ward",
+    ""
+   ],
+   "dodge": [
+    "ward",
+    ""
+   ],
+   "healing_word": [
+    "heal",
+    ""
+   ],
+   "mass_healing_word": [
+    "heal",
+    ""
+   ],
+   "preserve_life": [
+    "heal",
+    ""
+   ],
+   "second_wind": [
+    "heal",
+    ""
+   ],
+   "fire_bolt": [
+    "cast_fire",
+    "hit_fire"
+   ],
+   "scorching_ray": [
+    "cast_fire",
+    "hit_fire"
+   ],
+   "fireball": [
+    "cast_fire",
+    "explosion"
+   ],
+   "bomb": [
+    "throw",
+    "explosion"
+   ],
+   "magic_missile": [
+    "cast_arcane",
+    "hit_arcane"
+   ],
+   "slow": [
+    "cast_arcane",
+    ""
+   ],
+   "thunderwave": [
+    "thunder",
+    ""
+   ],
+   "grease": [
+    "cast_arcane",
+    "goo"
+   ],
+   "web": [
+    "cast_arcane",
+    "goo"
+   ],
+   "spike_growth": [
+    "cast_arcane",
+    "thorns"
+   ],
+   "cursed_blade": [
+    "cast_dark",
+    "hit_blade"
+   ],
+   "wither": [
+    "cast_dark",
+    "hit_dark"
+   ],
+   "life_drain": [
+    "cast_dark",
+    "hit_dark"
+   ],
+   "shadow_step": [
+    "cast_dark",
+    ""
+   ],
+   "taunt": [
+    "shout",
+    ""
+   ],
+   "rage": [
+    "shout",
+    ""
+   ],
+   "drive_on": [
+    "shout",
+    ""
+   ],
+   "action_surge": [
+    "shout",
+    ""
+   ],
+   "trip": [
+    "swing",
+    "hit_blunt"
+   ],
+   "shove": [
+    "swing",
+    "hit_blunt"
+   ],
+   "lasso": [
+    "whip",
+    ""
+   ],
+   "pinning_shot": [
+    "bow_shot",
+    "arrow_hit"
+   ],
+   "shoot": [
+    "bow_shot",
+    "arrow_hit"
+   ],
+   "knife_fan": [
+    "throw",
+    "hit_blade"
+   ],
+   "trap": [
+    "trap",
+    ""
+   ],
+   "disengage": [
+    "dash",
+    ""
+   ],
+   "dash": [
+    "dash",
+    ""
+   ],
+   "hide": [
+    "cloth",
+    ""
+   ],
+   "poison_blade": [
+    "cloth",
+    ""
+   ],
+   "reckless": [
+    "shout",
+    ""
+   ]
+  },
+  "steps": {
+   "grass": "step_grass",
+   "grass_scorch": "step_grass",
+   "ash": "step_mud",
+   "mud": "step_mud",
+   "yard": "step_mud",
+   "road": "step_stone"
+  }
  }
 }

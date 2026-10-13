@@ -55,7 +55,7 @@ The dead man opened his eyes. There were no pupils in them.
     It turned out to be easy. Too easy. As if someone had long been waiting for you to try.
 }
 "Ask," said the dead man in Brandt's voice, but without his breath. # spk:brandt
-Garret swore. Irena stepped back and raised her staff, and the bell on it trembled by itself.
+Garret swore. Irena stepped back and raised her staff, and the bell on it trembled by itself. # sfx:handbell
 -> answer
 
 = answer

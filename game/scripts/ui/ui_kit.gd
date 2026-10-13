@@ -71,12 +71,19 @@ static func theme() -> Theme:
 	return t
 
 
-static func button(text: String, on_press: Callable = Callable(), size := FONT_BODY) -> Button:
+## sound — звук нажатия (Sound.sfx); у «Дальше» в диалоге — перелистывание.
+static func button(text: String, on_press: Callable = Callable(), size := FONT_BODY, sound := "ui_click") -> Button:
 	var b := Button.new()
 	b.text = text
 	b.add_theme_font_size_override("font_size", size)
 	b.focus_mode = Control.FOCUS_ALL
 	b.custom_minimum_size = Vector2(0, 44)
+	b.pressed.connect(Sound.sfx.bind(sound))
+	b.mouse_entered.connect(Sound.sfx.bind("ui_hover", -8.0))
+	# Фокус ставится и сам при показе экрана; звучит только переход клавишами или геймпадом.
+	b.focus_entered.connect(func() -> void:
+		if Input.is_anything_pressed():
+			Sound.sfx("ui_hover", -8.0))
 	if on_press.is_valid():
 		b.pressed.connect(on_press)
 	return b
