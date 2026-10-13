@@ -526,6 +526,36 @@
       "bg_tolerance": 12
     }
   },
+  "garret_tense": {
+    "source": "source/garret_tense.png",
+    "crop": [
+      0,
+      30,
+      537,
+      567
+    ],
+    "face_box": [
+      31,
+      13,
+      112,
+      109
+    ],
+    "crop_64": [
+      72,
+      48,
+      533,
+      509
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
   "velior": {
     "source": "source/velior.png",
     "crop": [
@@ -586,8 +616,248 @@
       "bg_tolerance": 12
     }
   },
+  "spouse_m_smile": {
+    "source": "source/spouse_m_smile.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m_sad": {
+    "source": "source/spouse_m_sad.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m_tense": {
+    "source": "source/spouse_m_tense.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_m_away": {
+    "source": "source/spouse_m_away.png",
+    "crop": [
+      0,
+      100,
+      380,
+      480
+    ],
+    "face_box": [
+      0,
+      6,
+      101,
+      124
+    ],
+    "crop_64": [
+      0,
+      92,
+      380,
+      472
+    ],
+    "face_box_64": [
+      0,
+      4,
+      50,
+      63
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
   "spouse_f": {
     "source": "source/spouse_f.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_smile": {
+    "source": "source/spouse_f_smile.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_sad": {
+    "source": "source/spouse_f_sad.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_tense": {
+    "source": "source/spouse_f_tense.png",
+    "crop": [
+      0,
+      94,
+      509,
+      603
+    ],
+    "face_box": [
+      37,
+      13,
+      120,
+      110
+    ],
+    "crop_64": [
+      69,
+      110,
+      509,
+      550
+    ],
+    "face_box_64": [
+      11,
+      5,
+      59,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "spouse_f_away": {
+    "source": "source/spouse_f_away.png",
     "crop": [
       0,
       94,
@@ -676,8 +946,98 @@
       "bg_tolerance": 12
     }
   },
+  "oldrik_sad": {
+    "source": "source/oldrik_sad.png",
+    "crop": [
+      0,
+      108,
+      380,
+      488
+    ],
+    "face_box": [
+      51,
+      14,
+      128,
+      109
+    ],
+    "crop_64": [
+      55,
+      121,
+      380,
+      446
+    ],
+    "face_box_64": [
+      19,
+      5,
+      64,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
   "irena": {
     "source": "source/irena.png",
+    "crop": [
+      0,
+      87,
+      509,
+      596
+    ],
+    "face_box": [
+      24,
+      13,
+      109,
+      111
+    ],
+    "crop_64": [
+      42,
+      99,
+      493,
+      550
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "irena_tense": {
+    "source": "source/irena_tense.png",
+    "crop": [
+      0,
+      87,
+      509,
+      596
+    ],
+    "face_box": [
+      24,
+      13,
+      109,
+      111
+    ],
+    "crop_64": [
+      42,
+      99,
+      493,
+      550
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 12
+    }
+  },
+  "irena_sad": {
+    "source": "source/irena_sad.png",
     "crop": [
       0,
       87,
