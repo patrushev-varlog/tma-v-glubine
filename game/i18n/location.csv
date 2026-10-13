@@ -1,0 +1,7 @@
+keys,ru,en
+LOC_HINTS,{move} — идти · {act} — осмотреть · {journal} — журнал · {menu} — меню,{move} — walk · {act} — inspect · {journal} — journal · {menu} — menu
+LOC_MOVE_KEYS,"Клик, WASD","Click, WASD"
+LOC_MOVE_PAD,Стик,Stick
+LOC_PROMPT,{key} — {action},{key} — {action}
+LOC_GOALS,На карте,On the map
+LOC_BATTLE_BEGIN,В бой,Fight

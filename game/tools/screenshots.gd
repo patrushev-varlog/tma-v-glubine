@@ -51,7 +51,86 @@ func _initialize() -> void:
 	story._open_journal()
 	await _frames(4)
 	await _shot("5_journal")
+	story.queue_free()
+	await _location(game, setup)
 	quit()
+
+
+## Экран локации: облава ночью, бой и возврат, пепелище утром (разговор, улики).
+func _location(game: Node, setup: Dictionary) -> void:
+	setup.hero["class"] = "wizard"
+	setup.hero["hero_f"] = false
+	setup.hero["name"] = "Ардан"
+	setup.hero["spouse_f"] = true
+	setup.hero["spouse_id"] = "eila"
+	setup.hero["spouse_name"] = "Эйла"
+	game.new_game(setup)
+	var first := {}
+	while first.is_empty():
+		var item: Dictionary = game.session.next()
+		if item.type == "line" and String(item.get("scene", "")) == "raid":
+			first = item
+		elif item.type == "choices":
+			game.session.choose(0)
+	game.pending_tail.assign([first])
+	var loc := await _show("res://scenes/location_screen.tscn")
+	loc.change_screen = func(_p: String) -> void: pass
+	loc._advance()
+	loc._advance()
+	await _frames(20)
+	await _shot("6_raid_night")
+	while loc._mode != "battle":
+		if loc._mode == "choices":
+			loc._choose(0)
+		else:
+			loc._advance()
+	await _frames(4)
+	loc._start_battle(game.session.pending_battle)
+	await _wait(0.6)
+	await _shot("7_battle_stub")
+	loc._end_battle(0)
+	await _wait(1.0)
+	for i in 4:
+		loc._advance()
+	await _frames(20)
+	await _shot("8_raid_after_battle")
+	while loc._mode != "leaving":
+		if loc._mode == "choices":
+			loc._choose(0)
+		else:
+			loc._advance()
+	var tail: Array = game.pending_tail.duplicate()
+	loc.queue_free()
+	await _frames(2)
+
+	game.pending_tail.assign(tail)
+	loc = await _show("res://scenes/location_screen.tscn")
+	loc.change_screen = func(_p: String) -> void: pass
+	while loc._mode != "roam":
+		loc._advance()
+	var oldrik: Dictionary = loc._map.object("oldrik")
+	loc._hover(oldrik.cell)
+	await _frames(30)
+	await _shot("9_ashes_roam")
+	loc._interact("oldrik")
+	loc._advance()
+	await _frames(10)
+	await _shot("10_ashes_oldrik")
+	while loc._mode != "roam":
+		if loc._mode == "choices":
+			loc._choose(0)
+		else:
+			loc._advance()
+	var r: Dictionary = loc._map.path_to_object(loc._view.hero.cell, loc._map.object("cart"))
+	loc._view.hero.walk(r.path)
+	await _wait(0.25 * r.path.size() + 0.8)
+	loc._hover(loc._map.object("list").cell)
+	await _frames(10)
+	await _shot("11_ashes_clues")
+
+
+func _wait(sec: float) -> void:
+	await create_timer(sec).timeout
 
 
 func _show(path: String) -> Node:

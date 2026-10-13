@@ -21,6 +21,13 @@ func _ready() -> void:
 	else:
 		language = _default_language()
 	TranslationServer.set_locale(language)
+	# Набор шрифтов: FONT_SET из окружения (снимки для сравнения) или [ui] font_set в settings.cfg.
+	UiKit.font_set = OS.get_environment("FONT_SET")
+	if UiKit.font_set == "":
+		UiKit.font_set = String(cfg.get_value("ui", "font_set", UiKit.DEFAULT_FONT_SET))
+	if not UiKit.FONT_SETS.has(UiKit.font_set):
+		UiKit.font_set = UiKit.DEFAULT_FONT_SET
+	get_tree().root.theme = UiKit.theme()
 
 
 static func _default_language() -> String:
@@ -71,6 +78,14 @@ func autosave() -> void:
 
 func save_to(slot: String) -> Error:
 	return SaveStore.write(slot, session.to_save())
+
+
+## Экран для текущего места истории: карта локации, если сцена идёт на карте, иначе экран истории.
+## Туда же возвращается экран боя после победы.
+func screen_path() -> String:
+	if session != null and LocationMap.for_scene(session.scene_name()) != "":
+		return "res://scenes/location_screen.tscn"
+	return "res://scenes/story_screen.tscn"
 
 
 func can_continue() -> bool:

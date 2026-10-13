@@ -63,7 +63,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_save("quick")
 	elif event.is_action_pressed("game_quickload") and SaveStore.exists("quick"):
 		Game.pending_tail = Game.load_from("quick")
-		get_tree().reload_current_scene()
+		get_tree().change_scene_to_file(Game.screen_path())
 
 
 func _refresh_hints() -> void:
@@ -79,6 +79,11 @@ func _advance() -> void:
 	var item := Game.session.next()
 	match String(item.type):
 		"line":
+			if item.has("scene") and LocationMap.for_scene(String(item.scene)) != "":
+				# Сцена идёт на карте: строку покажет экран локации.
+				Game.pending_tail = [item]
+				get_tree().change_scene_to_file(Game.screen_path())
+				return
 			_add_line(item)
 			_bottom.add_child(UiKit.button(tr("STORY_NEXT"), _advance))
 		"choices":
@@ -161,53 +166,21 @@ func _fight() -> void:
 
 func _open_journal() -> void:
 	_close_overlay()
-	_overlay = Control.new()
-	_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(_overlay)
-	var col := UiKit.overlay(_overlay)
-	var s := Game.session
-	col.add_child(UiKit.label(tr("JOURNAL_TITLE"), UiKit.FONT_BODY, UiKit.ACCENT))
-	var party := PackedStringArray([String(s.state.hero.get("name", ""))])
-	for c in s.companions():
-		party.append(tr("COMPANION_" + c))
-	col.add_child(UiKit.label(UiKit.fmt("JOURNAL_PARTY", {"party": ", ".join(party), "level": s.state.level,
-		"silver": s.state.silver}), UiKit.FONT_SMALL))
-	var items := PackedStringArray()
-	for it in s.state.inventory:
-		var key := "ITEM_" + String(it.id)
-		items.append(tr(key) if tr(key) != key else String(it.id))
-	col.add_child(UiKit.label(UiKit.fmt("JOURNAL_ITEMS", {"items": ", ".join(items)}) if not items.is_empty()
-		else tr("JOURNAL_NO_ITEMS"), UiKit.FONT_SMALL))
-	col.add_child(UiKit.label(tr("JOURNAL_QUESTS"), UiKit.FONT_SMALL, UiKit.MUTED))
-	for q in QuestJournal.entries(s):
-		var line := tr(q.title_key)
-		if q.state == "done":
-			line += " — " + tr("QUEST_DONE")
-		elif q.has("clues"):
-			line += " — " + UiKit.fmt("QUEST_CLUES", {"n": q.clues, "max": q.clues_max})
-		col.add_child(UiKit.label("• " + line, UiKit.FONT_BODY, UiKit.ACCENT if q.state == "active" else UiKit.MUTED))
-		for note in q.notes:
-			col.add_child(UiKit.label("    " + note, UiKit.FONT_SMALL))
-	col.add_child(UiKit.button(tr("STORY_CLOSE"), _close_overlay))
-	UiKit.focus_first(col)
+	_overlay = GameMenus.journal(self, _close_overlay)
 
 
 func _open_menu() -> void:
 	_close_overlay()
-	_overlay = Control.new()
-	_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	add_child(_overlay)
-	var col := UiKit.overlay(_overlay)
-	col.add_child(UiKit.label(tr("STORY_MENU"), UiKit.FONT_BODY, UiKit.ACCENT))
-	col.add_child(UiKit.button(tr("STORY_QUICKSAVE"), func() -> void:
-		_close_overlay()
-		_save("quick")))
-	col.add_child(UiKit.button(tr("STORY_SAVE"), func() -> void:
-		_close_overlay()
-		_overlay = SlotPanel.open(self, "save", _save)))
-	col.add_child(UiKit.button(tr("STORY_TO_MENU"), _to_menu))
-	col.add_child(UiKit.button(tr("STORY_CLOSE"), _close_overlay))
-	UiKit.focus_first(col)
+	_overlay = GameMenus.pause_menu(self, {
+		"quicksave": func() -> void:
+			_close_overlay()
+			_save("quick"),
+		"save": func() -> void:
+			_close_overlay()
+			_overlay = SlotPanel.open(self, "save", _save),
+		"to_menu": _to_menu,
+		"close": _close_overlay,
+	})
 
 
 func _close_overlay() -> void:
