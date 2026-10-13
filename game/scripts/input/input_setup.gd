@@ -21,6 +21,10 @@ const ACTIONS := {
 	"game_journal": {"keys": [KEY_J], "joy": [JOY_BUTTON_BACK]},
 	"game_quicksave": {"keys": [KEY_F5]},
 	"game_quickload": {"keys": [KEY_F9]},
+	"battle_end_turn": {"keys": [KEY_E], "joy": [JOY_BUTTON_Y]},
+	"battle_next_ability": {"keys": [KEY_TAB], "joy": [JOY_BUTTON_RIGHT_SHOULDER]},
+	"battle_prev_ability": {"joy": [JOY_BUTTON_LEFT_SHOULDER]},
+	"battle_focus": {"keys": [KEY_F], "joy": [JOY_BUTTON_X]},
 }
 
 
@@ -66,15 +70,17 @@ func glyph(action: String) -> String:
 	if device == "keyboard":
 		return {
 			"ui_accept": "Enter", "ui_cancel": "Esc", "game_menu": "Esc", "game_journal": "J",
-			"game_quicksave": "F5", "game_quickload": "F9",
+			"game_quicksave": "F5", "game_quickload": "F9", "battle_end_turn": "E", "battle_next_ability": "Tab",
+			"battle_focus": "F",
 		}.get(action, action)
 	var face: Dictionary = {
-		"xbox": {"a": "A", "b": "B", "back": "View", "start": "Menu"},
-		"deck": {"a": "A", "b": "B", "back": "View", "start": "Menu"},
-		"playstation": {"a": "✕", "b": "○", "back": "Share", "start": "Options"},
+		"xbox": {"a": "A", "b": "B", "x": "X", "y": "Y", "back": "View", "start": "Menu"},
+		"deck": {"a": "A", "b": "B", "x": "X", "y": "Y", "back": "View", "start": "Menu"},
+		"playstation": {"a": "✕", "b": "○", "x": "□", "y": "△", "back": "Share", "start": "Options"},
 		# У Nintendo нижняя кнопка подписана B: SDL отдаёт её как JOY_BUTTON_A (позиция, не буква).
-		"nintendo": {"a": "B", "b": "A", "back": "−", "start": "+"},
+		"nintendo": {"a": "B", "b": "A", "x": "Y", "y": "X", "back": "−", "start": "+"},
 	}[device]
 	return {
 		"ui_accept": face["a"], "ui_cancel": face["b"], "game_menu": face["start"], "game_journal": face["back"],
+		"battle_end_turn": face["y"], "battle_focus": face["x"], "battle_next_ability": "RB", "battle_prev_ability": "LB",
 	}.get(action, action)

@@ -1,5 +1,5 @@
 extends Control
-## Экран истории: строки Ink по одной, варианты выбора, бои по тегу # battle: (пока их проводит ИИ),
+## Экран истории: строки Ink по одной, варианты выбора, переход в бой по тегу # battle: (экран боя),
 ## журнал, сохранения. Работает с мышью, клавиатурой и геймпадом.
 
 const MAX_LINES := 120
@@ -136,30 +136,21 @@ func _clear_bottom() -> void:
 		c.queue_free()
 
 
-# --- Бой (заглушка до экрана боя) -------------------------------------------
+# --- Бой --------------------------------------------------------------------
 
 func _battle_panel(battle_id: String) -> void:
-	_bottom.add_child(UiKit.label(UiKit.fmt("BATTLE_TITLE", {"id": battle_id}), UiKit.FONT_BODY, UiKit.ACCENT))
+	_bottom.add_child(UiKit.label(tr("BATTLE_AHEAD"), UiKit.FONT_BODY, UiKit.ACCENT))
 	var party := PackedStringArray([String(Game.session.state.hero.get("name", ""))])
-	for c in Game.session.companions():
-		party.append(tr("COMPANION_" + c))
-	_bottom.add_child(UiKit.label(UiKit.fmt("BATTLE_STUB_NOTE", {"party": ", ".join(party),
-		"level": Game.session.state.level}), UiKit.FONT_SMALL, UiKit.MUTED))
-	_bottom.add_child(UiKit.button(tr("BATTLE_AUTO"), _fight))
+	for u in Game.battle_scenario(battle_id).units:
+		if u.team == 0 and not u.is_hero:
+			party.append(u.name)
+	_bottom.add_child(UiKit.label(UiKit.fmt("BATTLE_PARTY", {"party": ", ".join(party)}), UiKit.FONT_SMALL, UiKit.MUTED))
+	_bottom.add_child(UiKit.button(tr("BATTLE_START"), _fight))
 
 
 func _fight() -> void:
-	var r := Game.auto_battle()
-	_clear_bottom()
-	if r.outcome == "victory":
-		_add_text(UiKit.fmt("BATTLE_WON", {"rounds": r.rounds, "dark": r.darkness}), UiKit.ACCENT)
-		_bottom.add_child(UiKit.button(tr("BATTLE_CONTINUE"), func() -> void:
-			Game.finish_battle(int(r.darkness))
-			_advance()))
-	else:
-		_add_text(tr("BATTLE_LOST"), UiKit.DANGER)
-		_bottom.add_child(UiKit.button(tr("BATTLE_RETRY"), _fight))
-	UiKit.focus_first(_bottom)
+	Game.start_battle()
+	get_tree().change_scene_to_file(Game.BATTLE_SCENE)
 
 
 # --- Журнал и меню -----------------------------------------------------------

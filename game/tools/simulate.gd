@@ -4,7 +4,9 @@ extends SceneTree
 ## Ключи: level=1,2 class=wizard arch=evoker diff=trial party=full dark=both runs=200 drop=O,A gear=kit boost=hp:30,hit:1 hunt=1
 ## (gear — экипировка: none, kit — гарантированный набор уровня, full — набор и всё сверх бюджета;
 ## drop — буквы врагов на карте, которых убрать; party — full, no_velior, no_irena, duo;
-## hunt=1 — бой после завершённой охоты главы, +10% хитов врагов).
+## hunt=1 — бой после завершённой охоты главы, +10% хитов врагов;
+## battle=prologue_1,prologue_3 — свои бои из battles.json вместо тестовых боёв уровней,
+## flags=garret_ambush,garret_hunters_scared — сюжетные флаги для этих боёв).
 ## Без ключей — все уровни, классы и ветки на «Испытании» полным отрядом, с дарами и без, по 200 боёв.
 
 func _init() -> void:
@@ -23,6 +25,13 @@ func _init() -> void:
 			CombatData.boost_override[kv2[0]] = int(kv2[1])
 	var runs := int(opt.runs)
 	var darks := [false, true] if opt.dark == "both" else [opt.dark == "1"]
+	var flags := {}
+	for f in String(opt.get("flags", "")).split(",", false):
+		flags[f] = true
+	if opt.has("battle"):
+		_story_battles(opt, flags, runs, darks)
+		quit()
+		return
 	print("Уровень | Класс | Ветка | Отряд | Режим | Тёмные дары | Победы | Раундов | Выбыло | Герой выбыл")
 	for lv_s in String(opt.level).split(","):
 		var lv := int(lv_s)
@@ -40,3 +49,15 @@ func _init() -> void:
 							roundi(s.win_rate * 100), s.avg_rounds, s.avg_down, roundi(s.hero_down_rate * 100),
 							"" if s.timeouts == 0 else " (не кончились: %d)" % s.timeouts])
 	quit()
+
+
+## Сюжетные бои (battle=…): отряд задан в бою, уровень тоже; перебираются классы героя.
+func _story_battles(opt: Dictionary, flags: Dictionary, runs: int, darks: Array) -> void:
+	print("Бой | Класс | Режим | Тёмные дары | Победы | Раундов | Выбыло | Герой выбыл")
+	for bid in String(opt.battle).split(","):
+		for cls in String(opt["class"]).split(","):
+			for dark in darks:
+				var s := Simulator.summarize(bid, cls, "", "full", opt.diff, runs, dark, opt.gear, 1000, flags)
+				print("%s | %s | %s | %s | %d%% | %.1f | %.1f | %d%%%s" % [bid, tr("CLASS_" + cls), tr("DIFF_" + opt.diff),
+					"да" if dark else "нет", roundi(s.win_rate * 100), s.avg_rounds, s.avg_down,
+					roundi(s.hero_down_rate * 100), "" if s.timeouts == 0 else " (не кончились: %d)" % s.timeouts])

@@ -41,6 +41,12 @@ var outcome := ""
 var log_lines: Array[String] = []
 ## События для интерфейса: урон, лечение, промах. Интерфейс забирает их через take_events().
 var events: Array[Dictionary] = []
+## Правила сюжетного боя из battles.json (собирает CombatData.scenario): objective — цель, кроме «убить всех»
+## ({"type": "survive", "rounds": N}); waves — подкрепления по раундам; timed — состояния до раунда;
+## bound — связанный союзник, который вступает в бой в раунде round или когда к нему подойдут;
+## surprise — враги застигнуты врасплох и пропускают первый ход; cannot_lose — поражения нет (соседи
+## добивают врагов, бой засчитан как победа, rescued = true). Сохраняется вместе с боем.
+var stage := {}
 
 
 func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
@@ -50,6 +56,7 @@ func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
 		rng.randomize()
 	difficulty = diff
 	id = String(scenario.get("id", ""))
+	stage = scenario.get("stage", {}).duplicate(true)
 	combat_dark_before = int(scenario.get("combat_darkness", 0))
 	level = int(scenario.get("level", 2))
 	width = int(scenario.width)
@@ -82,6 +89,7 @@ func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
 	turn_index = 0
 	round_num = 1
 	log_line("Бой начался. Раунд 1.")
+	_stage_start()
 	_start_turn()
 
 
@@ -124,7 +132,7 @@ func _team(team: int) -> Array[Combatant]:
 func foes_of(u: Combatant) -> Array[Combatant]:
 	var out: Array[Combatant] = []
 	for o in units:
-		if o.team != u.team and o.conscious():
+		if o.team != u.team and o.conscious() and not o.has_status("bound"):
 			out.append(o)
 	return out
 
@@ -418,6 +426,7 @@ func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 						return
 		u.cell = step
 		u.speed_left -= 1
+		_free_bound_near(u)
 		if _enter_cell(u, step):
 			return
 
@@ -840,8 +849,8 @@ func _spend_attack(u: Combatant) -> void:
 
 
 func can_attack(u: Combatant, target: Combatant) -> bool:
-	return u.conscious() and not u.action_used and not mod_any(u, "no_actions") and target.conscious() \
-		and target.team != u.team and in_weapon_range(u, target)
+	return u.conscious() and not u.action_used and not mod_any(u, "no_actions") and not mod_any(u, "no_harm") \
+		and target.conscious() and target.team != u.team and in_weapon_range(u, target)
 
 
 func attack(u: Combatant, target: Combatant) -> void:
@@ -871,6 +880,9 @@ func can_use(u: Combatant, aid: String) -> bool:
 	if not u.conscious() or mod_any(u, "no_actions") or not u.abilities.has(aid):
 		return false
 	var a := ability(aid)
+	# «Не поднимает руку» (Ирена в храме): только защита и лечение.
+	if mod_any(u, "no_harm") and (a.get("attack", false) or ["enemy", "cell", "empty_cell"].has(String(a.target))):
+		return false
 	match String(a.cost):
 		"action":
 			if u.action_used:
@@ -1439,13 +1451,15 @@ func _start_turn() -> void:
 		if not hook.is_empty():
 			run_effects(hook, {"user": u, "params": {}})
 	if mod_any(u, "skip_turn"):
+		var why := PackedStringArray()
 		for sid in u.statuses.keys():
 			if CombatData.status_def(sid).get("skip_turn", false):
+				why.append(TranslationServer.translate("STATUS_" + sid))
 				u.statuses.erase(sid)
 		u.speed_left = 0
 		u.action_used = true
 		u.bonus_used = true
-		log_line("%s парализован и пропускает ход." % u.name)
+		log_line("%s пропускает ход (%s)." % [u.name, ", ".join(why)])
 		return
 	for sid in u.statuses.keys():
 		if CombatData.status_def(sid).get("turn_start", "") == "stand_up":
@@ -1508,7 +1522,10 @@ func end_turn() -> void:
 			turn_index = 0
 			round_num += 1
 			log_line("Раунд %d." % round_num)
-		if current().conscious():
+			_new_round()
+			if outcome != "":
+				return
+		if can_act(current()):
 			break
 	_start_turn()
 	# Если аура добила начинающего ход врага, ход переходит дальше.
@@ -1516,15 +1533,147 @@ func end_turn() -> void:
 		end_turn()
 
 
+## Может ли участник ходить: в сознании и не связан.
+func can_act(u: Combatant) -> bool:
+	return u.conscious() and not u.has_status("bound")
+
+
 func _check_outcome() -> void:
 	if outcome != "":
 		return
-	if heroes().all(func(h: Combatant) -> bool: return not h.conscious()):
+	if heroes().all(func(h: Combatant) -> bool: return not can_act(h)):
+		if stage.get("cannot_lose", false):
+			# Облава: если герой выбыл, соседи с вилами добивают мертвецов (prologue-plan.md, сцена 2).
+			for e in enemies():
+				e.dead = true
+			stage["rescued"] = true
+			outcome = "victory"
+			log_line(TranslationServer.translate("BATTLE_LOG_RESCUED"))
+			return
 		outcome = "defeat"
 		log_line("Все герои выбыли. Поражение.")
-	elif enemies().all(func(e: Combatant) -> bool: return e.dead):
+	elif enemies().all(func(e: Combatant) -> bool: return e.dead) and _waves_left() == 0:
 		outcome = "victory"
 		log_line("Победа!")
+
+
+# --- Сюжетный бой: цель, подкрепления, связанные союзники ---------------------
+
+func _stage_start() -> void:
+	for t in stage.get("timed", []):
+		var u := get_unit(String(t.unit))
+		if u != null:
+			add_status(u, String(t.status), null)
+	for bnd in stage.get("bound", []):
+		var u := get_unit(String(bnd.unit))
+		if u != null:
+			add_status(u, "bound", null)
+	if stage.get("surprise", false):
+		for e in enemies():
+			add_status(e, "surprised", null)
+		log_line(TranslationServer.translate("BATTLE_LOG_AMBUSH"))
+	for i in order.size():
+		if can_act(current()):
+			break
+		turn_index = (turn_index + 1) % order.size()
+
+
+## Начало раунда: снять временные состояния, развязать союзника, вывести подкрепления, проверить цель.
+func _new_round() -> void:
+	for t in stage.get("timed", []):
+		var u := get_unit(String(t.unit))
+		if u != null and round_num >= int(t.until_round) and u.has_status(String(t.status)):
+			remove_status(u, String(t.status))
+			log_line(TranslationServer.translate(String(t.get("log", "BATTLE_LOG_TIMED_END"))).format({"name": u.name}))
+	for bnd in stage.get("bound", []):
+		if round_num >= int(bnd.round):
+			_release(get_unit(String(bnd.unit)), null)
+	for w in stage.get("waves", []):
+		if int(w.round) == round_num and not w.get("done", false):
+			_spawn_wave(w)
+	var obj: Dictionary = stage.get("objective", {})
+	if String(obj.get("type", "")) == "survive" and round_num > int(obj.rounds):
+		outcome = "victory"
+		log_line(TranslationServer.translate("BATTLE_LOG_SURVIVED"))
+
+
+## Сколько подкреплений ещё не вышло: пока они есть, бой «до последнего врага» не кончается.
+func _waves_left() -> int:
+	var n := 0
+	for w in stage.get("waves", []):
+		if not w.get("done", false):
+			n += 1
+	return n
+
+
+## Ближайший раунд с подкреплением (для интерфейса) или 0.
+func next_wave_round() -> int:
+	var best := 0
+	for w in stage.get("waves", []):
+		if not w.get("done", false) and (best == 0 or int(w.round) < best):
+			best = int(w.round)
+	return best
+
+
+func _spawn_wave(w: Dictionary) -> void:
+	w["done"] = true
+	var cells: Array = w.cells
+	var i := 0
+	for kind in w.units:
+		var c: Array = cells[i % cells.size()]
+		i += 1
+		var cell := _free_cell_near(Vector2i(int(c[0]), int(c[1])))
+		if cell.x < 0:
+			continue
+		var n := 1
+		for o in units:
+			if o.kind == kind:
+				n += 1
+		var e := CombatData.make_enemy(String(kind), n)
+		e.cell = cell
+		e.initiative = Dice.d20(rng) + e.init_mod
+		units.append(e)
+		order.append(e.id)
+		events.append({"type": "spawn", "unit": e.id})
+	log_line(TranslationServer.translate(String(w.get("log", "BATTLE_LOG_WAVE"))))
+
+
+## Свободная клетка поблизости: сама клетка или ближайшая проходимая без участника.
+func _free_cell_near(start: Vector2i) -> Vector2i:
+	var seen := {start: true}
+	var frontier: Array[Vector2i] = [start]
+	while not frontier.is_empty():
+		var next: Array[Vector2i] = []
+		for c in frontier:
+			if in_bounds(c) and not is_obstacle(c) and occupant(c) == null:
+				return c
+			for d in DIRS:
+				var n := c + d
+				if in_bounds(n) and not seen.has(n):
+					seen[n] = true
+					next.append(n)
+		frontier = next
+	return Vector2i(-1, -1)
+
+
+## Развязать союзника: by — кто разрезал верёвки (null — вырвался сам в свой раунд).
+func _release(u: Combatant, by: Combatant) -> void:
+	if u == null or not u.has_status("bound"):
+		return
+	remove_status(u, "bound")
+	if by == null:
+		log_line(TranslationServer.translate("BATTLE_LOG_BREAKS_FREE").format({"name": u.name}))
+	else:
+		log_line(TranslationServer.translate("BATTLE_LOG_CUT_FREE").format({"name": u.name, "by": by.name}))
+
+
+## Герой, вставший рядом со связанным союзником, разрезает верёвки.
+func _free_bound_near(u: Combatant) -> void:
+	if u.team != 0 or stage.get("bound", []).is_empty():
+		return
+	for o in heroes():
+		if o != u and o.has_status("bound") and dist(o.cell, u.cell) <= 1:
+			_release(o, u)
 
 
 func log_line(text: String) -> void:
@@ -1559,7 +1708,7 @@ func to_dict() -> Dictionary:
 		"rng_seed": str(rng.seed), "rng_state": str(rng.state), "difficulty": difficulty,
 		"darkness": darkness, "darkness_gained": darkness_gained, "dark_gifts_used": dark_gifts_used,
 		"dark_gifts_cast": dark_gifts_cast, "combat_dark_before": combat_dark_before, "item_darkness": item_darkness,
-		"zones": zd, "light_saved": light_saved.keys(), "outcome": outcome,
+		"zones": zd, "light_saved": light_saved.keys(), "outcome": outcome, "stage": stage,
 	}
 
 
@@ -1597,4 +1746,5 @@ static func from_dict(d: Dictionary) -> Battle:
 	for lid in d.get("light_saved", []):
 		b.light_saved[String(lid)] = true
 	b.outcome = d.outcome
+	b.stage = CombatData.whole_numbers(d.get("stage", {}))
 	return b

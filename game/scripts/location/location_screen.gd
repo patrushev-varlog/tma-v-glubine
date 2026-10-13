@@ -3,7 +3,7 @@ extends Node
 ## диалога внизу, выбор с тегом #obj:<id> — объект на карте: герой подходит к нему и осматривает.
 ## Пока на карте ждут только объекты, игрок свободно ходит: клик или тап по клетке, WASD и стрелки,
 ## стик или крестовина геймпада; осмотр — клик по объекту, Enter или A рядом с ним.
-## Бой по тегу # battle: — переход в бой и обратно на карту (пока бой проводит ИИ, экран боя — поток I).
+## Бой по тегу # battle: — переход на экран боя и после победы обратно на карту.
 ## Какие сцены идут на картах — data/locations/index.json; формат карт — docs/LOCATIONS.md.
 
 const FADE_TIME := 0.35
@@ -358,8 +358,6 @@ func _leave(tail: Array[Dictionary]) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _overlay != null and is_instance_valid(_overlay):
-		if _mode == "battle":
-			return
 		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("game_menu"):
 			_close_overlay()
 			get_viewport().set_input_as_handled()
@@ -476,91 +474,40 @@ func _update_prompt() -> void:
 	_prompt.text = UiKit.fmt("LOC_PROMPT", {"key": InputSetup.glyph("ui_accept"), "action": _choice_text[id]}) if id != "" else ""
 
 
-# --- Бой (заглушка до экрана боя, поток I) --------------------------------------------
+# --- Бой --------------------------------------------------------------------------------
 
-func _show_battle(battle_id: String) -> void:
+func _show_battle(_battle_id: String) -> void:
 	_mode = "battle"
 	_set_active({})
-	_speaker.text = UiKit.fmt("BATTLE_TITLE", {"id": battle_id}).to_upper()
-	_speaker.show()
+	_speaker.hide()
 	_prev.text = _last_line
 	_prev.visible = _last_line != ""
-	_text.text = ""
+	_text.text = tr("BATTLE_AHEAD")
 	_clear_buttons()
-	_buttons.add_child(UiKit.button(tr("LOC_BATTLE_BEGIN"), _start_battle.bind(battle_id)))
+	_buttons.add_child(UiKit.button(tr("LOC_BATTLE_BEGIN"), _start_battle))
 	_panel.show()
 	UiKit.focus_first(_buttons)
 
 
-## Переход в бой: затемнение, бой, возврат на карту. Экран боя (поток I) встанет сюда вместо
-## рамки с боем ИИ; после победы он вызывает Game.finish_battle и возвращается на Game.screen_path().
-func _start_battle(battle_id: String) -> void:
+## Переход на экран боя: затемнение и смена сцены. Экран боя после победы вызывает
+## Game.finish_battle и возвращается на Game.screen_path() — сюда же, история идёт дальше на карте.
+func _start_battle() -> void:
+	_mode = "leaving"
 	var tw := create_tween()
 	tw.tween_property(_fade, "color:a", 1.0, FADE_TIME)
 	tw.tween_callback(func() -> void:
-		_close_overlay()
-		_overlay = _battle_frame(battle_id)
-		_fade.color.a = 0.0)
-
-
-func _battle_frame(battle_id: String) -> Control:
-	var overlay := Control.new()
-	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_ui.add_child(overlay)
-	_ui.move_child(_fade, -1)
-	var bg := ColorRect.new()
-	bg.color = UiKit.BG
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.add_child(bg)
-	var col := UiKit.overlay(overlay)
-	col.add_child(UiKit.heading(UiKit.fmt("BATTLE_TITLE", {"id": battle_id}).to_upper(), UiKit.HEAD_BODY))
-	var party := PackedStringArray([String(Game.session.state.hero.get("name", ""))])
-	for c in Game.session.companions():
-		party.append(tr("COMPANION_" + c))
-	col.add_child(UiKit.label(UiKit.fmt("BATTLE_STUB_NOTE", {"party": ", ".join(party),
-		"level": Game.session.state.level}), UiKit.FONT_SMALL, UiKit.MUTED))
-	var result := UiKit.label("", UiKit.FONT_BODY, UiKit.ACCENT)
-	col.add_child(result)
-	var row := VBoxContainer.new()
-	col.add_child(row)
-	var fight := func(again: Callable) -> void:
-		var r := Game.auto_battle()
-		for c in row.get_children():
-			c.queue_free()
-		if r.outcome == "victory":
-			result.text = UiKit.fmt("BATTLE_WON", {"rounds": r.rounds, "dark": r.darkness})
-			row.add_child(UiKit.button(tr("BATTLE_CONTINUE"), _end_battle.bind(int(r.darkness))))
-		else:
-			result.text = tr("BATTLE_LOST")
-			row.add_child(UiKit.button(tr("BATTLE_RETRY"), again.bind(again)))
-		UiKit.focus_first(row)
-	row.add_child(UiKit.button(tr("BATTLE_AUTO"), fight.bind(fight)))
-	UiKit.focus_first(row)
-	return overlay
-
-
-func _end_battle(darkness: int) -> void:
-	var tw := create_tween()
-	tw.tween_property(_fade, "color:a", 1.0, FADE_TIME)
-	tw.tween_callback(func() -> void:
-		Game.finish_battle(darkness)
-		_close_overlay()
-		_advance())
-	tw.tween_property(_fade, "color:a", 0.0, FADE_TIME)
+		Game.start_battle()
+		change_screen.call(Game.BATTLE_SCENE))
 
 
 # --- Журнал, меню, сохранения -------------------------------------------------------
 
 func _open_journal() -> void:
-	if _mode == "battle" and _overlay != null:
-		return
 	_close_overlay()
 	_overlay = GameMenus.journal(_ui, _close_overlay)
 
 
 func _open_menu() -> void:
-	if _mode == "battle" and _overlay != null:
-		return
 	_close_overlay()
 	_overlay = GameMenus.pause_menu(_ui, {
 		"quicksave": func() -> void:

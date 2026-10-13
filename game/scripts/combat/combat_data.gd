@@ -300,18 +300,30 @@ static func party_members(level: int, party: String) -> Array[String]:
 
 ## Бой из battles.json: отряд героя того же уровня против врагов боя.
 ## gear — экипировка отряда: "none", "kit" (гарантированный набор уровня) или "full".
+## flags — переменные Ink на момент боя (сюжетные бои пролога читают их: засада, ушедший арбалетчик).
+## Ключи сюжетного боя (party, bound, timed, waves, objective, ambush_flag, flag_drop, cannot_lose) —
+## docs/COMBAT_DATA.md; они собираются в scenario.stage, который исполняет Battle.
 static func scenario(battle_id: String, hero_class: String, archetype: String, party := "full", diff := "trial",
-		gear := "kit") -> Dictionary:
+		gear := "kit", flags := {}) -> Dictionary:
 	var bt: Dictionary = table("battles")[battle_id]
 	var level := int(bt.level)
 	var heroes: Array[Combatant] = [make_hero(hero_class, level, archetype)]
-	for comp in party_members(level, party):
+	var members: Array[String] = party_members(level, party)
+	if bt.has("party"):
+		members.assign(bt.party)
+	for comp in members:
 		heroes.append(make_companion(comp, level))
-	var missing := party_members(level, "full").size() + 1 - heroes.size()
+	var missing := 0 if bt.has("party") else party_members(level, "full").size() + 1 - heroes.size()
 	var boost: Dictionary = (boost_override if not boost_override.is_empty() else bt.get("boost", {})).duplicate()
 	if hunt_done:
 		boost["hp"] = int(boost.get("hp", 0)) + int(rules().hunt_hp)
+	var drop: Array = exclude.duplicate()
+	for flag in bt.get("flag_drop", {}):
+		if flags.get(flag, false):
+			drop.append_array(bt.flag_drop[flag])
 	var hero_cells: Array[Vector2i] = []
+	var bound_cells: Array[Vector2i] = []
+	var marks := {}
 	var enemies: Array[Combatant] = []
 	var obstacles: Array[Vector2i] = []
 	var counts := {}
@@ -325,8 +337,13 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 				obstacles.append(c)
 			elif ch == "h":
 				hero_cells.append(c)
+			elif ch == "b":
+				bound_cells.append(c)
+			elif ch.is_valid_int():
+				# Цифры — места выхода подкреплений (waves[].at).
+				marks.get_or_add(ch, []).append([x, y])
 			elif bt.legend.has(ch):
-				if diff == "story" and bt.trial_only.has(ch) or exclude.has(ch):
+				if diff == "story" and bt.get("trial_only", []).has(ch) or drop.has(ch):
 					continue
 				var kind: String = bt.legend[ch]
 				counts[kind] = int(counts.get(kind, 0)) + 1
@@ -336,12 +353,41 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 				enemies.append(e)
 	if missing > 0:
 		enemies = trim_for_party(enemies, party)
-	for i in heroes.size():
-		heroes[i].cell = hero_cells[i]
+	var stage := {}
+	var bound: Array = bt.get("bound", [])
+	var hi := 0
+	for h in heroes:
+		var bi := -1
+		for k in bound.size():
+			if String(bound[k].unit) == h.kind and not h.is_hero:
+				bi = k
+		if bi >= 0:
+			h.cell = bound_cells[bi]
+		else:
+			h.cell = hero_cells[hi]
+			hi += 1
 		if gear != "none":
-			Items.equip(heroes[i], Items.kit_for(heroes[i], level, gear))
+			Items.equip(h, Items.kit_for(h, level, gear))
+	if not bound.is_empty():
+		stage["bound"] = bound.duplicate(true)
+	for key in ["timed", "objective", "cannot_lose"]:
+		if bt.has(key):
+			stage[key] = bt[key].duplicate(true) if bt[key] is Array or bt[key] is Dictionary else bt[key]
+	if String(bt.get("ambush_flag", "")) != "" and flags.get(String(bt.ambush_flag), false):
+		stage["surprise"] = true
+	var waves := []
+	for w in bt.get("waves", []):
+		var kinds: Array = w.units.duplicate()
+		if diff == "trial":
+			kinds.append_array(w.get("trial_units", []))
+		var wave := {"round": int(w.round), "units": kinds, "cells": marks.get(String(w.at), [])}
+		if w.has("log"):
+			wave["log"] = w.log
+		waves.append(wave)
+	if not waves.is_empty():
+		stage["waves"] = waves
 	return {"id": battle_id, "width": String(rows[0]).length(), "height": rows.size(), "units": heroes + enemies,
-		"obstacles": obstacles, "level": level}
+		"obstacles": obstacles, "level": level, "stage": stage}
 
 
 ## Урезать врагов под неполный отряд по бюджету опыта (без босса).

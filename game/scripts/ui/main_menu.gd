@@ -34,7 +34,9 @@ func _build() -> void:
 	buttons.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	buttons.add_theme_constant_override("separation", 8)
 	col.add_child(buttons)
-	if Game.can_continue():
+	if Game.can_resume_battle():
+		buttons.add_child(UiKit.button(tr("MENU_CONTINUE"), _resume_battle))
+	elif Game.can_continue():
 		buttons.add_child(UiKit.button(tr("MENU_CONTINUE"), func() -> void: _load(SaveStore.latest())))
 	buttons.add_child(UiKit.button(tr("MENU_NEW"), func() -> void:
 		get_tree().change_scene_to_file("res://scenes/hero_creation.tscn")))
@@ -55,6 +57,13 @@ func _toggle_language() -> void:
 	Game.set_language("en" if Game.language == "ru" else "ru")
 
 
+## Бой, прерванный выходом: вернуться в него с начала хода.
+func _resume_battle() -> void:
+	if Game.resume_battle():
+		get_tree().change_scene_to_file(Game.BATTLE_SCENE)
+
+
 func _load(slot: String) -> void:
+	Game.abandon_battle()
 	Game.pending_tail = Game.load_from(slot)
 	get_tree().change_scene_to_file(Game.screen_path())
