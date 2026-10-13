@@ -23,7 +23,7 @@ func _rebuild() -> void:
 func _build() -> void:
 	var col := UiKit.screen(self, 14)
 	col.alignment = BoxContainer.ALIGNMENT_CENTER
-	var title := UiKit.label(tr("GAME_TITLE"), UiKit.FONT_TITLE, UiKit.ACCENT)
+	var title := UiKit.heading(tr("GAME_TITLE").to_upper(), UiKit.HEAD_TITLE)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(title)
 	var sub := UiKit.label(tr("GAME_SUBTITLE"), UiKit.FONT_SMALL, UiKit.MUTED)
@@ -57,4 +57,4 @@ func _toggle_language() -> void:
 
 func _load(slot: String) -> void:
 	Game.pending_tail = Game.load_from(slot)
-	get_tree().change_scene_to_file("res://scenes/story_screen.tscn")
+	get_tree().change_scene_to_file(Game.screen_path())

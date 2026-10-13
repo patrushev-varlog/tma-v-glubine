@@ -148,4 +148,4 @@ func _begin() -> void:
 		return
 	Game.new_game(s)
 	Game.pending_tail = []
-	get_tree().change_scene_to_file("res://scenes/story_screen.tscn")
+	get_tree().change_scene_to_file(Game.screen_path())

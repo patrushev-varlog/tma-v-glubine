@@ -31,6 +31,9 @@ var entry := {}
 var pending_battle := ""
 ## "" — основной сюжет, "explore" — осмотр объекта на карте (отдельный поток Ink).
 var flow := ""
+## Где стоит герой на карте локации: {"location", "x", "y"}; пусто — на точке входа сцены.
+## Не событие журнала: в сохранение идёт как есть, на входе в новую сцену сбрасывается.
+var map_pos := {}
 
 var _mark := {}
 var _replaying := false
@@ -95,7 +98,8 @@ static func spouse_forms(spouse_id: String, female: bool, lang: String) -> Dicti
 
 ## Следующее, что показать игроку:
 ##   {"type": "line", "text", "tags", "speaker", "mood", "scene"} — строка (scene — только у первой строки сцены);
-##   {"type": "choices", "options": PackedStringArray};
+##   {"type": "choices", "options": PackedStringArray, "objects": Array[String]} — objects[i] — объект
+##     на карте для варианта i (тег #obj:) или "", если вариант — обычная кнопка;
 ##   {"type": "battle", "id"} — нужен исход боя (win_battle);
 ##   {"type": "explore_end"} — осмотр закончился, основной сюжет стоит там же;
 ##   {"type": "end"} — история закончилась.
@@ -124,7 +128,14 @@ func next() -> Dictionary:
 		return out
 	var options := runner.choices()
 	if not options.is_empty():
-		return {"type": "choices", "options": options}
+		var objects: Array[String] = []
+		for tags in runner.choice_tags():
+			var obj := ""
+			for t in tags:
+				if t.begins_with("obj:"):
+					obj = t.substr(4).strip_edges()
+			objects.append(obj)
+		return {"type": "choices", "options": options, "objects": objects}
 	if flow != "":
 		runner.default_flow()
 		flow = ""
@@ -191,6 +202,7 @@ func _check_scene() -> String:
 			scene_idx = j
 			entry = _mark.duplicate()
 			entry["scene"] = knot
+			map_pos = {}
 			if not _replaying:
 				scene_entered.emit(knot)
 			return knot
@@ -254,7 +266,7 @@ func party_key() -> String:
 func to_save() -> Dictionary:
 	var d := {
 		"version": SAVE_VERSION, "lang": runner.language, "story_hash": runner.story_hash,
-		"hero": state.hero, "difficulty": state.difficulty, "events": events, "entry": entry,
+		"hero": state.hero, "difficulty": state.difficulty, "events": events, "entry": entry, "map": map_pos,
 		# Для списка сохранений, без загрузки истории.
 		"scene": scene_name(), "chapter": state.chapter, "level": state.level, "darkness": darkness(),
 	}
@@ -270,6 +282,7 @@ func load_save(d: Dictionary, lang := "") -> Array[Dictionary]:
 	for ev in d.get("events", []):
 		saved_events.append(CombatData.whole_numbers(ev))
 	var e: Dictionary = d.get("entry", {})
+	var saved_map: Dictionary = d.get("map", {})
 	runner.load_language(lang)
 	var fast: bool = not e.is_empty() and d.get("story_hash", "") == runner.story_hash and d.get("lang", "") == runner.language
 	events = saved_events.duplicate()
@@ -284,7 +297,9 @@ func load_save(d: Dictionary, lang := "") -> Array[Dictionary]:
 		_mark = e.duplicate()
 		entry = {}
 		events.resize(int(e.log_index))
-		return _replay(saved_events, int(e.log_index))
+		var tail_fast := _replay(saved_events, int(e.log_index))
+		map_pos = saved_map
+		return tail_fast
 	state = GameState.new()
 	state.hero = d.hero.duplicate()
 	state.difficulty = String(d.get("difficulty", "story"))
@@ -292,7 +307,9 @@ func load_save(d: Dictionary, lang := "") -> Array[Dictionary]:
 	events.clear()
 	_mark_target = int(e.get("log_index", 0))
 	_set_mark_if_target()
-	return _replay(saved_events, 0)
+	var tail := _replay(saved_events, 0)
+	map_pos = saved_map
+	return tail
 
 
 func _set_mark_if_target() -> void:

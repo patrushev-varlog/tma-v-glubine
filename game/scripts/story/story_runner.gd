@@ -67,6 +67,14 @@ func choices() -> PackedStringArray:
 	return out
 
 
+## Теги вариантов выбора: по PackedStringArray на вариант (тег #obj: — объект на карте).
+func choice_tags() -> Array[PackedStringArray]:
+	var out: Array[PackedStringArray] = []
+	for tags in _story.ChoiceTags():
+		out.append(PackedStringArray(tags))
+	return out
+
+
 func choose(index: int) -> void:
 	_story.ChooseChoiceIndex(index)
 

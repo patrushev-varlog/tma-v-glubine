@@ -1,5 +1,7 @@
 // Prologue, scene 3. "The ashes". English parallel of story/ink/prologue/03_ashes.ink.
-// About 5 minutes. Darkness does not change. Clues on the map are separate knots the game calls on inspection.
+// About 5 minutes. Darkness does not change.
+// The scene plays on the yard map (game/data/locations/ashmoor.json). A choice tagged #obj:<id> is an object
+// on the map: the player walks up to it instead of pressing a button (game/docs/LOCATIONS.md).
 
 VAR buried_neighbors = false
 
@@ -7,6 +9,8 @@ VAR buried_neighbors = false
 The cold woke you. A grey dawn stood over Ashmoor, and the smoke rose straight up with no wind, as over a snuffed candle.
 Half the houses were gone. Yours still stood. The door still hung by a single nail.
 Someone coughed in the cellar by the well, and then a grey head came up out of it.
+* [Go to the cellar. #obj:oldrik]
+-
 "Alive," said old Oldric, looking at you. "Well, somebody's alive." # spk:oldrik
 He climbed out, holding on to the edge, and sat down right on the ground.
 "They took my boy. Into the column, with everyone. I sat in the cellar. Heard it all and sat there." # spk:oldrik # mood:sad
@@ -47,9 +51,11 @@ Oldric nodded, but stopped looking at you.
 }
 -> clues
 
-// Clues. In the game these are objects on the map; here they run in order for testing.
+// Clues are objects on the map: the player inspects them in any order or walks past. The track is also the way out of the yard.
 = clues
--> clue_crown -> clue_list -> clue_track -> leave
++ {not clue_crown} [Look at the cart by the well. #obj:cart] -> clue_crown -> clues
++ {not clue_list} [Pick up the paper by the wheel. #obj:list] -> clue_list -> clues
++ [Follow the track north. #obj:road] -> clue_track -> leave
 
 = clue_crown
 A cart with a broken axle has been abandoned by the well. On its side is a yellow sign: a crown, and under it three prongs.

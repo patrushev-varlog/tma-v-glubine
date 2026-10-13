@@ -11,7 +11,8 @@ namespace TmaGame;
 //    свойство, как это делает импорт .ink в редакторе;
 // 3) у ChoosePathString в GodotInk несколько перегрузок, а GDScript видит только одну из них;
 // 4) GodotInk не отдаёт текущий путь в истории, а по нему игра узнаёт, что началась новая сцена
-//    (счётчики посещений Ink ведёт не для всех узлов).
+//    (счётчики посещений Ink ведёт не для всех узлов);
+// 5) GodotInk не отдаёт теги вариантов выбора, а по тегу #obj: вариант становится объектом на карте.
 [GlobalClass]
 public partial class InkLoader : RefCounted
 {
@@ -37,6 +38,16 @@ public partial class JsonInkStory : InkStory
         for (int i = 0; i < args.Count; i++)
             list[i] = args[i];
         ChoosePathString(path, true, list);
+    }
+
+    // Теги текущих вариантов выбора, по одному массиву на вариант.
+    public Godot.Collections.Array<string[]> ChoiceTags()
+    {
+        var story = (Ink.Runtime.Story)RuntimeField.GetValue(this)!;
+        var outList = new Godot.Collections.Array<string[]>();
+        foreach (var choice in story.currentChoices)
+            outList.Add(choice.tags?.ToArray() ?? System.Array.Empty<string>());
+        return outList;
     }
 
     // Путь Ink, где сейчас стоит история («evening.0.12»), или "" в конце истории.
