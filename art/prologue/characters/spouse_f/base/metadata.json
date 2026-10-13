@@ -1,0 +1,36 @@
+{
+  "group_id": "c0c8044d-06e8-464a-af4c-5fb0232947c0",
+  "states": [
+    {
+      "character": {
+        "id": "ebe55e05-b159-4dbc-a576-9b069710647e",
+        "name": "Idle",
+        "prompt": "a woman in her early thirties, villager, plain homespun dress, dark wool shawl, chestnut hair loosely pinned up, worried, hands empty, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T13:24:21.855470+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T13:27:07.461122"
+}
