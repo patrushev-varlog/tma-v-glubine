@@ -705,5 +705,67 @@
     "settings": {
       "bg_tolerance": 12
     }
+  },
+  "hero_wizard_f": {
+    "source": "source/hero_wizard_f.png",
+    "crop": [
+      0,
+      85,
+      793,
+      878
+    ],
+    "face_box": [
+      26,
+      17,
+      100,
+      103
+    ],
+    "crop_64": [
+      88,
+      137,
+      702,
+      751
+    ],
+    "face_box_64": [
+      8,
+      5,
+      55,
+      61
+    ],
+    "settings": {
+      "bg_tolerance": 5
+    },
+    "features": {
+      "eye_near": [
+        48,
+        54,
+        46
+      ],
+      "eye_far": [
+        72,
+        78,
+        46
+      ],
+      "iris_near": [
+        51,
+        46
+      ],
+      "iris_far": [
+        75,
+        46
+      ],
+      "temple": [
+        40,
+        38
+      ],
+      "cheek": [
+        46,
+        58
+      ],
+      "neck": [
+        57,
+        90
+      ]
+    }
   }
 }
