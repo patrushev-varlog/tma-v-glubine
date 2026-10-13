@@ -19,7 +19,7 @@ No-go по любому критерию → правим ядро (бой, те
   в прогоне workflow CI (вкладка Actions).
 - macOS-демо — `TmaVGlubine.zip` с приложением для Intel и Apple Silicon (macOS 11+). Оно не подписано Apple, поэтому
   при первом запуске macOS его не откроет: тестеру нужно нажать на приложение правой кнопкой → «Открыть» → «Открыть»,
-  либо в Терминале `xattr -dr com.apple.quarantine ` и перетащить приложение в окно Терминала. Подпись и нотаризация —
+  либо набрать в Терминале `xattr -dr com.apple.quarantine `, перетащить приложение в окно и нажать Enter. Подпись и нотаризация —
   вместе со Steamworks (поток L).
 - Локально: `godot --headless --path game --export-release "Windows Desktop Demo"`.
 - Из редактора демо включается ключом: `godot --path game -- --demo`.
