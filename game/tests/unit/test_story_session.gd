@@ -37,6 +37,16 @@ func _play(s: StorySession, seed_value: int, max_events := -1) -> PackedStringAr
 			"battle":
 				out.append("B:" + String(item.id))
 				s.win_battle(2 if s.state.combat_darkness < 20 else 0)
+			"levelup":
+				var arches := CombatData.archetypes_of(String(s.state.hero["class"]))
+				var pick := String(arches[(rng + int(item.level)) % arches.size()])
+				out.append("U:%d>%s" % [item.level, pick])
+				s.choose_branch(pick)
+			"shop":
+				var stock := Shops.stock(String(item.id))
+				var buy: Array = [[stock[0].id, "hero"]] if not stock.is_empty() and rng % 2 == 0 else []
+				out.append("S:%s>%d" % [item.id, buy.size()])
+				s.leave_shop(buy)
 			"explore_end":
 				out.append("E")
 			"end":

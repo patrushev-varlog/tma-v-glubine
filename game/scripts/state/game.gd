@@ -167,12 +167,16 @@ var battle_return_scene := "res://scenes/story_screen.tscn"
 
 
 ## Бой по тегу # battle:<id>: свой бой из data/combat/battles.json (бои пролога), иначе — тестовый бой
-## уровня отряда, пока у глав нет своих карт. Ветка героя — первая из классов, пока нет экрана повышения уровня.
+## уровня отряда, пока у главы нет своих карт. Ветка героя — выбранная в лагере (экран уровня).
+## Экипировка — гарантированный набор уровня, вещи отряда из инвентаря встают поверх, если не хуже.
 func battle_scenario(battle_id: String) -> Dictionary:
 	var st := session.state
 	var bid := battle_id if CombatData.table("battles").has(battle_id) else "level_%d" % clampi(st.level, 1, 5)
-	var sc := CombatData.scenario(bid, String(st.hero.get("class", "fighter")), String(st.hero.get("archetype", "")),
-		session.party_key(), st.difficulty, "kit", session.flags())
+	var owned := {}
+	for it in st.inventory:
+		owned.get_or_add(String(it.owner), []).append(String(it.id))
+	var sc := CombatData.scenario(bid, String(st.hero.get("class", "fighter")), st.hero_branch(),
+		session.party_key(), st.difficulty, "kit", session.flags(), owned)
 	sc["combat_darkness"] = st.combat_darkness
 	var hero_name := String(st.hero.get("name", ""))
 	if hero_name != "":

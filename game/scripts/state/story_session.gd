@@ -19,7 +19,8 @@ const CASES: Array[String] = ["gen", "dat", "acc", "ins", "pre"]
 
 var runner := StoryRunner.new()
 var state := GameState.new()
-## События: {"pick": i} | {"battle": id, "dark": n} | {"explore": узел, "args": []} | {"var": имя, "value": v}.
+## События: {"pick": i} | {"battle": id, "dark": n} | {"explore": узел, "args": []} | {"var": имя, "value": v}
+##   | {"branch": ветка} (повышение уровня в лагере) | {"shop": торговец, "buy": [[предмет, владелец], …]}.
 var events: Array[Dictionary] = []
 ## Сцены всей истории по порядку (story/scenes.json).
 var scenes: Array = []
@@ -29,6 +30,10 @@ var scene_idx := -1
 var entry := {}
 ## Бой, который ждёт исхода (тег # battle: на последней показанной строке).
 var pending_battle := ""
+## Повышение уровня, которое ждёт выбора ветки (тег # levelup:N в лагере); 0 — нет.
+var pending_levelup := 0
+## Торговец, который ждёт покупок (тег # shop:<id>); "" — нет.
+var pending_shop := ""
 ## "" — основной сюжет, "explore" — осмотр объекта на карте (отдельный поток Ink).
 var flow := ""
 ## Где стоит герой на карте локации: {"location", "x", "y"}; пусто — на точке входа сцены.
@@ -62,6 +67,8 @@ func _restart(lang: String) -> void:
 	scene_idx = -1
 	entry = {}
 	pending_battle = ""
+	pending_levelup = 0
+	pending_shop = ""
 	flow = ""
 	_apply_setup()
 
@@ -102,6 +109,8 @@ static func spouse_forms(spouse_id: String, female: bool, lang: String) -> Dicti
 ##   {"type": "choices", "options": PackedStringArray, "objects": Array[String]} — objects[i] — объект
 ##     на карте для варианта i (тег #obj:) или "", если вариант — обычная кнопка;
 ##   {"type": "battle", "id"} — нужен исход боя (win_battle);
+##   {"type": "levelup", "level"} — новый уровень: выбрать ветку или оставить (choose_branch);
+##   {"type": "shop", "id"} — торговец: покупки (leave_shop);
 ##   {"type": "explore_end"} — осмотр закончился, основной сюжет стоит там же;
 ##   {"type": "end"} — история закончилась.
 ## Звуки строк с находками и записями в журнал (теги # silver:, # item:, # journal:).
@@ -111,6 +120,10 @@ const AUTO_SFX := {"silver": "coin", "item": "pickup", "journal": "journal"}
 func next() -> Dictionary:
 	if pending_battle != "":
 		return {"type": "battle", "id": pending_battle}
+	if pending_levelup > 0:
+		return {"type": "levelup", "level": pending_levelup}
+	if pending_shop != "":
+		return {"type": "shop", "id": pending_shop}
 	if runner.can_continue():
 		var line := runner.next_line()
 		var tags: PackedStringArray = line.tags
@@ -133,6 +146,10 @@ func next() -> Dictionary:
 						out.sfx = AUTO_SFX[kv[0].strip_edges()]
 				"battle":
 					pending_battle = kv[1].strip_edges()
+				"levelup":
+					pending_levelup = int(kv[1])
+				"shop":
+					pending_shop = kv[1].strip_edges()
 		var scene := _check_scene()
 		if scene != "":
 			out["scene"] = scene
@@ -165,6 +182,19 @@ func win_battle(darkness := 0) -> void:
 	_apply({"battle": pending_battle, "dark": darkness})
 
 
+## Ветка класса на новом уровне (DESIGN.md, «Умения в бою»): на 2 уровне выбор, дальше в каждом лагере
+## её можно сменить — умения новой ветки приходят сразу все по текущему уровню.
+func choose_branch(branch: String) -> void:
+	assert(pending_levelup > 0, "Нет повышения уровня, которое ждёт выбора")
+	_apply({"branch": branch})
+
+
+## Уйти от торговца. buy — [[предмет, владелец], …]; цены считает Shops, серебро списывается здесь.
+func leave_shop(buy: Array = []) -> void:
+	assert(pending_shop != "", "Нет торговца, который ждёт покупок")
+	_apply({"shop": pending_shop, "buy": buy})
+
+
 ## Осмотр объекта на карте: узел Ink в отдельном потоке (story/ink/explore_common.ink).
 ## Можно, только когда основной сюжет ждёт выбора игрока.
 func explore(node: String, args: Array = []) -> void:
@@ -179,6 +209,9 @@ func _apply(ev: Dictionary) -> void:
 	elif ev.has("battle"):
 		var id := String(ev.battle)
 		state.battles[id] = int(state.battles.get(id, 0)) + 1
+		# Добыча после боя (design/equipment-catalog.md: 10–15 серебра за бой главы).
+		var bt: Dictionary = CombatData.table("battles").get(id, {})
+		state.silver += int(bt.get("silver", 0))
 		var dark := mini(int(ev.get("dark", 0)), state.combat_dark_room())
 		if dark > 0:
 			state.combat_darkness += dark
@@ -190,6 +223,17 @@ func _apply(ev: Dictionary) -> void:
 		runner.go_to(String(ev.explore), ev.get("args", []))
 	elif ev.has("var"):
 		runner.set_var(String(ev["var"]), ev.value)
+	elif ev.has("branch"):
+		state.branch = String(ev.branch)
+		pending_levelup = 0
+	elif ev.has("shop"):
+		for b in ev.get("buy", []):
+			var price := Shops.price(String(ev.shop), String(b[0]))
+			if price < 0 or price > state.silver:
+				continue
+			state.silver -= price
+			state.inventory.append({"id": String(b[0]), "owner": String(b[1])})
+		pending_shop = ""
 	_set_mark()
 
 
@@ -303,6 +347,8 @@ func load_save(d: Dictionary, lang := "") -> Array[Dictionary]:
 		scene_idx = int(e.scene_idx)
 		flow = String(e.get("flow", ""))
 		pending_battle = ""
+		pending_levelup = 0
+		pending_shop = ""
 		if flow != "":
 			runner.switch_flow(flow)
 		_mark = e.duplicate()
@@ -321,6 +367,17 @@ func load_save(d: Dictionary, lang := "") -> Array[Dictionary]:
 	var tail := _replay(saved_events, 0)
 	map_pos = saved_map
 	return tail
+
+
+## Какого ответа ждёт история для события журнала.
+static func _event_kind(ev: Dictionary) -> String:
+	if ev.has("battle"):
+		return "battle"
+	if ev.has("branch"):
+		return "levelup"
+	if ev.has("shop"):
+		return "shop"
+	return "choices"
 
 
 func _set_mark_if_target() -> void:
@@ -349,7 +406,7 @@ func _replay(saved: Array[Dictionary], from: int) -> Array[Dictionary]:
 		if i >= saved.size():
 			break
 		var ev: Dictionary = saved[i]
-		var fits: bool = (item.type == "battle") == ev.has("battle")
+		var fits: bool = _event_kind(ev) == ("choices" if item.type == "choices" else String(item.type))
 		if not fits:
 			push_error("Журнал не совпадает с историей на событии %d: %s" % [i, ev])
 			break

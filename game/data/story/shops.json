@@ -1,0 +1,22 @@
+{
+ "_doc": "Торговцы по тегу # shop:<id> (design/equipment-catalog.md, «Торговцы»). price — цена в серебре до скидки; discount — скидка в процентах, цена округляется до 5. for — кому вещь подходит: hero, irena, garret, velior (без ключа — всем). Покупка идёт в инвентарь отряда (StorySession.leave_shop). Расходников (зелья, масло, свитки) в бою пока нет, поэтому их здесь тоже нет.",
+ "shops": {
+  "sutler": {
+   "discount": 0,
+   "stock": [
+    {"id": "sutler_quilt", "price": 35},
+    {"id": "sutler_amulet", "price": 30},
+    {"id": "sutler_censer", "price": 35, "for": ["hero", "irena"]}
+   ]
+  },
+  "smith": {
+   "discount": 25,
+   "stock": [
+    {"id": "sutler_quilt", "price": 35},
+    {"id": "sutler_amulet", "price": 30},
+    {"id": "sutler_censer", "price": 35, "for": ["hero", "irena"]},
+    {"id": "village_mail", "price": 90, "for": ["hero", "irena", "garret"]}
+   ]
+  }
+ }
+}

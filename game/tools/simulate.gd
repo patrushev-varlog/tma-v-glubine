@@ -6,7 +6,7 @@ extends SceneTree
 ## drop — буквы врагов на карте, которых убрать; party — full, no_velior, no_irena, duo;
 ## hunt=1 — бой после завершённой охоты главы, +10% хитов врагов;
 ## battle=prologue_1,prologue_3 — свои бои из battles.json вместо тестовых боёв уровней,
-## flags=garret_ambush,garret_hunters_scared — сюжетные флаги для этих боёв).
+## flags=garret_ambush,garret_hunters_scared,ch1_choice=riot — сюжетные флаги для этих боёв).
 ## Без ключей — все уровни, классы и ветки на «Испытании» полным отрядом, с дарами и без, по 200 боёв.
 
 func _init() -> void:
@@ -27,7 +27,8 @@ func _init() -> void:
 	var darks := [false, true] if opt.dark == "both" else [opt.dark == "1"]
 	var flags := {}
 	for f in String(opt.get("flags", "")).split(",", false):
-		flags[f] = true
+		var fv := f.split("=", true, 1)
+		flags[fv[0]] = fv[1] if fv.size() == 2 else true
 	if opt.has("battle"):
 		_story_battles(opt, flags, runs, darks)
 		quit()

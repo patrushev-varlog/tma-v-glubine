@@ -36,6 +36,13 @@ static func run() -> int:
 				mid = JSON.parse_string(JSON.stringify(s.to_save()))
 		elif item.type == "battle":
 			s.win_battle(2)
+		elif item.type == "levelup":
+			# Ветка: на 2 уровне вторая, дальше снова первая — проверка смены ветки в лагере.
+			var arches := CombatData.archetypes_of(String(s.state.hero["class"]))
+			s.choose_branch(String(arches[1 if int(item.level) == 2 else 0]))
+		elif item.type == "shop":
+			var stock := Shops.stock(String(item.id))
+			s.leave_shop([[stock[0].id, "hero"]] if not stock.is_empty() else [])
 	var scenes := entered.size()
 	if scenes != s.scenes.size():
 		fails.append("сцен пройдено %d из %d" % [scenes, s.scenes.size()])

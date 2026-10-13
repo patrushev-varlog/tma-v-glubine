@@ -11,7 +11,7 @@ const SLOT_VALUE := 2.5
 static func take_turn(b: Battle, u: Combatant, use_dark := false) -> void:
 	if not u.conscious() or b.outcome != "" or u.action_used and u.bonus_used and u.speed_left == 0:
 		return
-	if u.team == 1 and not _has_active_abilities(b, u):
+	if (u.team == 1 or u.ai_ally) and not _has_active_abilities(b, u):
 		_enemy_turn(b, u)
 	else:
 		_hero_turn(b, u, use_dark)

@@ -121,8 +121,14 @@ func occupant(cell: Vector2i) -> Combatant:
 	return null
 
 
+## Отряд игрока: сторона 0 без союзников под ИИ (те — в allies_of и foes_of как обычно).
 func heroes() -> Array[Combatant]:
-	return _team(0)
+	return _team(0).filter(func(u: Combatant) -> bool: return not u.ai_ally)
+
+
+## Ходит ли участник сам: враги и союзники под ИИ.
+func ai_turn(u: Combatant) -> bool:
+	return u.team == 1 or u.ai_ally
 
 
 func enemies() -> Array[Combatant]:
