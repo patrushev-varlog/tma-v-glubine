@@ -14,6 +14,7 @@ from k3_batch6 import ISO, FLAT
 TILES = p.ROOT / "art" / "prologue" / "tiles"
 MORNING = "grey cold morning light, overcast, "
 TEMPLE = "inside a ruined village temple, dim candlelight, "
+GATE = "night, dim cold light, "  # с «mine gate» и «campfire» в начале генератор пририсовывает ворота и костёр ко всему
 SETS = {
  "village_morning": {
   "tiles": {
@@ -41,6 +42,25 @@ SETS = {
    "column": (TEMPLE + "cracked round stone column with a fallen chunk at its base", 64, 96),
    "candelabrum": (TEMPLE + "tall iron floor candelabrum with lit candles", 32, 64),
    "roof_debris": (TEMPLE + "large heap of fallen charred wooden roof beams and broken clay roof tiles lying on the floor, the heap fills the canvas", 96, 96),
+  },
+ },
+ "gate": {
+  "tiles": {
+   "floor_mud": FLAT + "dark brown-grey trampled mud with scattered gravel, wet patches, muted desaturated, night, very low contrast, seamless edges",
+   "floor_straw": FLAT + "trampled muddy earth with scattered straw and a dropped iron shackle, night, low contrast, seamless edges",
+   "floor_puddle": FLAT + "trampled muddy earth with a dark puddle of water, no fire, night, low contrast, seamless edges",
+   "floor_cobble": FLAT + "old cobblestones half buried in mud, night, low contrast, seamless edges",
+  },
+  "objects": {
+   "prison_cart": (GATE + "large wooden prison cart with an iron cage of bars on it, a dull red crown-in-circle emblem painted on the side, empty cage, the cart fills the canvas", 128, 128),
+   "crates": (GATE + "stack of three wooden supply crates and a barrel tied with rope, the stack fills the canvas", 64, 64),
+   "palisade": (GATE + "short straight section of a wooden palisade wall made of vertical sharpened logs, no fire", 64, 96),
+   "gatepost": (GATE + "tall stone gatepost of an old mine entrance with a rusted iron lantern hanging from it", 64, 128),
+   "campfire": (GATE + "small campfire of crossed logs with glowing embers and low flames, ring of stones, no walls, no gate", 64, 64),
+   "chains": (GATE + "small pile of rusty iron chains and open shackles lying on the ground, no fire, no door", 64, 48),
+   "bound_villagers": (GATE + "three captive villagers in muted brown and grey homespun clothes sitting on the ground in a row, hands bound, roped together, heads lowered, desaturated colors", 96, 96),
+   "hitching_post": (GATE + "wooden hitching post rail with a sack of supplies leaning on it", 64, 64),
+   "tent": (GATE + "small canvas army tent with a pennant showing a dull red crown-in-circle emblem", 96, 128),
   },
  },
 }

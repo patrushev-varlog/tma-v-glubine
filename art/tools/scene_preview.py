@@ -27,6 +27,15 @@ SCENES = {
           (4, 3): "fence", (4, 4): "fence", (4, 5): "fence", (5, 3): "grave", (2, 6): "cart_abandoned",
           (3, 6): "list_scrap", (6, 6): "cellar_hatch"},
     chars={(2, 4): HERO, (3, 5): ROT("oldrik", "north-west"), (5, 5): ROT("neighbor_woman", "south-west")}),
+ "gate": dict(
+    map=["pppppppp", "mmmmmmmm", "mmsmmmum", "mmmmmmmm", "mumcccmm", "mmmcccsm", "mmmcccmm", "mmmmmmmm"],
+    key={"m": "floor_mud", "s": "floor_straw", "u": "floor_puddle", "c": "floor_cobble", "p": "floor_mud"}, bg=(14, 14, 22),
+    objs={(0, 0): "palisade", (1, 0): "palisade", (2, 0): "gatepost", (5, 0): "gatepost", (6, 0): "palisade", (7, 0): "palisade",
+          (1, 2): "prison_cart", (6, 2): "tent", (3, 2): "campfire", (0, 4): "crates", (7, 5): "boulder",
+          (4, 3): "bound_villagers", (6, 4): "hitching_post", (2, 6): "list_scrap"},
+    chars={(4, 5): HERO, (3, 5): ROT("hero_cleric_f", "south-east"), (5, 6): W1 / "garret/unarmed/composited2/idle/south-east/00.png",
+           (4, 1): W1 / "overseer_chief/rotations/south-west.png", (2, 3): W1 / "overseer/rotations/south-west.png",
+           (6, 3): W1 / "skeleton_archer/rotations/south-west.png"}),
  "temple": dict(
     map=["ffffffff", "fdffffdf", "ffffffff", "fffsffff", "ffffffff", "ffffffff", "fdfffffd", "ffffffff"],
     key={"f": "floor_flagstone", "d": "floor_debris", "s": "floor_scorched"}, bg=(14, 13, 18),
