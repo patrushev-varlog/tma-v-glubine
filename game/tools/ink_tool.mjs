@@ -21,7 +21,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const GAME = path.resolve(HERE, "..");
 const REPO = path.resolve(GAME, "..");
 
-// Язык → точка входа истории. В английской переведён пролог, главы 1–5 подключены из story/ink.
+// Язык → точка входа истории. В английской переведены пролог и глава 1, главы 2–5 подключены из story/ink.
 const TARGETS = [
   { id: "game.ru", src: path.join(REPO, "story/ink/game.ink") },
   { id: "game.en", src: path.join(REPO, "story/ink-en/game.ink") },
