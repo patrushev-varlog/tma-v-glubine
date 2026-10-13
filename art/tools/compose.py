@@ -41,7 +41,7 @@ WEAPONS = {
 HERO_WEAPON = {"fighter": "longsword", "rogue": "shortsword", "cleric": "mace", "wizard": "staff"}
 # Персонажи вне классов героев: оружие, рука, держится ли как посох (вертикально, удар копьём).
 NPC_WEAPON = {"neighbor": ("pitchfork", "RIGHT ARM")}
-STANCE_POLE = {"south-east": -12.0, "north-east": 12.0}  # древко в правой руке, по другую сторону от лица
+STANCE_POLE = {"south-east": -25.0, "north-east": 25.0}  # древко в правой руке, по другую сторону от лица
 
 
 def weapon(name):
