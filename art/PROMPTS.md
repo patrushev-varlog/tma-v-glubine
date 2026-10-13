@@ -17,6 +17,8 @@
 4. **Третья волна:** иконки ~60 предметов, Darkness-варианты портрета героя, ассеты пролога и главы 5 вне прототипа (раздел 10).
 5. **Каждый ассет проходит чистку** (раздел 9): палитра, контур, точка опоры, мусорные пиксели.
 
+*Дальше по плану [review/07-next-steps.md](../review/07-next-steps.md) (поток K, 2026-10-12): портреты к демо — [art/portraits/README.md](portraits/README.md), стиль-тест на людях — [art/style-test/README.md](style-test/README.md), полный список ассетов пролога со звуком — [art/prologue/ASSETS.md](prologue/ASSETS.md).*
+
 ---
 
 ## 1. Правила стиля (одинаковые для всех ассетов)
@@ -286,13 +288,88 @@ isometric bucket of glowing coal, 32x32, STYLE_ISO
 | Активный участник | Жёлтое кольцо под ногами | 4 кадра вращения рун |
 | Ловушка Велиора | Жёлтый крест | Иконка капкана (см. 5.4) |
 
+### 3.7. Пролог: деревня Эшмур, храм, брод
+
+Локации пролога вне прототипа боя; список и порядок — [art/prologue/ASSETS.md](prologue/ASSETS.md). Бой 4 (колонна у ворот) использует тайлсет 3.1. Деревня нужна в двух видах: ночь облавы (бой 1) и утро после пожара (сцена 3) — это один набор, утренний вариант делается перекраской и заменой целых домов на сгоревшие.
+
+**Деревня, ночь облавы (бой 1):**
+```
+Пол: isometric floor tile, packed dirt village path with grass tufts and puddles, night, warm glow of a nearby fire, low contrast, seamless edges, STYLE_ISO
+Пол, вариант: isometric floor tile, trampled grass with a few fallen leaves, night, low contrast, seamless edges, STYLE_ISO
+Пол, огород: isometric floor tile, dug-up vegetable garden bed with cabbages, night, STYLE_ISO
+Край карты (Thick, 64x48): isometric ground tile with earth cross-section on the side, grass on top, STYLE_ISO
+Стена дома: isometric corner of a timber-and-wattle cottage with a thatched roof edge and a small shuttered window glowing warm, 64x96, STYLE_ISO
+Горящий дом: isometric corner of a timber-and-wattle cottage on fire, flames on the thatched roof, sparks, 64x96, STYLE_ISO
+Плетень: isometric section of a woven wattle fence, 64x64, STYLE_ISO
+Поленница: isometric stacked firewood under a small lean-to roof, 64x64, STYLE_ISO
+Колодец: isometric old stone village well with a wooden crank and bucket, 64x64, STYLE_ISO
+Телега с короной: isometric wooden prison cart with iron cage bars, a painted crown-in-circle emblem on the side (как в 3.1, один ассет)
+Колокольня: isometric wooden village bell tower base with a rope, 64x96, STYLE_ISO
+Вилы и грабли: isometric pitchfork and rake leaning on a fence post, 32x48, STYLE_ISO
+```
+
+**Деревня, утро после облавы (сцена 3, осмотр без боя):** перекраска ночных тайлов в холодный серый утренний свет и
+```
+Сгоревший дом: isometric burned cottage ruins with charred beams and smoldering ashes, thin smoke, grey morning light, 64x96, STYLE_ISO
+Пепел на полу: isometric floor tile, grey ash and charred straw over dirt, morning, low contrast, seamless edges, STYLE_ISO
+Свежая могила: isometric fresh grave mound with a simple wooden marker, 64x32, STYLE_ISO
+Брошенная телега: isometric abandoned broken cart with one wheel off, a crown-in-circle emblem on the side, 64x64, STYLE_ISO
+Обрывок списка: isometric torn sheet of paper with neat handwritten names lying in the mud, tiny, 32x16, STYLE_ISO
+Колея: isometric floor tile, deep cart ruts in mud leading in one direction, STYLE_ISO
+Погреб: isometric wooden cellar hatch in the ground, half open, 64x32, STYLE_ISO
+```
+
+**Разрушенный храм, внутри (бой 2):**
+```
+Пол: isometric floor tile, cracked temple flagstones with faded painted pattern, candle wax drips, low contrast, seamless edges, STYLE_ISO
+Пол, вариант: isometric floor tile, temple flagstones with scattered broken roof tiles and dust, STYLE_ISO
+Пол у алтаря (зона Ирены): isometric floor tile, flagstones with a scorched circle burned into the stone, STYLE_ISO
+Скамья: isometric wooden church pew, some knocked over, 64x64, STYLE_ISO
+Сломанная скамья: isometric broken wooden pew split in half, 64x64, STYLE_ISO
+Алтарь: isometric stone altar with a carved candle-flame symbol, many melted candles, 64x64, STYLE_ISO
+Колонна: isometric stone column, cracked, with a fallen chunk at its base, 64x96, STYLE_ISO
+Подсвечник: isometric tall iron candelabrum with lit candles, 32x64, STYLE_ISO
+Обломки кровли: isometric pile of fallen roof beams and broken tiles, 64x64, STYLE_ISO
+```
+
+**Брод у ручья, вечер (бой 3):**
+```
+Пол: isometric floor tile, wet riverside grass with pebbles, dusk, low contrast, seamless edges, STYLE_ISO
+Мелководье (проходимо): isometric floor tile, shallow clear stream water over pebbles with a few ripples, dusk light, STYLE_ISO
+Глубокая вода (непроходимо): isometric floor tile, darker deeper stream water with a current, STYLE_ISO
+Берег: isometric floor tile, muddy stream bank with reeds, STYLE_ISO
+Костёр охотников: isometric campfire with logs, a cooking pot on a tripod, bedrolls nearby, 64x64, STYLE_ISO
+Кусты (укрытие засады): isometric dense dark green bushes, 64x64, STYLE_ISO
+Поваленное дерево: isometric fallen tree trunk with moss, 64x64 (лежит по диагонали ромба), STYLE_ISO
+Валун: isometric large mossy boulder (как в 3.1, один ассет)
+Ива: isometric willow tree trunk with drooping branches, 64x128, STYLE_ISO
+```
+
+**Колонна у ворот (бой 4), дополнение к 3.1:** в варианте «соседи» бой идёт у костров колонны, поэтому кроме 3.1 нужны
+```
+Связанные соседи: isometric group of three bound villagers sitting on the ground by a fire, roped together, 64x64, STYLE_ISO (декор, без коллизии; на клетку не ставится)
+Коновязь: isometric hitching post with a sack of supplies, 64x64, STYLE_ISO
+Палатка надсмотрщиков: isometric small canvas tent with a crown-in-circle pennant, 64x96, STYLE_ISO
+```
+
+**Дом героя (сцена 1, без боя):** если сцена 1 показывается картой, а не только диалогом, нужен маленький интерьер
+```
+Пол: isometric floor tile, worn wooden floorboards, warm hearth light, seamless edges, STYLE_ISO
+Очаг: isometric stone hearth with a low fire and a hanging kettle, 64x96, STYLE_ISO
+Стол: isometric rough wooden table with two stools, a bowl and a candle, 64x64, STYLE_ISO
+Ведро под течью: isometric wooden bucket catching drips from the roof, small puddle, 32x32, STYLE_ISO
+Полка класса: isometric wooden shelf with a few old books and a candle (волшебник) / a sword hanging on a wall peg (воин), 64x96, STYLE_ISO
+```
+
 ---
 
 ## 4. Персонажи
 
 Сначала для каждого персонажа делаем разворот (RD `character_turnaround` или PixelLab character 8 directions), утверждаем внешность, потом анимации.
 
-Описания внешности спутников и врагов ниже — предложение. В сюжете зафиксированы только: Гаррет — бывший надсмотрщик с выжженной на щеке короной, перечёркнутой ножом; Велиор — в сером плаще без знаков; Ирена — жрица разрушенного храма. Остальное можно править.
+Описания внешности спутников и врагов ниже — предложение. В сюжете зафиксированы только: Гаррет — бывший надсмотрщик, дезертир; Велиор — в сером плаще без знаков, на щеке выжжена корона, перечёркнутая ножом (глава 1, «Клетка» и лагерь: клеймо поставил сам Король, перечеркнул сам Велиор); Ирена — жрица разрушенного храма, в бою с посохом (пролог, сцена 4). Остальное можно править.
+
+*Поправка 2026-10-12:* в первой редакции клеймо по ошибке было у Гаррета. Спрайты первой волны это не задело: шрама при 64 px не видно.
 
 ### 4.1. Герой: 4 класса × 2 ветки
 
@@ -314,9 +391,9 @@ isometric bucket of glowing coal, 32x32, STYLE_ISO
 ### 4.2. Спутники
 
 ```
-Ирена: a young human woman priestess of a ruined village temple, soot-stained pale grey habit with the hood down, chain shirt underneath, dark braided hair, iron mace, wooden prayer beads, a small bronze bell on her belt, pale gold accents, grieving but steady, STYLE_CHAR
-Гаррет: a big broad-shouldered human man in his forties, deserter mine overseer, heavy chainmail under a black overseer tabard with the crown emblem torn off, longsword and a battered kite shield, short grey-streaked hair, stubble, a branded crown on his left cheek crossed out by a knife scar, rust-orange scarf, STYLE_CHAR
-Велиор: a lean wiry human scout, grey hooded cloak with no insignia, dark leather armor, short sword, belt with alchemical bomb flasks and a coil of trap wire, sharp pale face, swamp-green inner lining, watchful, STYLE_CHAR
+Ирена: a young human woman priestess of a ruined village temple, soot-stained pale grey habit with the hood down, chain shirt underneath, dark braided hair, wooden processional staff with an iron head, wooden prayer beads, a small bronze bell on her belt, pale gold accents, grieving but steady, STYLE_CHAR
+Гаррет: a big broad-shouldered human man in his forties, deserter mine overseer, heavy chainmail under a black overseer tabard with the crown emblem torn off, longsword and a battered kite shield, short grey hair and a short grey beard, weathered face, rust-orange scarf, STYLE_CHAR
+Велиор: a lean wiry human scout, grey hooded cloak with no insignia, dark leather armor, short sword, belt with alchemical bomb flasks and a coil of trap wire, sharp pale face with a branded crown on one cheek crossed out by a knife scar, swamp-green inner lining, watchful, STYLE_CHAR
 ```
 
 ### 4.3. Враги (по уровням прототипа)
@@ -370,6 +447,30 @@ down (отряд): staggers, drops to one knee, then collapses to the ground wou
 death (люди): falls backward to the ground and lies still, 5 frames
 death (нежить): body collapses and crumbles into a pile of bones and dust, 6 frames
 prone: lying on the ground on the side, trying to get up, single frame
+```
+
+### 4.5. Персонажи пролога сверх первой волны
+
+Делаются по схеме 2a. Состав и анимации — [art/prologue/ASSETS.md](prologue/ASSETS.md).
+
+```
+Прихожанин-мертвец (бой 2): a freshly risen village parishioner corpse in a simple clean Sunday tunic and a wool shawl, grey-green skin, slack jaw, empty eyes with a faint green glint, shambling pose, STYLE_CHAR
+Прихожанка-мертвец (бой 2): a freshly risen old village woman corpse in a dark Sunday dress and a white head scarf, grey-green skin, empty eyes with a faint green glint, shambling pose, STYLE_CHAR
+Арбалетчик-надсмотрщик (бой 3): a human mine overseer with a loaded crossbow, black padded jacket with a dull-red iron crown-in-circle badge, bolt quiver on the hip, leather cap, STYLE_CHAR
+Сосед с вилами (бой 1, добивает последнего мертвеца): a middle-aged male villager in a nightshirt and boots, holding a pitchfork, scared but resolute, STYLE_CHAR
+Супруга героя (сцены 1–2): a woman in her early thirties, villager, plain homespun dress, dark wool shawl, chestnut hair loosely pinned up, STYLE_CHAR
+Супруг героя (сцены 1–2): a man in his early thirties, villager, plain linen shirt, dark wool vest, short chestnut hair, short beard, STYLE_CHAR
+Олдрик (сцена 3): an old villager man in his seventies, wool cap, sheepskin vest, soot-stained face, white stubble, slightly hunched, STYLE_CHAR
+Соседка (сцены 3, 6): a village woman in a plain dress and apron, head scarf, soot-stained, STYLE_CHAR
+```
+
+Снаряд арбалета: `single short crossbow bolt in flight, 16x16, STYLE_FX`.
+
+Позы-состояния (один кадр, по схеме 2a как `create_character_state` от готовой основы):
+```
+Гаррет связан (сцена 5): lying on the ground on his side, hands tied behind the back, ropes around the ankles
+Брандт связан (сцена 7): sitting on the ground, hands tied in front, wounded, head lowered
+Супруг в телеге (сцена 2): standing behind the cage bars of the cart, hands on the bars (поверх ассета телеги)
 ```
 
 ---
@@ -625,27 +726,88 @@ pixel art game UI element, dark fantasy, weathered dark iron and old stone with 
 
 ## 8. Портреты
 
-По DESIGN.md: универсальная модель (Midjourney, GPT Image, Flux) → пикселизация → чистка в Aseprite. Портрет генерировать в 512–1024 px, затем уменьшить до 128×128 ближайшим соседом и пропустить через палитру (RD `fix_pixel_art`/palette converter или Aseprite «Color Mode → Indexed»). Для 64×64 в панели боя делать отдельную ручную версию с 128, а не просто уменьшать.
+По DESIGN.md: универсальная модель (Midjourney, GPT Image, Flux) → пикселизация → чистка в Aseprite. Схема проверена на портрете волшебника (срез стека, 2026-10-12): Midjourney, 1254 px → [`art/tools/portrait.py`](tools/portrait.py) → 128×128 и 64×64 в Resurrect 64 → Aseprite. Порядок работы, список портретов к демо и состояние каждого — [art/portraits/README.md](portraits/README.md).
 
-**STYLE_PORTRAIT** (для универсальной модели):
+### 8.1. Правила кадра (одинаковые для всех портретов)
+
+Портреты одного размера стоят в одной рамке интерфейса и в одной панели диалога, а слои Тьмы и повязка травмы ложатся по координатам лица. Поэтому кадр у всех один, как у волшебника:
+
+- погрудный портрет, лицо повёрнуто на три четверти **вправо** (персонаж смотрит в сторону текста диалога);
+- голова в верхней половине кадра, глаза примерно на трети высоты сверху, макушка почти касается верхнего края;
+- плечи уходят за нижний край, руки и оружие в кадр не попадают, кроме верхушки посоха у края;
+- **ровный однотонный фон**: скрипт отделяет фигуру по цвету фона. У волшебника фон тёмный и сливается с волосами, поэтому там фон чистится руками;
+- квадрат 1:1, не меньше 1024 px.
+
+### 8.2. Хвост промпта и параметры
+
+**STYLE_PORTRAIT** (обновлён 2026-10-12: ровный фон и правила кадра):
 ```
-bust portrait, three-quarter view facing right, dark fantasy, painterly but simple shapes, flat color areas, strong rim light from the upper left torchlight, dark neutral background, muted desaturated palette, designed to be converted to 128x128 pixel art
+bust portrait, head and shoulders, face turned three-quarters to the right, eyes at one third from the top of the frame, dark fantasy, painterly but simple shapes, flat color areas, strong rim light from the upper left torchlight, cool shadows, muted desaturated palette, plain flat dusty teal background with no gradient and no scenery, no hands, no text, designed to be converted to 128x128 pixel art
 ```
 
-Сразу после пикселизации портрет можно дорабатывать в RD стилем `default` с `input_image` (strength 0.4–0.5) и `input_palette`.
+**Midjourney** (так делался волшебник): в конце каждого промпта
+```
+--ar 1:1 --v 7 --style raw --sref <ссылка на портрет волшебника> --sw 150
+```
+`--sref` с портретом волшебника держит одну манеру у всех персонажей. Ссылку на картинку волшебника можно скопировать в Midjourney (правый клик → Copy image address) или загрузить `art/portraits/source/hero_wizard_m.png` как Style Reference. Если персонаж начинает походить на волшебника лицом, снизить `--sw` до 80–100.
 
-| Персонаж | Эмоции (по DESIGN.md 4–5) | Описание |
-|---|---|---|
-| Герой ×4 класса, м/ж | нейтрально, решимость, боль, гнев, скорбь | по описаниям из 4.1 |
-| Ирена | нейтрально, сострадание, тревога, гнев, скорбь | по 4.2 |
-| Гаррет | нейтрально, усмешка, мрачность, гнев, стыд | по 4.2, шрам-корона на левой щеке хорошо виден |
-| Велиор | нейтрально, ирония, настороженность, вина, страх | по 4.2 |
+**Если Midjourney нет:** Flux или GPT Image с тем же промптом; в GPT Image приложить портрет волшебника и написать «in the same painting style as the attached image, different person».
 
-**Портреты героя по Тьме** (DESIGN.md, «Механика Тьмы»): тот же портрет в 4 версиях, делается дорисовкой в Aseprite, а не новой генерацией, чтобы лицо не «поплыло».
-- Тень: исходный.
-- Сумрак: тени под глазами, кожа чуть серее.
-- Мрак: потемневшие вены у висков, радужка темнее, свет ложится холоднее.
-- Бездна: бледная кожа, чёрно-фиолетовые прожилки, глаза с бледно-зелёным отблеском, как у послушников.
+### 8.3. Эмоции
+
+Эмоция — не новая генерация, а **правка лица в той же картинке**, иначе голова сдвинется и слои Тьмы не лягут. В Midjourney: открыть утверждённый нейтральный портрет → **Editor** (или **Vary Region**) → выделить только лицо от бровей до подбородка → в промпте заменить описание эмоции. Всё остальное (волосы, одежда, кадр) не трогать.
+
+Эмоции берутся из тегов `# mood:` в Ink: что стоит в тексте, то и рисуем. В прологе встречаются:
+
+| Тег | Добавка к промпту |
+|---|---|
+| без тега (нейтрально) | `calm neutral expression, steady gaze` |
+| `smile` | `a faint warm smile, softened eyes` |
+| `sad` | `sad expression, brows drawn up, eyes lowered, lips pressed together` |
+| `tense` | `tense expression, brows drawn together, jaw clenched, wary eyes` |
+| `away` | `looking away and down, avoiding eye contact, head slightly lowered` |
+
+Эмоции глав 1–5 из таблицы DESIGN.md (гнев, стыд, страх, вина, ирония) добавляются, когда до них дойдёт очередь, той же правкой лица.
+
+### 8.4. Промпты персонажей
+
+Каждый промпт = описание + эмоция из 8.3 + STYLE_PORTRAIT + параметры Midjourney. Внешность совпадает со спрайтами первой волны (`art/wave1/characters/*/rotations/`): у кого спрайт уже есть, цвет волос и одежды взяты с него.
+
+**Герой.** В прологе у героя первый уровень и ещё нет ветки, поэтому портрет показывает класс, а не ветку; акцент холодный синий у всех. Каждый класс в двух вариантах: `man` / `woman`.
+```
+Волшебник: bust portrait of a {man|woman} in {his|her} early thirties, village scholar turned wizard, long dark-blue robe with burned singed edges, hood down, dark hair, {short beard|hair tied back with loose strands}, tired intelligent eyes, leather satchel strap across the chest, the ember-glowing crystal top of a quarterstaff at the left edge of the frame
+Воин: bust portrait of a {man|woman} in {his|her} early thirties, villager who once served as a soldier, dented steel breastplate over a padded gambeson, short dark-blue cloak pinned at the shoulder, short brown hair, {stubble|hair cut short at the neck}, a pale old scar through one eyebrow, determined eyes
+Плут: bust portrait of a lean {man|woman} in {his|her} early thirties, dark leather armor with the hood down, dark-blue hood lining, a dark face scarf pulled down around the neck, short dark hair, narrow wary eyes, a thin scar at the corner of the mouth, the hilts of throwing knives on a chest strap
+Жрец: bust portrait of a {man|woman} in {his|her} early thirties, village priest, grey-white vestments over a chainmail shirt, dark-blue stole over the shoulders, a small wooden candle-flame pendant on a cord, {close-cropped hair|hair under a simple grey head scarf}, calm tired kind face
+```
+
+**Спутники.**
+```
+Ирена: bust portrait of a young woman in her mid twenties, priestess of a ruined village temple, soot-stained pale grey habit with the hood down, chain shirt underneath, dark hair in a single braid over the shoulder, wooden prayer beads, thin pale gold embroidery at the collar, soot on one cheek, grieving but steady eyes
+Гаррет: bust portrait of a big broad-shouldered man in his late forties, deserter mine overseer, heavy chainmail under a black overseer tabard with a torn pale patch where a badge was ripped off, short grey hair and a short grey beard, weathered face, once-broken nose, rust-orange scarf, heavy-lidded tired eyes
+Велиор: bust portrait of a lean wiry man in his thirties, scout and former royal agent, grey hooded cloak with no insignia, hood up but the face fully visible, swamp-green inner lining, dark leather armor, sharp pale face, a crown branded into the cheek facing the viewer and crossed out by a deep knife scar, watchful ironic eyes
+```
+У Велиора клеймо рисуется на щеке, обращённой к зрителю: в тексте сторона не названа.
+
+**Супруг героя** (вводит игрок, по умолчанию Эйла или Эйвин). Главное лицо сцены 1 пролога и финала: в прологе 27 реплик и все пять эмоций из 8.3.
+```
+Эйла: bust portrait of a woman in her early thirties, villager, plain homespun dress with a dark wool shawl over the shoulders, chestnut hair loosely pinned up with strands falling, kind tired face, gentle eyes that hold a hidden sorrow
+Эйвин: bust portrait of a man in his early thirties, villager, plain linen shirt with a dark wool vest, short chestnut hair, short beard, kind tired face, gentle eyes that hold a hidden sorrow
+```
+
+**Второстепенные лица пролога** (один портрет, у Олдрика ещё `sad`).
+```
+Брандт: bust portrait of a tall man in his fifties, overseer captain, chain shirt under a long black coat with dull red trim, a silver crown-in-circle badge on the chest, grey hair combed back, clean-shaven, thin lips, cold tired eyes
+Олдрик: bust portrait of an old man in his seventies, village survivor, soot-stained face, white stubble, wool cap, worn sheepskin vest, red-rimmed wet eyes
+```
+
+### 8.5. Портреты героя по Тьме и травма
+
+Тьма на портрете — композит, а не новые картинки (DESIGN.md, раздел 4): один базовый портрет, три накопительных слоя (Сумрак — тени под глазами; Мрак — вены у висков и тёмная радужка; Бездна — прожилки и бледно-зелёный отблеск глаз) и шейдер, который бледнит четыре тона кожи. Слои рисует `art/tools/portrait.py` по координатам лица из `art/portraits/portraits.json`, затем они дочищаются в Aseprite. Сборка в игре — `prototypes/stack-slice/scripts/portrait/dark_portrait.gd`.
+
+**В демо слои не видны:** за пролог Тьма набирает не больше 20 (DESIGN.md, таблица Тьмы), а Сумрак начинается с 25. Слои нужны к главе 1; сейчас их достаточно у волшебника как образца. Условие, которое важно уже сейчас: у всех эмоций одной внешности лицо стоит на тех же пикселях (8.3).
+
+Повязка травмы («Испытание», DESIGN.md, раздел 3) — такой же слой поверх базового портрета, один на внешность; рисуется в Aseprite по тем же координатам лица.
 
 ---
 
@@ -671,13 +833,10 @@ bust portrait, three-quarter view facing right, dark fantasy, painterly but simp
 
 ## 10. Дальше прототипа (по сюжету, вне текущих 5 боёв)
 
-Короткие промпты, чтобы список был полным, когда дойдёт очередь.
+Короткие промпты, чтобы список был полным, когда дойдёт очередь. Пролог (деревня, храм, брод, его персонажи) перенесён в разделы 3.7 и 4.5.
 
 ```
-Деревня Эшмур, пролог: isometric village floor tile, packed dirt path with grass tufts, night, STYLE_ISO; isometric timber-and-wattle cottage wall corner with a thatched roof edge, 64x96, STYLE_ISO; isometric burned cottage ruins with smoldering beams, 64x96, STYLE_ISO; isometric wooden village bell tower base, 64x96, STYLE_ISO
-Разрушенный храм, пролог: isometric cracked temple floor tile with faded painted flagstones, STYLE_ISO; isometric broken stone pew, 64x64, STYLE_ISO; isometric toppled altar with a candle-flame symbol, 64x64, STYLE_ISO
 Дно, глава 5: isometric floor tile of black glassy stone with faint violet veins, cold silence, STYLE_ISO; isometric enormous circular seal stone with dwarven runes and a crack, center piece 192x96, STYLE_ISO
-Поднятые прихожане (бой в храме): a risen village parishioner corpse in a simple Sunday tunic, STYLE_CHAR
 Контрабандист Ренны Сол: a human smuggler in an oiled leather coat, hooked knife, lantern, STYLE_CHAR
 Страж-конструкт Молчащих: a dwarven stone-and-bronze guardian construct, hooded statue face with a finger to its lips, glowing rune core, 96x96, STYLE_CHAR
 Мастер плоти: a human flesh master in a leather apron and a bone mask, surgical hooks, STYLE_CHAR
