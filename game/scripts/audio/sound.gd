@@ -141,6 +141,18 @@ func _sfx_variants(id: String) -> Array:
 	return out
 
 
+func _stream(kind: String, id: String) -> AudioStream:
+	if id == "":
+		return null
+	var path := "res://audio/%s/%s.ogg" % [kind, id]
+	if not ResourceLoader.exists(path):
+		return null
+	var s: AudioStream = load(path)
+	if kind != "sfx" and s is AudioStreamOggVorbis:
+		(s as AudioStreamOggVorbis).loop = true
+	return s
+
+
 ## Что сейчас должно звучать (для тестов и отладки): {"music", "ambient"}.
 func now_playing() -> Dictionary:
 	return {"music": _music_id, "ambient": _ambient_id}

@@ -1,0 +1,552 @@
+{
+ "sources": {
+  "bones": {
+   "url": "https://opengameart.org/sites/default/files/bones_rattle.zip",
+   "page": "https://opengameart.org/content/bones-rattle",
+   "title": "Bones rattle",
+   "author": "congusbongus",
+   "license": "CC0"
+  },
+  "cure": {
+   "url": "https://opengameart.org/sites/default/files/curemagic.zip",
+   "page": "https://opengameart.org/content/cure-magic",
+   "title": "Cure Magic",
+   "author": "Someoneman",
+   "license": "CC0"
+  },
+  "dark": {
+   "url": "https://opengameart.org/sites/default/files/dark_magic.7z",
+   "page": "https://opengameart.org/content/3-dark-magic-spells",
+   "title": "3 dark magic spells",
+   "author": "qubodup",
+   "license": "CC0"
+  },
+  "fleshy": {
+   "url": "https://opengameart.org/sites/default/files/fleshy_fight_sounds.zip",
+   "page": "https://opengameart.org/content/fleshy-fight-sounds",
+   "title": "Fleshy Fight Sounds",
+   "author": "will_leamon",
+   "license": "OGA-BY 3.0"
+  },
+  "horn": {
+   "url": "https://opengameart.org/sites/default/files/theircoming3_0.ogg",
+   "page": "https://opengameart.org/content/their-coming-generic-horn-sound",
+   "title": "Their Coming (generic horn sound)",
+   "author": "StumpyStrust",
+   "license": "CC0"
+  },
+  "jc_fx": {
+   "url": "https://opengameart.org/sites/default/files/fantasy_sfx_pack_vol_1.7z",
+   "page": "https://opengameart.org/content/jc-sounds-fantasy-sfx-pack-vol-1",
+   "title": "Fantasy SFX Pack Vol 1",
+   "author": "JC Sounds",
+   "license": "CC-BY 4.0"
+  },
+  "k_impact": {
+   "url": "https://kenney.nl/media/pages/assets/impact-sounds/87b4ddecda-1677589768/kenney_impact-sounds.zip",
+   "page": "https://kenney.nl/assets/impact-sounds",
+   "title": "Impact Sounds",
+   "author": "Kenney",
+   "license": "CC0"
+  },
+  "k_rpg": {
+   "url": "https://kenney.nl/media/pages/assets/rpg-audio/8e99002d76-1677590336/kenney_rpg-audio.zip",
+   "page": "https://kenney.nl/assets/rpg-audio",
+   "title": "RPG Audio",
+   "author": "Kenney",
+   "license": "CC0"
+  },
+  "k_ui": {
+   "url": "https://kenney.nl/media/pages/assets/ui-audio/490d233f68-1677590494/kenney_ui-audio.zip",
+   "page": "https://kenney.nl/assets/ui-audio",
+   "title": "UI Audio",
+   "author": "Kenney",
+   "license": "CC0"
+  },
+  "leohpaz_heal": {
+   "url": "https://opengameart.org/sites/default/files/8_rpg_heals_buffs_sfx_samples.zip",
+   "page": "https://opengameart.org/content/8-heals-and-buffs-sfx",
+   "title": "8 Heals and Buffs SFX",
+   "author": "leohpaz",
+   "license": "CC-BY 4.0"
+  },
+  "leohpaz_magic": {
+   "url": "https://opengameart.org/sites/default/files/8_rpg_battle_magic_sfx_free_samples.zip",
+   "page": "https://opengameart.org/content/8-magic-attacks",
+   "title": "8 Magic Attacks",
+   "author": "leohpaz",
+   "license": "CC-BY 4.0"
+  },
+  "lrsf_fantasy": {
+   "url": "https://opengameart.org/sites/default/files/Fantasy%20Sound%20Library.zip",
+   "page": "https://opengameart.org/content/fantasy-sound-effects-library",
+   "title": "Fantasy Sound Effects Library",
+   "author": "Little Robot Sound Factory (www.littlerobotsoundfactory.com)",
+   "license": "CC-BY 3.0"
+  },
+  "lrsf_horror": {
+   "url": "https://opengameart.org/sites/default/files/Horror%20Sound%20Library.zip",
+   "page": "https://opengameart.org/content/horror-sound-effects-library",
+   "title": "Horror Sound Effects Library",
+   "author": "Little Robot Sound Factory (www.littlerobotsoundfactory.com)",
+   "license": "CC-BY 3.0"
+  },
+  "medieval1": {
+   "url": "https://opengameart.org/sites/default/files/medieval_sfx_textures_1_of_2.7z",
+   "page": "https://opengameart.org/content/medieval-sound-effects-weapon-textures",
+   "title": "Medieval sound effects - Weapon Textures",
+   "author": "MedicineStorm",
+   "license": "CC0"
+  },
+  "medieval2": {
+   "url": "https://opengameart.org/sites/default/files/medieval_sfx_textures_2_of_2.7z",
+   "page": "https://opengameart.org/content/medieval-sound-effects-weapon-textures",
+   "title": "Medieval sound effects - Weapon Textures",
+   "author": "MedicineStorm",
+   "license": "CC0"
+  },
+  "slime": {
+   "url": "https://opengameart.org/sites/default/files/water-splash-slime-sfx.zip",
+   "page": "https://opengameart.org/content/40-cc0-water-splash-slime-sfx",
+   "title": "40 CC0 water / splash / slime SFX",
+   "author": "rubberduck",
+   "license": "CC0"
+  },
+  "smite": {
+   "url": "https://opengameart.org/sites/default/files/Magic%20Smite.wav",
+   "page": "https://opengameart.org/content/magic-smite",
+   "title": "Magic Smite",
+   "author": "spookymodem",
+   "license": "CC-BY 3.0"
+  },
+  "swishes": {
+   "url": "https://opengameart.org/sites/default/files/swishes.zip",
+   "page": "https://opengameart.org/content/swishes-sound-pack",
+   "title": "Swishes Sound Pack",
+   "author": "artisticdude",
+   "license": "CC0"
+  },
+  "voices": {
+   "url": "https://opengameart.org/sites/default/files/Voice%20Effects%20Zombie-Skeleton-Monster%20Human%20Male.zip",
+   "page": "https://opengameart.org/content/zombie-skeleton-monster-voice-effects",
+   "title": "Zombie / Skeleton / Monster Voice Effects",
+   "author": "ArcadeParty",
+   "license": "CC0"
+  },
+  "zombies": {
+   "url": "https://opengameart.org/sites/default/files/zombies.zip",
+   "page": "https://opengameart.org/content/zombies-sound-pack",
+   "title": "Zombies Sound Pack",
+   "author": "artisticdude",
+   "license": "CC0"
+  },
+  "crowd": {
+   "url": "https://opengameart.org/sites/default/files/crowd_shouting_0.ogg",
+   "page": "https://opengameart.org/content/crowd-shoutingspeaking-ambience",
+   "title": "Crowd Shouting/Speaking Ambience",
+   "author": "StarNinjas",
+   "license": "CC0"
+  },
+  "drips": {
+   "url": "https://opengameart.org/sites/default/files/atmosbasement.mp3_.flac",
+   "page": "https://opengameart.org/content/dripping-water-loop",
+   "title": "Dripping water loop",
+   "author": "qubodup",
+   "license": "CC0"
+  },
+  "dungeon": {
+   "url": "https://opengameart.org/sites/default/files/dungeon_ambient_1_0.ogg",
+   "page": "https://opengameart.org/content/loopable-dungeon-ambience",
+   "title": "Loopable Dungeon Ambience",
+   "author": "JaggedStone",
+   "license": "CC0"
+  },
+  "jc_nature": {
+   "url": "https://opengameart.org/sites/default/files/nature_ambient_pack_vol_1_-_mp3.7z",
+   "page": "https://opengameart.org/content/jc-sounds-nature-ambient-pack-vol-1",
+   "title": "Nature Ambient Pack Vol 1",
+   "author": "JC Sounds",
+   "license": "CC-BY 4.0"
+  },
+  "wind": {
+   "url": "https://opengameart.org/sites/default/files/wind1.wav",
+   "page": "https://opengameart.org/content/wind1",
+   "title": "wind1",
+   "author": "Luke.RUSTLTD",
+   "license": "CC0"
+  },
+  "dark_descent": {
+   "url": "https://opengameart.org/sites/default/files/Dark%20Descent_0.mp3",
+   "page": "https://opengameart.org/content/dark-descent",
+   "title": "Dark Descent",
+   "author": "Matthew Pablo (www.matthewpablo.com)",
+   "license": "CC-BY 3.0"
+  },
+  "fight": {
+   "url": "https://opengameart.org/sites/default/files/zander_noriega-fight_them_until_we_cant.zip",
+   "page": "https://opengameart.org/content/fight-them-until-we-cant",
+   "title": "Fight Them Until We Can't",
+   "author": "Zander Noriega",
+   "license": "CC-BY 3.0"
+  },
+  "lament": {
+   "url": "https://opengameart.org/sites/default/files/Lament_for_a_Warriors_Soul_REUPLOAD.mp3",
+   "page": "https://opengameart.org/content/fantasy-lament-for-a-warriors-soul",
+   "title": "Fantasy: Lament for a Warrior's Soul",
+   "author": "RandomMind",
+   "license": "CC0"
+  }
+ },
+ "files": {
+  "sfx/ui_click_1.ogg": [
+   "k_ui"
+  ],
+  "sfx/ui_click_2.ogg": [
+   "k_ui"
+  ],
+  "sfx/ui_hover_1.ogg": [
+   "k_ui"
+  ],
+  "sfx/ui_hover_2.ogg": [
+   "k_ui"
+  ],
+  "sfx/page_turn_1.ogg": [
+   "k_rpg"
+  ],
+  "sfx/page_turn_2.ogg": [
+   "k_rpg"
+  ],
+  "sfx/page_turn_3.ogg": [
+   "k_rpg"
+  ],
+  "sfx/book.ogg": [
+   "k_rpg"
+  ],
+  "sfx/journal_1.ogg": [
+   "k_rpg"
+  ],
+  "sfx/journal_2.ogg": [
+   "k_rpg"
+  ],
+  "sfx/save.ogg": [
+   "k_rpg"
+  ],
+  "sfx/coin_1.ogg": [
+   "k_rpg"
+  ],
+  "sfx/coin_2.ogg": [
+   "k_rpg"
+  ],
+  "sfx/pickup_1.ogg": [
+   "k_rpg"
+  ],
+  "sfx/pickup_2.ogg": [
+   "k_rpg"
+  ],
+  "sfx/cloth_1.ogg": [
+   "k_rpg"
+  ],
+  "sfx/cloth_2.ogg": [
+   "k_rpg"
+  ],
+  "sfx/cloth_3.ogg": [
+   "k_rpg"
+  ],
+  "sfx/swing_1.ogg": [
+   "medieval2"
+  ],
+  "sfx/swing_2.ogg": [
+   "medieval2"
+  ],
+  "sfx/swing_3.ogg": [
+   "medieval2"
+  ],
+  "sfx/swing_4.ogg": [
+   "medieval2"
+  ],
+  "sfx/miss_1.ogg": [
+   "swishes"
+  ],
+  "sfx/miss_2.ogg": [
+   "swishes"
+  ],
+  "sfx/miss_3.ogg": [
+   "swishes"
+  ],
+  "sfx/throw_1.ogg": [
+   "swishes"
+  ],
+  "sfx/throw_2.ogg": [
+   "swishes"
+  ],
+  "sfx/whip.ogg": [
+   "swishes"
+  ],
+  "sfx/hit_blade_1.ogg": [
+   "fleshy"
+  ],
+  "sfx/hit_blade_2.ogg": [
+   "fleshy"
+  ],
+  "sfx/hit_blade_3.ogg": [
+   "lrsf_horror"
+  ],
+  "sfx/hit_blade_4.ogg": [
+   "lrsf_horror"
+  ],
+  "sfx/hit_blunt_1.ogg": [
+   "fleshy"
+  ],
+  "sfx/hit_blunt_2.ogg": [
+   "fleshy"
+  ],
+  "sfx/hit_blunt_3.ogg": [
+   "fleshy"
+  ],
+  "sfx/hit_claw_1.ogg": [
+   "fleshy"
+  ],
+  "sfx/hit_claw_2.ogg": [
+   "fleshy"
+  ],
+  "sfx/hit_bone_1.ogg": [
+   "lrsf_horror"
+  ],
+  "sfx/hit_bone_2.ogg": [
+   "lrsf_horror"
+  ],
+  "sfx/hit_bone_3.ogg": [
+   "lrsf_horror"
+  ],
+  "sfx/bow_shot_1.ogg": [
+   "medieval1"
+  ],
+  "sfx/bow_shot_2.ogg": [
+   "medieval1"
+  ],
+  "sfx/bow_shot_3.ogg": [
+   "jc_fx"
+  ],
+  "sfx/crossbow_shot_1.ogg": [
+   "medieval1"
+  ],
+  "sfx/crossbow_shot_2.ogg": [
+   "medieval1"
+  ],
+  "sfx/arrow_hit_1.ogg": [
+   "jc_fx"
+  ],
+  "sfx/arrow_hit_2.ogg": [
+   "jc_fx"
+  ],
+  "sfx/body_fall_1.ogg": [
+   "k_impact"
+  ],
+  "sfx/body_fall_2.ogg": [
+   "k_impact"
+  ],
+  "sfx/body_fall_3.ogg": [
+   "k_impact"
+  ],
+  "sfx/bones_collapse_1.ogg": [
+   "bones"
+  ],
+  "sfx/bones_collapse_2.ogg": [
+   "bones"
+  ],
+  "sfx/bones_collapse_3.ogg": [
+   "bones"
+  ],
+  "sfx/undead_groan_1.ogg": [
+   "zombies"
+  ],
+  "sfx/undead_groan_2.ogg": [
+   "zombies"
+  ],
+  "sfx/undead_groan_3.ogg": [
+   "zombies"
+  ],
+  "sfx/undead_groan_4.ogg": [
+   "zombies"
+  ],
+  "sfx/undead_groan_5.ogg": [
+   "zombies"
+  ],
+  "sfx/undead_death_1.ogg": [
+   "voices"
+  ],
+  "sfx/undead_death_2.ogg": [
+   "voices"
+  ],
+  "sfx/undead_death_3.ogg": [
+   "voices"
+  ],
+  "sfx/shout_1.ogg": [
+   "voices"
+  ],
+  "sfx/shout_2.ogg": [
+   "voices"
+  ],
+  "sfx/dash_1.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/dash_2.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/trap_1.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/trap_2.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/spawn.ogg": [
+   "horn"
+  ],
+  "sfx/victory.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/defeat.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/cast_holy.ogg": [
+   "leohpaz_heal"
+  ],
+  "sfx/hit_holy.ogg": [
+   "smite"
+  ],
+  "sfx/heal_1.ogg": [
+   "leohpaz_heal"
+  ],
+  "sfx/heal_2.ogg": [
+   "cure"
+  ],
+  "sfx/heal_3.ogg": [
+   "cure"
+  ],
+  "sfx/ward_1.ogg": [
+   "leohpaz_heal"
+  ],
+  "sfx/ward_2.ogg": [
+   "jc_fx"
+  ],
+  "sfx/cast_fire_1.ogg": [
+   "jc_fx"
+  ],
+  "sfx/cast_fire_2.ogg": [
+   "jc_fx"
+  ],
+  "sfx/hit_fire_1.ogg": [
+   "jc_fx"
+  ],
+  "sfx/hit_fire_2.ogg": [
+   "jc_fx"
+  ],
+  "sfx/explosion.ogg": [
+   "leohpaz_magic"
+  ],
+  "sfx/cast_arcane.ogg": [
+   "leohpaz_magic"
+  ],
+  "sfx/hit_arcane_1.ogg": [
+   "jc_fx"
+  ],
+  "sfx/hit_arcane_2.ogg": [
+   "jc_fx"
+  ],
+  "sfx/thunder.ogg": [
+   "leohpaz_magic"
+  ],
+  "sfx/goo_1.ogg": [
+   "slime"
+  ],
+  "sfx/goo_2.ogg": [
+   "slime"
+  ],
+  "sfx/thorns.ogg": [
+   "leohpaz_magic"
+  ],
+  "sfx/cast_dark_1.ogg": [
+   "dark"
+  ],
+  "sfx/cast_dark_2.ogg": [
+   "dark"
+  ],
+  "sfx/hit_dark_1.ogg": [
+   "leohpaz_magic"
+  ],
+  "sfx/hit_dark_2.ogg": [
+   "leohpaz_heal"
+  ],
+  "sfx/step_grass_1.ogg": [
+   "k_impact"
+  ],
+  "sfx/step_grass_2.ogg": [
+   "k_impact"
+  ],
+  "sfx/step_grass_3.ogg": [
+   "k_impact"
+  ],
+  "sfx/step_grass_4.ogg": [
+   "k_impact"
+  ],
+  "sfx/step_mud_1.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/step_mud_2.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/step_mud_3.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/step_mud_4.ogg": [
+   "lrsf_fantasy"
+  ],
+  "sfx/step_stone_1.ogg": [
+   "k_impact"
+  ],
+  "sfx/step_stone_2.ogg": [
+   "k_impact"
+  ],
+  "sfx/step_stone_3.ogg": [
+   "k_impact"
+  ],
+  "sfx/handbell_1.ogg": [
+   "k_impact"
+  ],
+  "sfx/handbell_2.ogg": [
+   "k_impact"
+  ],
+  "sfx/bell_far.ogg": [],
+  "sfx/bell_chapel.ogg": [],
+  "ambient/rain.ogg": [
+   "jc_nature",
+   "drips"
+  ],
+  "ambient/raid_night.ogg": [
+   "jc_nature",
+   "crowd"
+  ],
+  "ambient/ashes_wind.ogg": [
+   "wind",
+   "jc_nature"
+  ],
+  "ambient/temple.ogg": [
+   "dungeon"
+  ],
+  "ambient/stream.ogg": [
+   "jc_nature"
+  ],
+  "ambient/camp.ogg": [
+   "jc_nature"
+  ],
+  "music/home.ogg": [
+   "lament"
+  ],
+  "music/battle.ogg": [
+   "fight"
+  ],
+  "music/dread.ogg": [
+   "dark_descent"
+  ]
+ }
+}
