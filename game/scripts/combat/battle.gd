@@ -18,6 +18,10 @@ var level := 2
 var width := 12
 var height := 12
 var obstacles := {}
+## Вид клеток для рисовки: клетка → вид препятствия или пола (CombatData.OBSTACLE_GLYPHS, FLOOR_GLYPHS).
+var decor := {}
+## Пол поля боя (yard, temple, ford, camp, gate); "" — серое поле тестовых боёв.
+var ground := ""
 var units: Array[Combatant] = []
 var order: Array[String] = []
 var turn_index := 0
@@ -63,6 +67,8 @@ func setup(scenario: Dictionary, seed_value: int = -1, diff := "story") -> void:
 	height = int(scenario.height)
 	for o in scenario.obstacles:
 		obstacles[o] = true
+	decor = scenario.get("decor", {}).duplicate()
+	ground = String(scenario.get("ground", ""))
 	for u in scenario.units:
 		units.append(u)
 	var raw_item_dark := 0
@@ -1701,8 +1707,12 @@ func to_dict() -> Dictionary:
 		for c in zones[kind]:
 			arr.append([c.x, c.y, zones[kind][c]])
 		zd[kind] = arr
+	var dec := []
+	for c in decor:
+		dec.append([c.x, c.y, decor[c]])
 	return {
 		"version": SAVE_VERSION, "id": id, "level": level, "width": width, "height": height, "obstacles": obs,
+		"decor": dec, "ground": ground,
 		"units": units.map(func(u: Combatant) -> Dictionary: return u.to_dict()),
 		"order": Array(order), "turn_index": turn_index, "round": round_num,
 		"rng_seed": str(rng.seed), "rng_state": str(rng.state), "difficulty": difficulty,
@@ -1720,6 +1730,9 @@ static func from_dict(d: Dictionary) -> Battle:
 	b.height = int(d.height)
 	for o in d.obstacles:
 		b.obstacles[Vector2i(int(o[0]), int(o[1]))] = true
+	for o in d.get("decor", []):
+		b.decor[Vector2i(int(o[0]), int(o[1]))] = String(o[2])
+	b.ground = String(d.get("ground", ""))
 	for ud in d.units:
 		b.units.append(Combatant.from_dict(ud))
 	for oid in d.order:

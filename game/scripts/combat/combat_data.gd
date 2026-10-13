@@ -4,6 +4,13 @@ extends RefCounted
 ## Правила, по которым эти данные исполняются, — в Battle; схема данных — docs/COMBAT_DATA.md.
 
 const DIR := "res://data/combat/"
+## Знаки карты боя, которые занимают клетку: знак → вид препятствия (для рисовки; правила у всех одни).
+const OBSTACLE_GLYPHS := {
+	"#": "wall", "|": "pillar", "_": "pew", "&": "altar", "*": "rubble", "%": "tree", "+": "fence",
+	"=": "cart", "@": "well", "^": "fire", "~": "water",
+}
+## Знаки карты боя, по которым можно ходить: только вид пола.
+const FLOOR_GLYPHS := {",": "ford", ":": "road", ";": "ash"}
 
 static var _cache := {}
 
@@ -326,6 +333,8 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 	var marks := {}
 	var enemies: Array[Combatant] = []
 	var obstacles: Array[Vector2i] = []
+	## Вид препятствия или украшения пола по клетке (OBSTACLE_GLYPHS, FLOOR_GLYPHS) — только для вида поля.
+	var decor := {}
 	var counts := {}
 	var rows: Array = bt.map
 	for y in rows.size():
@@ -333,8 +342,12 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 		for x in row.length():
 			var ch := row[x]
 			var c := Vector2i(x, y)
-			if ch == "#":
+			if OBSTACLE_GLYPHS.has(ch):
 				obstacles.append(c)
+				if ch != "#":
+					decor[c] = OBSTACLE_GLYPHS[ch]
+			elif FLOOR_GLYPHS.has(ch):
+				decor[c] = FLOOR_GLYPHS[ch]
 			elif ch == "h":
 				hero_cells.append(c)
 			elif ch == "b":
@@ -387,7 +400,7 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 	if not waves.is_empty():
 		stage["waves"] = waves
 	return {"id": battle_id, "width": String(rows[0]).length(), "height": rows.size(), "units": heroes + enemies,
-		"obstacles": obstacles, "level": level, "stage": stage}
+		"obstacles": obstacles, "decor": decor, "ground": String(bt.get("ground", "")), "level": level, "stage": stage}
 
 
 ## Урезать врагов под неполный отряд по бюджету опыта (без босса).

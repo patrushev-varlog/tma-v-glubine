@@ -1,0 +1,15 @@
+{
+ "comment": "Музыка и эмбиент по сценам (art/prologue/ASSETS.md, раздел 7). Файлы — audio/music/<id>.ogg и audio/ambient/<id>.ogg; пока файла нет, там тишина. Сцена без записи оставляет то, что играло.",
+ "menu": {"music": "home"},
+ "battle": {"music": "battle", "ambient": ""},
+ "demo_end": {"music": "dread", "ambient": ""},
+ "scenes": {
+  "evening": {"music": "home", "ambient": "rain"},
+  "raid": {"music": "", "ambient": "raid_night"},
+  "ashes": {"music": "home", "ambient": "ashes_wind"},
+  "temple": {"music": "dread", "ambient": "temple"},
+  "deserter": {"music": "", "ambient": "stream"},
+  "column": {"music": "dread", "ambient": "camp"},
+  "interrogation_scene": {"music": "dread", "ambient": "camp"}
+ }
+}

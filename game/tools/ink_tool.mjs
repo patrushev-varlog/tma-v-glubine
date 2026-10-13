@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Сборка истории для проекта игры. Нужен Node 18+ и inkjs 2.3.2 (npm install в этой папке).
 //
-//   node ink_tool.mjs build   — story/ink/game.ink (и story/ink-en/game.ink, когда он появится) → game/story/*.json
+//   node ink_tool.mjs build   — story/ink/game.ink и story/ink-en/game.ink → game/story/game.{ru,en}.json
 //                              и порядок сцен по главам → game/story/scenes.json (для автосохранений)
 //   node ink_tool.mjs check   — JSON в репозитории совпадает с текущими .ink (код 1, если устарел)
 //
@@ -21,7 +21,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const GAME = path.resolve(HERE, "..");
 const REPO = path.resolve(GAME, "..");
 
-// Язык → точка входа истории. Английской точки входа пока нет: переведена одна сцена пролога.
+// Язык → точка входа истории. В английской переведён пролог, главы 1–5 подключены из story/ink.
 const TARGETS = [
   { id: "game.ru", src: path.join(REPO, "story/ink/game.ink") },
   { id: "game.en", src: path.join(REPO, "story/ink-en/game.ink") },

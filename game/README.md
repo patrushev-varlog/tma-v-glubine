@@ -15,6 +15,11 @@ godot --path .                                       # или открыть gam
 ```
 
 `node ink_tool.mjs check` говорит, устарели ли собранные JSON после правок в `story/`.
+Английская история — `story/ink-en/game.ink`: пролог переведён, главы 1–5 пока подключены по-русски.
+
+`godot --path . -- --demo` — игра как демо: после пролога титр главы 1 и экран конца демо.
+`python3 tools/import_art.py` — скопировать готовые портреты из `art/portraits` в `game/art/portraits`
+(потом `godot --headless --path . --import`); `--check` — проверить, что копия свежая.
 
 ## Проверки
 
@@ -32,6 +37,8 @@ godot --headless --path game -s tools/simulate.gd -- battle=prologue_3 diff=tria
 ## Сборки
 
 `export_presets.cfg` — Windows, macOS (universal) и Linux. Сборки кладутся в `build/game/<ос>/`.
+Пресеты «… Demo» — демо для Steam и плейтеста (пролог, признак `demo`), сборки в `build/game/<ос>-demo/`.
+Сохранения у демо и игры одни и те же: полная игра продолжает с автосохранения на входе в главу 1.
 
 ```sh
 godot --headless --path game --export-release "Linux" ../build/game/linux/TmaVGlubine.x86_64
@@ -40,10 +47,11 @@ godot --headless --path game --export-release "Linux" ../build/game/linux/TmaVGl
 CI (`.github/workflows/ci.yml`):
 
 - `game-tests` — сборка сюжета, `dotnet build`, тесты GUT и самопроверка.
-- `export` — три сборки на Linux, самопроверка сборки Linux.
+- `export` — три сборки и демо для Windows и Linux на Linux, самопроверка сборок Linux.
 - `smoke` — запуск сборки Windows (на каждом PR) и macOS (на main и вручную).
 
-Готовые сборки лежат в артефактах прогона: `game-windows`, `game-macos`, `game-linux`.
+Готовые сборки лежат в артефактах прогона: `game-windows`, `game-macos`, `game-linux`, демо — `game-windows-demo`,
+`game-linux-demo`. Как проводить плейтест демо и сводить журналы тестеров — `docs/PLAYTEST.md`.
 
 ## Устройство
 
@@ -51,12 +59,15 @@ CI (`.github/workflows/ci.yml`):
 | --- | --- |
 | `scripts/combat/` | Бой без сцен: `battle.gd` (исполнитель правил), `combatant.gd`, `combat_data.gd`, `combat_ai.gd`, `items.gd`, `dice.gd`, `simulator.gd`. |
 | `scripts/story/` | `story_runner.gd` над GodotInk; `InkLoader.cs` — загрузка JSON истории и текущий путь Ink. |
-| `scripts/state/` | `story_session.gd` (прохождение, журнал событий, сохранения), `game_state.gd` (герой, серебро, вещи, журнал), `quest_journal.gd`, `save_store.gd`, автозагрузка `game.gd`. |
-| `scripts/ui/` | Экраны: главное меню, создание героя, история с журналом и меню, экран боя (`battle_screen.gd`, поле — `board_view.gd`, иконки умений — `ability_icon.gd`). Вёрстка кодом в `ui_kit.gd`. |
+| `scripts/state/` | `story_session.gd` (прохождение, журнал событий, сохранения), `game_state.gd` (герой, серебро, вещи, журнал), `quest_journal.gd`, `save_store.gd`, `playtest_log.gd` (журнал плейтеста), автозагрузка `game.gd` (в том числе демо). |
+| `scripts/audio/` | Автозагрузка `Sound`: музыка и эмбиент по сценам из `data/audio.json`, звуки, громкость. |
+| `scripts/ui/` | Экраны: главное меню, создание героя, история с журналом и меню, экран боя (`battle_screen.gd`, поле — `board_view.gd`, иконки умений — `ability_icon.gd`), конец демо (`demo_end.gd`). Портреты — `portraits.gd`. Вёрстка кодом в `ui_kit.gd`. |
 | `scripts/location/` | Экран локации: карта (`location_map.gd`, пути `AStarGrid2D`), вид (`location_view.gd`, `TileMapLayer`), герой, графика-заглушки. Формат карт и тег `#obj:` — `docs/LOCATIONS.md`. |
 | `scripts/input/` | Действия ввода для клавиатуры, мыши и геймпада. |
-| `data/` | `combat/` — правила боя, `locations/` — карты локаций и какие сцены на них идут, `story/quests.json` — задания журнала, `hero/spouse_names.json` — имена супруга с падежами. |
+| `data/` | `combat/` — правила боя, `locations/` — карты локаций и какие сцены на них идут, `story/quests.json` — задания журнала, `hero/spouse_names.json` — имена супруга с падежами, `audio.json` — звук по сценам. |
 | `i18n/` | `ui.csv`, `combat.csv`, `location.csv` — русский и английский. |
+| `art/` | Копия готовой графики из `art/` репозитория (`tools/import_art.py`): `portraits/<id>/base_128.png` (диалог), `base_64.png` (панель боя), слои Тьмы героя. |
+| `audio/` | Музыка, петли окружения и звуки (OGG); лицензии — `audio/LICENSES.md`, авторы — `CREDITS.md`. Пока пусто. |
 | `fonts/` | Шрифты под OFL с текстами лицензий: текст — Literata, заголовки — Tiny5 (выбор — `docs/LOCATIONS.md`). |
 | `story/` | Собранные `game.<язык>.json` и `scenes.json` — генерируются `ink_tool.mjs`, вручную не правятся. |
 | `tests/` | GUT: правила боя, тест на каждое умение и приём, предметы, прохождение и сохранения. |
@@ -83,14 +94,28 @@ CI (`.github/workflows/ci.yml`):
 
 Снимки экрана боя: `godot --path game --rendering-method gl_compatibility -s res://tools/battle_shots.gd`.
 
+### Портреты и Тьма
+
+Экран истории показывает слева портрет говорящего (тег `# spk:`, эмоция — `# mood:`) и имя под ним, на строках
+рассказчика портрет гаснет; на карте портрет стоит в панели реплики, на экране боя — у карточек отряда.
+У героя поверх портрета слои Тьмы с Сумрака (25); за пролог Тьма не выше 20 (`tests/unit/test_prologue.gd`),
+поэтому в демо их не видно.
+
+### Демо
+
+Демо — пролог целиком: когда история входит в главу 1, после титра главы игра показывает экран конца демо
+(`scenes/demo_end.tscn`): прогресс сохранён для полной игры, кнопка страницы в Steam (адрес — настройка
+`tma/steam_url` в `project.godot`, пока пусто, кнопки нет) и путь к журналу плейтеста.
+
 ### Чего пока нет
 
 - Карт боёв глав 1–5: бой по тегу `# battle:` без своей записи в `battles.json` идёт на тестовой карте
-  уровня отряда. У пролога свои бои (`prologue_*`), но карты серые, окончательные — в потоке H.
-- Графики боя: участники, препятствия, портреты и иконки умений — заглушки. Спрайты подхватятся из
-  `art/units/<вид>.png`, иконки — из `art/icons/abilities/<умение>.png`.
+  уровня отряда. У боёв пролога свои карты мест из сцен (`docs/PROLOGUE_BATTLES.md`).
+- Графики боя и карты: участники, препятствия, пол, иконки умений — заглушки. Спрайты подхватятся из
+  `art/units/<вид>.png`, иконки — из `art/icons/abilities/<умение>.png`, тайлы карты — из `art/locations/tiles/`.
+- Музыки и звуков: экраны уже зовут `Sound`, файлы ложатся в `audio/` по `audio/LICENSES.md`.
 - Травмы на «Испытании» после выбывания (DESIGN.md, «Режимы сложности»).
-- Карт для остальных сцен пролога: на карте пока только двор Эшмура (облава и пепелище), остальное
-  идёт на экране истории. Графика на карте — заглушки кодом до тайлов и спрайтов (поток K3).
+- Карт для остальных сцен пролога: на карте только двор Эшмура (облава и пепелище), остальное идёт на
+  экране истории.
 - Экрана повышения уровня: ветка героя — первая из двух.
-- Английского текста истории: при английском языке интерфейс английский, сюжет русский.
+- Английского текста глав 1–5: при английском языке пролог английский, дальше сюжет русский.

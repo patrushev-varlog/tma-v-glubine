@@ -11,6 +11,7 @@ func _ready() -> void:
 		get_tree().quit(code)
 		return
 	_build()
+	Sound.for_menu()
 	Game.language_changed.connect(func(_l: String) -> void: _rebuild())
 
 
@@ -26,7 +27,7 @@ func _build() -> void:
 	var title := UiKit.heading(tr("GAME_TITLE").to_upper(), UiKit.HEAD_TITLE)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(title)
-	var sub := UiKit.label(tr("GAME_SUBTITLE"), UiKit.FONT_SMALL, UiKit.MUTED)
+	var sub := UiKit.label(tr("GAME_SUBTITLE") + (" · " + tr("MENU_DEMO") if Game.is_demo() else ""), UiKit.FONT_SMALL, UiKit.MUTED)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(sub)
 	var buttons := VBoxContainer.new()
@@ -44,8 +45,13 @@ func _build() -> void:
 		buttons.add_child(UiKit.button(tr("MENU_LOAD"), func() -> void: SlotPanel.open(self, "load", _load)))
 	var lang_name := tr("LANG_" + Game.language)
 	buttons.add_child(UiKit.button(UiKit.fmt("MENU_LANGUAGE", {"lang": lang_name}), _toggle_language))
+	var note_key := ""
 	if Game.story_language() != Game.language:
-		var note := UiKit.label(tr("LANG_STORY_RU_ONLY"), UiKit.FONT_SMALL, UiKit.MUTED)
+		note_key = "LANG_STORY_RU_ONLY"
+	elif Game.language == "en" and not Game.is_demo():
+		note_key = "LANG_STORY_EN_PROLOGUE"
+	if note_key != "":
+		var note := UiKit.label(tr(note_key), UiKit.FONT_SMALL, UiKit.MUTED)
 		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		col.add_child(note)
 	if OS.get_name() != "Android" and OS.get_name() != "iOS":

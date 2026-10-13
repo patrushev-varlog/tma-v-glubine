@@ -1,5 +1,5 @@
 {
-  "_doc": "Тестовые бои уровней 1–5 из серого прототипа (prototypes/combat). Карта 18×14: # — стена или телега, h — места отряда, буквы — враги по legend. trial_only — враги только на «Испытании». boost — усиление врагов под гарантированный набор экипировки: hp — проценты к хитам (также hit, dmg, ac). Бои пролога (prologue_*) — серые карты-черновики под B8: party — отряд боя, b — связанный союзник (bound), цифры — выходы подкреплений (waves[].at); остальные ключи — docs/COMBAT_DATA.md. Окончательные карты — поток H.",
+  "_doc": "Тестовые бои уровней 1–5 из серого прототипа (prototypes/combat). Карта 18×14: # — стена или телега, h — места отряда, буквы — враги по legend. trial_only — враги только на «Испытании». boost — усиление врагов под гарантированный набор экипировки: hp — проценты к хитам (также hit, dmg, ac). Бои пролога (prologue_*) — карты мест из сцен (поток H): party — отряд боя, b — связанный союзник (bound), цифры — выходы подкреплений (waves[].at), ground — пол; знаки препятствий (| _ & * % + = @ ^ ~) и пола (, : ;) и остальные ключи — docs/COMBAT_DATA.md.",
   "level_1": {
     "level": 1,
     "legend": {
@@ -191,80 +191,80 @@
       ".......#......#..."
     ]
   },
-  "prologue_1": {"level": 1, "party": [], "cannot_lose": true, "legend": {"r": "raised", "R": "raised"}, "trial_only": ["R"],
+  "prologue_1": {"level": 1, "ground": "yard", "party": [], "cannot_lose": true, "legend": {"r": "raised", "R": "raised"}, "trial_only": ["R"],
     "map": [
-      "......#.....",
-      "..##..#..r..",
-      "..##........",
+      "###...+++++.",
+      "###......r..",
+      "###.........",
       "............",
-      ".h.......#..",
+      ".h.....@....",
       "..........R.",
-      "...#........",
-      "...#...r....",
-      "............",
-      ".......##..."
+      "...%........",
+      "...%...r....",
+      "+.........==",
+      "+.....++...."
     ]
   },
-  "prologue_2": {"level": 1, "party": ["irena"], "timed": [{"unit": "irena", "status": "hesitant", "until_round": 3, "log": "BATTLE_LOG_IRENA_FIGHTS"}], "legend": {"r": "raised", "R": "raised", "z": "zombie"}, "trial_only": ["R"],
+  "prologue_2": {"level": 1, "ground": "temple", "party": ["irena"], "timed": [{"unit": "irena", "status": "hesitant", "until_round": 3, "log": "BATTLE_LOG_IRENA_FIGHTS"}], "legend": {"r": "raised", "R": "raised", "z": "zombie"}, "trial_only": ["R"],
     "map": [
-      "....####....",
-      "....h..h....",
-      "............",
-      "..##....##..",
-      "......r.....",
-      "..##....##..",
-      "..r.....R...",
-      "..##....##..",
-      "......z.....",
-      "..##....##..",
-      "........r...",
-      "............"
+      "#|..&&&&..|#",
+      "#...h..h...#",
+      "#..........#",
+      "#.__....__.#",
+      "#.....r....#",
+      "#.__....__.#",
+      "#.r.....R..#",
+      "#.__....__.#",
+      "#.....z....#",
+      "#*__....__.#",
+      "#.......r...",
+      "##**....####"
     ]
   },
-  "prologue_3": {"level": 1, "party": ["irena", "garret"], "bound": [{"unit": "garret", "round": 2}], "ambush_flag": "garret_ambush", "flag_drop": {"garret_hunters_scared": ["x"]}, "legend": {"o": "overseer", "x": "crossbowman", "O": "overseer"}, "trial_only": ["O"],
+  "prologue_3": {"level": 1, "ground": "ford", "party": ["irena", "garret"], "bound": [{"unit": "garret", "round": 2}], "ambush_flag": "garret_ambush", "flag_drop": {"garret_hunters_scared": ["x"]}, "legend": {"o": "overseer", "x": "crossbowman", "O": "overseer"}, "trial_only": ["O"],
     "map": [
-      "......#.......",
-      "..h...#...o...",
-      "......#.......",
-      ".h.......o.b..",
-      "......#.....x.",
-      "......#..o....",
-      "......#.......",
-      "..........O...",
-      "......#.......",
-      "......#......."
+      "%%....~.......",
+      "%.h...~...o...",
+      "......~...^...",
+      ".h....,..o.b..",
+      "..%...~.....x.",
+      "......~..o....",
+      "%.....~......%",
+      "......,...O...",
+      "..%...~.....%%",
+      "%.....~......%"
     ]
   },
-  "prologue_4_camp": {"level": 1, "party": ["irena", "garret"], "objective": {"type": "survive", "rounds": 4, "key": "BATTLE_OBJ_P4_CAMP"}, "waves": [{"round": 2, "at": "1", "units": ["overseer"], "trial_units": ["overseer"]}, {"round": 3, "at": "2", "units": ["brandt", "overseer"], "trial_units": ["crossbowman"], "log": "BATTLE_LOG_BRANDT"}], "legend": {"o": "overseer", "x": "crossbowman", "O": "overseer"}, "trial_only": ["O"],
+  "prologue_4_camp": {"level": 1, "ground": "camp", "party": ["irena", "garret"], "objective": {"type": "survive", "rounds": 4, "key": "BATTLE_OBJ_P4_CAMP"}, "waves": [{"round": 2, "at": "1", "units": ["overseer"], "trial_units": ["overseer"]}, {"round": 3, "at": "2", "units": ["brandt", "overseer"], "trial_units": ["crossbowman"], "log": "BATTLE_LOG_BRANDT"}], "legend": {"o": "overseer", "x": "crossbowman", "O": "overseer"}, "trial_only": ["O"],
     "map": [
-      "................",
-      "..#.......o....1",
-      "...........##...",
-      ".h.....#.......1",
-      ".h....###..x....",
-      ".h.....#.....o..",
-      "..............2.",
-      "....o....##.....",
-      "..#.............",
+      "%%.............:",
+      "%.=.......o....1",
+      "...........==..:",
+      ".h.....^.......1",
+      ".h....^^^..x...:",
+      ".h.....^.....o.:",
+      "..............2:",
+      "....o....==....:",
+      "%..............:",
       ".........O.....2",
-      "....##..........",
-      "................"
+      "%...**.........:",
+      "%%.............:"
     ]
   },
-  "prologue_4_gate": {"level": 1, "party": ["irena", "garret"], "waves": [{"round": 3, "at": "1", "units": ["raised", "raised"], "log": "BATTLE_LOG_GATE_DEAD"}], "legend": {"B": "brandt", "o": "overseer", "x": "crossbowman", "O": "overseer"}, "trial_only": ["O"],
+  "prologue_4_gate": {"level": 1, "ground": "gate", "party": ["irena", "garret"], "waves": [{"round": 3, "at": "1", "units": ["raised", "raised"], "log": "BATTLE_LOG_GATE_DEAD"}], "legend": {"B": "brandt", "o": "overseer", "x": "crossbowman", "O": "overseer"}, "trial_only": ["O"],
     "map": [
-      "...........####.",
-      "...........#11#.",
-      "..h.............",
-      ".h.....#....B...",
-      "..h...###...o...",
-      ".......#..x.....",
+      "**.........#||#*",
+      "...........|11|.",
+      "..h.......::::..",
+      ".h.....=....B...",
+      "..h...===...o...",
+      ".......=..x.....",
       "...........O....",
-      "....##..........",
-      "................",
-      "................",
-      "......##........",
-      "................"
+      "....**....::....",
+      "..........::....",
+      "%.........::...%",
+      "%.....%%..::...%",
+      "%%........::..%%"
     ]
   }
 }

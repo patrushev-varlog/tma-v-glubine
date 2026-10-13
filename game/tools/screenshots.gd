@@ -53,6 +53,15 @@ func _initialize() -> void:
 	await _shot("5_journal")
 	story.queue_free()
 	await _location(game, setup)
+	for c in root.get_children():
+		if not ["Game", "InputSetup", "Sound"].has(String(c.name)):
+			c.queue_free()
+	await _frames(2)
+	game.language = "ru"
+	TranslationServer.set_locale("ru")
+	var demo := await _show("res://scenes/demo_end.tscn")
+	await _shot("12_demo_end")
+	demo.queue_free()
 	quit()
 
 
@@ -84,11 +93,12 @@ func _location(game: Node, setup: Dictionary) -> void:
 			loc._choose(0)
 		else:
 			loc._advance()
-	await _frames(4)
-	loc._start_battle(game.session.pending_battle)
-	await _wait(0.6)
-	await _shot("7_battle_stub")
-	loc._end_battle(0)
+	# Бой идёт на экране боя (снимки — tools/battle_shots.gd): засчитываем победу и возвращаемся на карту.
+	loc.queue_free()
+	game.start_battle(1)
+	game.finish_battle(0)
+	loc = await _show("res://scenes/location_screen.tscn")
+	loc.change_screen = func(_p: String) -> void: pass
 	await _wait(1.0)
 	for i in 4:
 		loc._advance()

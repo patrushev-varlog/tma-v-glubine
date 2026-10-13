@@ -11,6 +11,11 @@ var _bottom: VBoxContainer
 var _hints: Label
 var _status: Label
 var _overlay: Control = null
+## Портрет говорящего слева от текста и имя под ним.
+var _face_box: VBoxContainer
+var _face_holder: Control
+var _face_name: Label
+var _face_id := ""
 
 
 func _ready() -> void:
@@ -26,10 +31,25 @@ func _ready() -> void:
 	top.add_child(UiKit.button(tr("STORY_MENU"), _open_menu, UiKit.FONT_SMALL))
 	col.add_child(top)
 
+	var mid := HBoxContainer.new()
+	mid.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	mid.add_theme_constant_override("separation", 16)
+	col.add_child(mid)
+	_face_box = VBoxContainer.new()
+	_face_box.add_theme_constant_override("separation", 6)
+	_face_holder = Control.new()
+	_face_holder.custom_minimum_size = Vector2(256, 256)
+	_face_box.add_child(_face_holder)
+	_face_name = UiKit.heading("", UiKit.HEAD_SMALL, UiKit.SPEAKER)
+	_face_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_face_name.custom_minimum_size = Vector2(256, 0)
+	_face_box.add_child(_face_name)
+	mid.add_child(_face_box)
 	_scroll = ScrollContainer.new()
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	col.add_child(_scroll)
+	mid.add_child(_scroll)
 	_lines = VBoxContainer.new()
 	_lines.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_lines.add_theme_constant_override("separation", 10)
@@ -43,6 +63,8 @@ func _ready() -> void:
 	InputSetup.device_changed.connect(func(_k: String) -> void: _refresh_hints())
 	_refresh_hints()
 
+	_show_face("hero", "")
+	Sound.for_scene(Game.session.scene_name())
 	for item in Game.pending_tail:
 		_add_line(item)
 	Game.pending_tail = []
@@ -79,11 +101,13 @@ func _advance() -> void:
 	var item := Game.session.next()
 	match String(item.type):
 		"line":
-			if item.has("scene") and LocationMap.for_scene(String(item.scene)) != "":
-				# Сцена идёт на карте: строку покажет экран локации.
+			if item.has("scene") and Game.screen_path() != scene_file_path:
+				# Сцена идёт на карте (строку покажет экран локации) или демо кончилось (экран конца демо).
 				Game.pending_tail = [item]
 				get_tree().change_scene_to_file(Game.screen_path())
 				return
+			if item.has("scene"):
+				Sound.for_scene(String(item.scene))
 			_add_line(item)
 			_bottom.add_child(UiKit.button(tr("STORY_NEXT"), _advance))
 		"choices":
@@ -109,15 +133,41 @@ func _choose(i: int) -> void:
 
 
 func _add_line(item: Dictionary) -> void:
-	# Реплики в тексте уже с атрибуцией («— сказал Эйвин»), поэтому говорящего отмечаем только цветом;
-	# имя над репликой появится вместе с портретами (поток H).
+	# Реплики в тексте уже с атрибуцией («— сказал Эйвин»), поэтому говорящего отмечаем цветом,
+	# портретом и именем слева; на строках рассказчика портрет последнего говорящего гаснет.
 	var who := String(item.get("speaker", ""))
 	var color := UiKit.TEXT
 	if who == "hero":
 		color = UiKit.HERO
 	elif who != "":
 		color = UiKit.SPEAKER
+	if who != "":
+		_show_face(who, String(item.get("mood", "")))
+	else:
+		_face_box.modulate = Color(1, 1, 1, 0.45)
+	for t in item.get("tags", PackedStringArray()):
+		if String(t).begins_with("chapter:"):
+			# Титр новой главы — крупно, по центру.
+			var title := UiKit.heading(String(item.text).to_upper(), UiKit.HEAD_TITLE)
+			title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_lines.add_child(title)
+			_chapter.text = tr("CHAPTER_%d" % Game.session.state.chapter)
+			return
 	_add_text(String(item.text), color)
+
+
+func _show_face(who: String, mood: String) -> void:
+	var hero: Dictionary = Game.session.state.hero
+	var id := Portraits.id_for(who, mood, hero)
+	var dark := Game.session.darkness()
+	var key := "%s/%d" % [id, Portraits.dark_stage(dark)]
+	if key != _face_id:
+		_face_id = key
+		for c in _face_holder.get_children():
+			c.queue_free()
+		_face_holder.add_child(Portraits.view(id, 128, 2, dark))
+	_face_name.text = Portraits.speaker_name(who, hero, String(Game.session.flag("spouse_name")))
+	_face_box.modulate = Color.WHITE
 
 
 func _add_text(text: String, color: Color) -> void:

@@ -21,6 +21,8 @@ var _goals: VBoxContainer
 var _prompt: Label
 var _panel: PanelContainer
 var _speaker: Label
+## Портрет говорящего в панели реплики (128 px); скрыт, если у говорящего нет портрета.
+var _face: Control
 var _prev: Label
 var _text: Label
 var _buttons: VBoxContainer
@@ -45,6 +47,7 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(UiKit.BG)
 	var s := Game.session
 	_scene = s.scene_name()
+	Sound.for_scene(_scene)
 	var loc := LocationMap.for_scene(_scene)
 	_map = LocationMap.load_location(loc)
 	_map.setup_scene(_scene, _check)
@@ -167,9 +170,18 @@ func _build_ui() -> void:
 	sb.set_content_margin_all(16)
 	_panel.add_theme_stylebox_override("panel", sb)
 	col.add_child(_panel)
+	var prow := HBoxContainer.new()
+	prow.add_theme_constant_override("separation", 14)
+	_panel.add_child(prow)
+	_face = Control.new()
+	_face.custom_minimum_size = Vector2(128, 128)
+	_face.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_face.hide()
+	prow.add_child(_face)
 	var pcol := VBoxContainer.new()
 	pcol.add_theme_constant_override("separation", 6)
-	_panel.add_child(pcol)
+	pcol.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prow.add_child(pcol)
 	_speaker = UiKit.heading("", UiKit.HEAD_SMALL)
 	pcol.add_child(_speaker)
 	_prev = UiKit.label("", UiKit.FONT_SMALL, UiKit.MUTED)
@@ -202,6 +214,15 @@ func _clear_buttons() -> void:
 	for c in _buttons.get_children():
 		_buttons.remove_child(c)
 		c.queue_free()
+
+
+func _set_face(who: String, mood: String) -> void:
+	for c in _face.get_children():
+		c.queue_free()
+	var id := Portraits.id_for(who, mood, Game.session.state.hero)
+	_face.visible = id != ""
+	if id != "":
+		_face.add_child(Portraits.view(id, 128, 1, Game.session.darkness()))
 
 
 func _speaker_name(spk: String) -> String:
@@ -252,6 +273,7 @@ func _show_line(item: Dictionary) -> void:
 	var who := String(item.get("speaker", ""))
 	_speaker.text = _speaker_name(who).to_upper()
 	_speaker.visible = _speaker.text != ""
+	_set_face(who, String(item.get("mood", "")))
 	_prev.text = _last_line
 	_prev.visible = _last_line != ""
 	_text.text = String(item.text)
@@ -283,6 +305,7 @@ func _show_choices(item: Dictionary) -> void:
 		for i in item.options.size():
 			_buttons.add_child(UiKit.button(String(item.options[i]), _choose.bind(i)))
 		_speaker.hide()
+		_face.hide()
 		_prev.hide()
 		_text.text = _last_line
 		_panel.show()
@@ -480,6 +503,7 @@ func _show_battle(_battle_id: String) -> void:
 	_mode = "battle"
 	_set_active({})
 	_speaker.hide()
+	_face.hide()
 	_prev.text = _last_line
 	_prev.visible = _last_line != ""
 	_text.text = tr("BATTLE_AHEAD")
