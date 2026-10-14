@@ -9,7 +9,8 @@ import argparse
 import csv
 import os
 import subprocess
-from concurrent.futures import ThreadPoolExecutor
+import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 GAME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CLASSES = ["fighter", "rogue", "cleric", "wizard"]
@@ -82,15 +83,19 @@ def main():
     ap.add_argument("--out", default="-")
     args = ap.parse_args()
     jobs = [(b, c, *v) for b in args.battles.split(",") for v in VARIANTS[b] for c in CLASSES]
-    rows = []
-    with ThreadPoolExecutor(args.jobs) as ex:
-        for res in ex.map(lambda j: run(j, args), jobs):
-            rows += res
+    # Строки пишутся по мере готовности: долгий прогон можно смотреть и прервать без потерь.
     f = open(args.out, "w", newline="") if args.out != "-" else None
-    w = csv.DictWriter(f or os.sys.stdout, fieldnames=list(rows[0]))
-    w.writeheader()
-    w.writerows(rows)
-
+    w = None
+    with ThreadPoolExecutor(args.jobs) as ex:
+        for fut in as_completed([ex.submit(run, j, args) for j in jobs]):
+            res = fut.result()
+            if not res:
+                continue
+            if w is None:
+                w = csv.DictWriter(f or sys.stdout, fieldnames=list(res[0]))
+                w.writeheader()
+            w.writerows(res)
+            (f or sys.stdout).flush()
 
 if __name__ == "__main__":
     main()
