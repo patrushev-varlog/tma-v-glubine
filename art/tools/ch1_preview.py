@@ -29,10 +29,15 @@ SCENE = dict(
 PICK2 = {"bars": "bars_2", "boards": "boards_1", "bunk": "bunk_2", "guard_hut": "guard_hut_2", "lamp_post": "lamp_post_1",
          "lift_cage": "lift_cage_2", "notice_board": "notice_board_2", "tag_box": "tag_box_1", "shaft": "floor_shaft_1"}
 
+# Стены штреков (mines3, ch1_batch3.py --blocks): кубы скалы.
+PICK3 = {"rock_block": "rock_block_2", "rock_block_ore": "rock_block_ore_2"}
+
 
 def main():
     for name, src in PICK.items():
         shutil.copy(T / "variants" / f"{src}.png", T / f"{name}.png")
+    for name, src in PICK3.items():
+        shutil.copy(A / "chapter1/tiles/mines3/variants" / f"{src}.png", T / f"{name}.png")
     for name, src in PICK2.items():
         shutil.copy(A / "chapter1/tiles/mines2/variants" / f"{src}.png", T / f"{name}.png")
     shutil.copy(A / "anchors/approved/timber_support.png", T / "timber_support.png")
