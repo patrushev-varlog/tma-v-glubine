@@ -32,12 +32,16 @@ static func resolve(item_id: String, c: Combatant) -> Dictionary:
 
 ## Набор участника на уровне: по одному предмету на слот, в слоте остаётся предмет высшей ступени.
 ## gear: "kit" — гарантированный набор, "full" — набор и всё сверх бюджета (скрытые легендарки и т. п.).
-static func kit_for(c: Combatant, level: int, gear := "kit") -> Array[String]:
+## owned — вещи участника из инвентаря отряда: встают в слот, если они не хуже предмета набора.
+static func kit_for(c: Combatant, level: int, gear := "kit", owned: Array = []) -> Array[String]:
 	var key := "hero" if c.is_hero else c.kind
 	var data: Dictionary = CombatData.table("items")
 	var ids: Array = data.kits[str(level)].get(key, []).duplicate()
 	if gear == "full":
 		ids += data.extra[str(level)].get(key, [])
+	for id in owned:
+		if has_item(String(id)):
+			ids.append(String(id))
 	return pick_best(c, ids)
 
 

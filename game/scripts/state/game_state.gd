@@ -12,6 +12,8 @@ var hero := {}
 var difficulty := "story"
 var chapter := 0
 var level := 1
+## Ветка класса героя со 2 уровня (classes.json, archetypes); "" — ещё не выбрана.
+var branch := ""
 var silver := 0
 ## Вещи отряда: [{"id", "owner"}], owner — "hero", "garret", "irena" или "velior".
 var inventory: Array[Dictionary] = []
@@ -82,6 +84,13 @@ func has_journal(id: String) -> bool:
 	return false
 
 
+## Ветка для правил боя: выбранная в лагере, иначе первая (до 2 уровня ветка не действует).
+func hero_branch() -> String:
+	if branch != "":
+		return branch
+	return String(hero.get("archetype", ""))
+
+
 func items_of(owner: String) -> Array[String]:
 	var out: Array[String] = []
 	for it in inventory:
@@ -98,7 +107,7 @@ func combat_dark_room() -> int:
 ## Глубокая копия: снимок на входе в сцену не должен меняться вместе с текущим состоянием.
 func to_dict() -> Dictionary:
 	var d := {
-		"version": SAVE_VERSION, "hero": hero, "difficulty": difficulty, "chapter": chapter, "level": level,
+		"version": SAVE_VERSION, "hero": hero, "difficulty": difficulty, "chapter": chapter, "level": level, "branch": branch,
 		"silver": silver, "inventory": inventory, "journal": journal, "unlocks": Array(unlocks),
 		"map_changes": Array(map_changes), "combat_darkness": combat_darkness, "battles": battles, "ending": ending,
 	}
@@ -112,6 +121,7 @@ static func from_dict(d: Dictionary) -> GameState:
 	g.difficulty = String(d.get("difficulty", "story"))
 	g.chapter = int(d.get("chapter", 0))
 	g.level = int(d.get("level", 1))
+	g.branch = String(d.get("branch", ""))
 	g.silver = int(d.get("silver", 0))
 	for it in d.get("inventory", []):
 		g.inventory.append(it)

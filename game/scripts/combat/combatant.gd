@@ -35,6 +35,8 @@ var undead := false
 var sneak_dice := ""
 var is_hero := false
 var is_companion := false
+## Союзник под ИИ (узники в бунте главы 1): на стороне отряда, но ходит сам и в поражении не считается.
+var ai_ally := false
 
 ## Экипировка: надетые предметы и то, что они дают в бою (см. Items).
 var items: Array[String] = []
@@ -67,7 +69,7 @@ var counters := {}
 ## Простые поля, которые сохраняются как есть.
 const STATE := ["id", "name", "team", "kind", "letter", "level", "archetype", "max_hp", "hp", "ac", "speed", "init_mod",
 	"slots", "max_slots", "spell_attack", "spell_dc", "attacks_per_action", "str_mod", "undead", "sneak_dice",
-	"is_hero", "is_companion", "heal_bonus", "dr", "undead_dice", "drain_dice", "fire_dice", "item_dark",
+	"is_hero", "is_companion", "ai_ally", "heal_bonus", "dr", "undead_dice", "drain_dice", "fire_dice", "item_dark",
 	"initiative", "down", "dead", "reaction_used", "speed_left", "action_used", "attacks_left", "bonus_used",
 	"sneak_used", "cleave_used", "acted"]
 

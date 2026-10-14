@@ -138,7 +138,7 @@ SPEAKER_liara,Лиара,Liara
 SPEAKER_garret,Гаррет,Garret
 SPEAKER_irena,Ирена,Irena
 SPEAKER_velior,Велиор,Velior
-SPEAKER_meb,Мэб,Meb
+SPEAKER_meb,Мэб,Mab
 SPEAKER_brandt,Брандт,Brandt
 SPEAKER_oldrik,Олдрик,Oldric
 SPEAKER_shrine_priest,Отец Мерен,Father Meren
@@ -169,3 +169,28 @@ LANG_STORY_EN_PROLOGUE,"История на английском — проло�
 VOLUME_MUSIC,Музыка,Music
 VOLUME_AMBIENT,Окружение,Ambience
 VOLUME_SFX,Звуки,Sounds
+LEVELUP_TITLE,Уровень {level},Level {level}
+LEVELUP_GROWTH,"Растут хиты, ячейки и умения всего отряда.","Hit points, spell slots and skills grow for the whole party."
+LEVELUP_PICK,Выберите ветку класса. В следующих лагерях её можно будет сменить.,Choose your class path. You can change it at later camps.
+LEVELUP_KEEP_OR_SWITCH,"Ваша ветка — {branch}. Можно оставить её или сменить: умения новой ветки придут сразу.","Your path is {branch}. Keep it or switch: the new path's skills arrive at once."
+LEVELUP_CHOOSE,Выбрать: {branch},Choose {branch}
+LEVELUP_KEEP,Оставить: {branch},Keep {branch}
+LEVELUP_SWITCH,Сменить на: {branch},Switch to {branch}
+SHOP_sutler,Маркитант,The Sutler
+SHOP_smith,Кузнец из Эшмура,The Ashmoor Smith
+SHOP_smugglers,Контрабандисты,The Smugglers
+SHOP_dwarf_forge,Горн Молчащих,The Forge of the Silent
+SHOP_SILVER,Серебро: {silver},Silver: {silver}
+SHOP_FOR_HERO,Себе,For me
+SHOP_FOR,{name},{name}
+SHOP_LEAVE,Уйти,Leave
+FX_hit,+{n} к попаданию,+{n} to hit
+FX_dmg,+{n} к урону,+{n} damage
+FX_ac,+{n} КД,+{n} AC
+FX_save,спасброски +{n},saves +{n}
+FX_hp,хиты +{n},hit points +{n}
+FX_spell,заклинания +{n},spells +{n}
+FX_slot,ячейки +{n},slots +{n}
+FX_heal,лечение +{n},healing +{n}
+FX_dr,снижение урона {n},damage reduction {n}
+BATTLE_LOOT,Добыча: {silver} серебра.,Loot: {silver} silver.

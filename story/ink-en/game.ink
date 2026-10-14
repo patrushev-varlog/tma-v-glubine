@@ -1,8 +1,8 @@
 // Точка входа английской истории (демо для Next Fest — английский пролог, решение 6 плана 07).
-// Пролог и common.ink — переведённые файлы из этой папки; главы 1–5 пока подключены из story/ink
-// и идут по-русски, пока их не переведут (каждую главу — перед её сборкой). Переведённую главу
-// подключать отсюда так же, как пролог. Структура обязана совпадать с story/ink/game.ink: игра
-// переносит сохранения между языками проигрыванием журнала выборов.
+// Пролог, глава 1 и common.ink — переведённые файлы из этой папки; главы 2–5 пока подключены из
+// story/ink и идут по-русски, пока их не переведут (каждую главу — перед её сборкой). Переведённую
+// главу подключать отсюда так же, как пролог и главу 1. Структура обязана совпадать с story/ink/game.ink:
+// игра переносит сохранения между языками проигрыванием журнала выборов.
 INCLUDE common.ink
 INCLUDE ../ink/explore_common.ink
 
@@ -14,14 +14,14 @@ INCLUDE prologue/05_deserter.ink
 INCLUDE prologue/06_column.ink
 INCLUDE prologue/07_interrogation.ink
 
-INCLUDE ../ink/chapter1/01_gate.ink
-INCLUDE ../ink/chapter1/02_cage.ink
-INCLUDE ../ink/chapter1/03_rest.ink
-INCLUDE ../ink/chapter1/04_barracks.ink
-INCLUDE ../ink/chapter1/05_white_woman.ink
-INCLUDE ../ink/chapter1/06_lift.ink
-INCLUDE ../ink/chapter1/07_camp.ink
-INCLUDE ../ink/chapter1/explore.ink
+INCLUDE chapter1/01_gate.ink
+INCLUDE chapter1/02_cage.ink
+INCLUDE chapter1/03_rest.ink
+INCLUDE chapter1/04_barracks.ink
+INCLUDE chapter1/05_white_woman.ink
+INCLUDE chapter1/06_lift.ink
+INCLUDE chapter1/07_camp.ink
+INCLUDE chapter1/explore.ink
 
 INCLUDE ../ink/chapter2/01_black_water.ink
 INCLUDE ../ink/chapter2/02_fugitives.ink

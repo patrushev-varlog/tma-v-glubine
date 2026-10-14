@@ -256,6 +256,16 @@ func _advance() -> void:
 			_show_choices(item)
 		"battle":
 			_show_battle(String(item.id))
+		"levelup":
+			_panel.hide()
+			_camp = CampPanels.levelup(_ui, int(item.level), func(branch: String) -> void:
+				Game.session.choose_branch(branch)
+				_camp_done())
+		"shop":
+			_panel.hide()
+			_camp = CampPanels.shop(_ui, String(item.id), func(buy: Array) -> void:
+				Game.session.leave_shop(buy)
+				_camp_done())
 		"explore_end":
 			_advance()
 		"end":
@@ -382,7 +392,20 @@ func _leave(tail: Array[Dictionary]) -> void:
 
 # --- Движение ----------------------------------------------------------------------
 
+## Рамка лагеря (уровень, торговец): не закрывается Esc, история ждёт ответа.
+var _camp: Control = null
+
+
+func _camp_done() -> void:
+	if _camp != null and is_instance_valid(_camp):
+		_camp.queue_free()
+	_camp = null
+	_advance()
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if _camp != null:
+		return
 	if _overlay != null and is_instance_valid(_overlay):
 		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("game_menu"):
 			_close_overlay()
@@ -449,7 +472,7 @@ func _click(c: Vector2i) -> void:
 ## Клавиатура и геймпад: шаг на соседнюю клетку в сторону, куда наклонён стик (в экранных
 ## координатах, поэтому «вверх» на стике — вверх по экрану, а не вдоль оси карты).
 func _process(_delta: float) -> void:
-	if _mode != "roam" or (_overlay != null and is_instance_valid(_overlay)):
+	if _mode != "roam" or _camp != null or (_overlay != null and is_instance_valid(_overlay)):
 		return
 	var dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	if dir.length() < 0.5 or _view.hero.is_moving():

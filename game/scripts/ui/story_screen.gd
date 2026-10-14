@@ -72,6 +72,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _camp != null:
+		return
 	if _overlay != null and is_instance_valid(_overlay):
 		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("game_menu"):
 			_close_overlay()
@@ -115,6 +117,16 @@ func _advance() -> void:
 				_bottom.add_child(UiKit.button(String(item.options[i]), _choose.bind(i)))
 		"battle":
 			_battle_panel(String(item.id))
+		"levelup":
+			_camp_panel(CampPanels.levelup(self, int(item.level), func(branch: String) -> void:
+				Game.session.choose_branch(branch)
+				_camp_done()))
+			return
+		"shop":
+			_camp_panel(CampPanels.shop(self, String(item.id), func(buy: Array) -> void:
+				Game.session.leave_shop(buy)
+				_camp_done()))
+			return
 		"explore_end":
 			_advance()
 			return
@@ -185,6 +197,24 @@ func _clear_bottom() -> void:
 	for c in _bottom.get_children():
 		_bottom.remove_child(c)
 		c.queue_free()
+
+
+# --- Лагерь -----------------------------------------------------------------
+
+## Рамка лагеря (уровень, торговец) не закрывается Esc: история ждёт ответа. Ответ закрывает её сам.
+var _camp: Control = null
+
+
+func _camp_panel(panel: Control) -> void:
+	_camp = panel
+	panel.tree_exiting.connect(func() -> void: _camp = null)
+
+
+func _camp_done() -> void:
+	if _camp != null and is_instance_valid(_camp):
+		_camp.queue_free()
+	_camp = null
+	_advance()
 
 
 # --- Бой --------------------------------------------------------------------

@@ -80,7 +80,7 @@ func _ready() -> void:
 func _advance() -> void:
 	busy = true
 	_refresh()
-	while battle.outcome == "" and battle.current().team == 1:
+	while battle.outcome == "" and battle.ai_turn(battle.current()):
 		var e := battle.current()
 		_focus_if_needed(e.cell)
 		_refresh()
@@ -122,7 +122,7 @@ func _after_action() -> void:
 
 
 func _my_turn() -> bool:
-	return battle != null and not busy and battle.outcome == "" and battle.current().team == 0 and _overlay == null
+	return battle != null and not busy and battle.outcome == "" and not battle.ai_turn(battle.current()) and _overlay == null
 
 
 # --- План действия по клетке -------------------------------------------------
@@ -884,6 +884,9 @@ func _show_result() -> void:
 	col.add_child(UiKit.label(UiKit.fmt("BATTLE_RESULT_STATS", {"rounds": battle.round_num, "down": down}), UiKit.FONT_SMALL))
 	if not won:
 		PlaytestLog.event("battle_lost", {"battle": battle.id, "rounds": battle.round_num, "difficulty": battle.difficulty})
+	var loot := int(CombatData.table("battles").get(battle.id, {}).get("silver", 0))
+	if won and loot > 0:
+		col.add_child(UiKit.label(UiKit.fmt("BATTLE_LOOT", {"silver": loot}), UiKit.FONT_SMALL, UiKit.ACCENT))
 	if won and battle.stage.get("rescued", false):
 		col.add_child(UiKit.label(tr("BATTLE_RESCUED_NOTE"), UiKit.FONT_SMALL, UiKit.MUTED))
 	if won:

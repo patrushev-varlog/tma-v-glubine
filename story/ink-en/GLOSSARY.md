@@ -26,3 +26,37 @@
 | тёмные дары | dark gifts | тег `unlock:dark_gifts` не переводится |
 | Глава 1. Верхние шахты | Chapter 1. The Upper Mines | титр |
 | по седьмым дням | every seventh day | в мире нет воскресений |
+
+Глава 1 (перевод 13.10.2026, ждут утверждения вместе с PR):
+
+| Русский | English | Где |
+|---|---|---|
+| Хольт, сержант Хольт | Holt, Sergeant Holt | пост у ворот, сцена 1 |
+| Верхний ворот (пост) | the Upper Windlass | сцена 1 |
+| Велиор | Velior | бывший королевский разведчик |
+| «Предатель Короля» | "Traitor to the King" | табличка на клетке |
+| Мэб | Mab | узница в бараках |
+| Аннет | Annet | жена Гаррета |
+| Эдрик | Edric | голос во сне (имя только в комментариях) |
+| Лиара | Liara | женщина в белом (имя только в комментариях) |
+| Аларик, штейгер Аларик | Alaric, the foreman | охота главы 1 |
+| штейгер | foreman | «Фонарь первого штейгера» — "Lantern of the First Foreman" (как в i18n) (id `foreman_lantern`) |
+| десятник, сторожка десятника | ganger, the ganger's hut | закоулок 3 |
+| старший смены | the shift boss | сцена 4 |
+| горизонт (верхние, нижние) | level (the upper levels, the lower levels) | |
+| Средние горизонты | the Middle Levels | |
+| штрек | tunnel | |
+| забой | face (a side face, the old face) | закоулок 1 |
+| выработка | working | |
+| крепь, стойки | timber, pit props, posts | |
+| клетка (Велиора) | the cage | сцена 2 |
+| клеть (подъёмника) | the cage | шахтный термин; площадка — the platform, ствол — the shaft |
+| бараки, караулка | the barracks, the guardroom | |
+| бирка (жетон умершего) | tag, token | амулет «Бирка жены» — "His Wife's Tag" (как в i18n) (id `garret_tag`) |
+| списать | strike off | «тебя же списали» |
+| маркитант | sutler | торговец, тег `shop:sutler` |
+| кузнец (из Эшмура) | the smith | торговец, тег `shop:smith` |
+| оберег рудокопа | charm | id `miner_charm` |
+| масло против мёртвых | oil against the dead | id `oil_undead` |
+| лагерь беглецов | the runaways' camp | |
+| Глава 2. Затопленные выработки | Chapter 2. The Flooded Workings | титр |
