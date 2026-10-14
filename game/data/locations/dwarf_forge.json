@@ -1,0 +1,39 @@
+{
+ "id": "dwarf_forge",
+ "comment": "Глава 3, сцена 2 «Лагерь спасённых»: дварфийская кузница — постоянный лагерь. Горн, наковальни, лари со сталью. Пивоварня Молчащих за горном (закоулок 1, слиток для кузницы).",
+ "size": [16, 11],
+ "legend": {"h": "dwarf_hall", "r": "dwarf_rune", "c": "dwarf_chasm", "#": "dwarf_hall"},
+ "blocked_ground": ["dwarf_chasm"],
+ "wall": {"char": "#", "sprites": ["dwarf/wall_block", "dwarf/wall_block", "dwarf/wall_block", "dwarf/wall_runes"]},
+ "ground": [
+  "    ######      ",
+  "  ###hhhh#####  ",
+  " ##hhhhhhhhhh## ",
+  " #hhhhhhhhhhhh##",
+  " #hhhhhhhhhhhhh#",
+  " #hhhhrrrhhhhhh#",
+  " #hhhhrrrhhhhh##",
+  " #hhhhhhhhhhhh# ",
+  " ##hhhhhhhhhh## ",
+  "  ####hhh#####  ",
+  "     #   #      "
+ ],
+ "variants": {"halls": {"tint": "#b4a690"}},
+ "scenes": {"refuge": {"variant": "halls", "spawn": [7, 9]}},
+ "objects": [
+  {"id": "forge", "kind": "box", "cell": [6, 1], "size": [2, 2], "light": 40, "sprite": "dwarf/great_forge"},
+  {"id": "anvil_1", "kind": "box", "cell": [5, 4], "sprite": "dwarf/anvil"},
+  {"id": "anvil_2", "kind": "box", "cell": [9, 4], "sprite": "dwarf/anvil"},
+  {"id": "steel_chests", "kind": "box", "cell": [12, 3], "sprite": "dwarf/steel_chest"},
+  {"id": "coal", "kind": "box", "cell": [3, 7], "sprite": "dwarf/coal_heap"},
+  {"id": "brewery", "kind": "box", "cell": [13, 4], "explore": "ch3_nook_brewery", "label": "LOC_CH3_BREWERY", "sprite": "dwarf/brew_door"},
+  {"id": "smith", "kind": "figure", "cell": [8, 5], "image": "smith", "face": "south-west", "if": "column_choice=neighbors"},
+  {"id": "mab", "kind": "figure", "cell": [4, 5], "image": "mab", "face": "south-east", "if": "ch3_camp_leader=meb"},
+  {"id": "tobin", "kind": "figure", "cell": [4, 5], "image": "tobin", "face": "south-east", "if": "ch3_camp_leader=tobin"},
+  {"id": "fugitive_1", "kind": "figure", "cell": [10, 7], "image": "prisoner_f", "face": "north-west", "if": "ch3_fugitives_here"},
+  {"id": "fugitive_2", "kind": "figure", "cell": [3, 6], "image": "prisoner_m", "face": "north-east", "if": "ch3_fugitives_here"},
+  {"id": "bedding_1", "kind": "decal", "cell": [11, 6], "flat": true, "sprite": "flooded/bedding"},
+  {"id": "fresco_door", "kind": "box", "cell": [2, 4], "sprite": "dwarf/rune_column"},
+  {"id": "brazier", "kind": "box", "cell": [13, 6], "light": 34, "sprite": "dwarf/rune_brazier"}
+ ]
+}

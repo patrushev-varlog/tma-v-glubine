@@ -111,6 +111,7 @@ FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 TILE_SETS = {ts: ART / "prologue" / "tiles" / ts for ts in ("village_night", "village_morning", "temple", "ford", "gate")}
 TILE_SETS["mines"] = ART / "chapter1" / "tiles" / "mines"
 TILE_SETS["flooded"] = ART / "chapter2" / "tiles" / "flooded"
+TILE_SETS["dwarf"] = ART / "chapter3" / "tiles" / "dwarf"
 FLOOR_PREFIXES = ("floor_", "water_", "bank_", "edge")
 # Верх ромба у пола 64×64: ромб 64×32 начинается с 22-й строки.
 FLOOR_TOP = 22
@@ -125,6 +126,8 @@ LOCATION_FLOORS = {
 	"mine_planks": "mines/floor_planks", "mine_rails": "mines/floor_rails", "mine_rails_b": "mines/floor_rails_b",
 	# Затопленные выработки главы 2.
 	"flood_wade": "flooded/floor_wade", "flood_deep": "flooded/floor_deep", "flood_wet": "flooded/floor_wet",
+	# Дварфийские залы главы 3.
+	"dwarf_hall": "dwarf/floor_hall", "dwarf_rune": "dwarf/floor_rune",
 }
 
 ABILITY_ICONS = ("disengage", "dodge", "end_turn", "fire_bolt", "hallowed_ground", "healing_word", "magic_missile",

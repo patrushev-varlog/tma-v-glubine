@@ -19,3 +19,8 @@ LOC_CH2_FUGITIVE_TALE,Поговорить с вожаком беглых,Talk t
 LOC_CH2_STASH,Осмотреть ящики под помостом,Search the crates under the platform
 LOC_CH2_BOATMEN,Послушать лодочников у причала,Listen to the boatmen at the pier
 LOC_CH2_SMALL_LEVER,Осмотреть малый рычаг у затвора,Examine the small lever by the gate
+LOC_CH3_RIDDLE_DOOR,Осмотреть дверь с загадкой,Examine the riddle door
+LOC_CH3_BREWERY,Заглянуть в низкую дверь за горном,Look behind the low door past the forge
+LOC_CH3_TABLETS,Осмотреть боковую нишу с табличками,Search the side niche with the tablets
+LOC_CH3_SLAB,Осмотреть плиту у дальней стены,Examine the slab by the far wall
+LOC_CH3_GALLERY_NOOK,Пролезть в обвалившийся боковой ход,Squeeze into the collapsed side passage

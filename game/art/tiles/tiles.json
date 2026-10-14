@@ -1,4 +1,20 @@
 {
+	"dwarf/great_forge": [
+		40,
+		88
+	],
+	"dwarf/riddle_door": [
+		27,
+		75
+	],
+	"dwarf/rune_arch": [
+		55,
+		108
+	],
+	"dwarf/tablet_shelf": [
+		21,
+		77
+	],
 	"flooded/bedding": [
 		27,
 		30
