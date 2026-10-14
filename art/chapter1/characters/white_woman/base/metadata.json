@@ -1,0 +1,36 @@
+{
+  "group_id": "3499aba8-9d91-456d-87a9-db1d0e1e6eea",
+  "states": [
+    {
+      "character": {
+        "id": "dc4507e2-8105-4cbe-90c8-6fdf7dea050f",
+        "name": "Idle",
+        "prompt": "a pale ghostly young woman in a long plain white dress, long dark hair loose, barefoot, standing still with arms at her sides, faint cold glow, sad calm face, both hands empty, no weapon in hands, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T19:45:06.404183+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T19:49:51.611403"
+}

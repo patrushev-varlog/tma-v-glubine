@@ -116,6 +116,11 @@ func _add_object(o: Dictionary) -> void:
 			center /= cells.size()
 			var y := center.y + 2.0 if cells.size() == 1 else bottom - 4.0
 			layer.add_child(_SpriteObj.make(sprite, Vector2(center.x, y)))
+		# Светильник (фонарь на столбе в шахтах): свет на высоте light над клеткой.
+		if o.has("light"):
+			var l := light(true)
+			l.position = cell_center(o.cell) - Vector2(0, float(o.light))
+			props.add_child(l)
 		return
 	if o.has("unit") and not UnitArt.unit(String(o.unit)).is_empty():
 		var u := LocationWalker.new()
@@ -153,6 +158,25 @@ func _add_object(o: Dictionary) -> void:
 			var s := _Standing.new()
 			s.setup(self, o)
 			props.add_child(s)
+
+
+## Тёплый свет огня: круг с мягким краем.
+static func light(small: bool) -> PointLight2D:
+	var l := PointLight2D.new()
+	var g := GradientTexture2D.new()
+	g.fill = GradientTexture2D.FILL_RADIAL
+	g.fill_from = Vector2(0.5, 0.5)
+	g.fill_to = Vector2(1.0, 0.5)
+	g.width = 256
+	g.height = 256
+	g.gradient = Gradient.new()
+	g.gradient.set_color(0, Color(1, 1, 1, 1))
+	g.gradient.set_color(1, Color(1, 1, 1, 0))
+	l.texture = g
+	l.color = Color("#fb6b1d")
+	l.energy = 0.9 if small else 1.4
+	l.texture_scale = 0.9 if small else 2.0
+	return l
 
 
 # --- Рисунок объекта: нижняя точка рисунка стоит в position (по ней сортируется глубина) ---
@@ -337,22 +361,9 @@ class _Fire extends Node2D:
 		position = view.cell_center(o.cell)
 		lift = float(o.get("lift", 0))
 		small = bool(o.get("small", false))
-		var light := PointLight2D.new()
-		var g := GradientTexture2D.new()
-		g.fill = GradientTexture2D.FILL_RADIAL
-		g.fill_from = Vector2(0.5, 0.5)
-		g.fill_to = Vector2(1.0, 0.5)
-		g.width = 256
-		g.height = 256
-		g.gradient = Gradient.new()
-		g.gradient.set_color(0, Color(1, 1, 1, 1))
-		g.gradient.set_color(1, Color(1, 1, 1, 0))
-		light.texture = g
-		light.color = Color("#fb6b1d")
-		light.energy = 0.9 if small else 1.4
-		light.texture_scale = 0.9 if small else 2.0
-		light.position = Vector2(0, -lift)
-		add_child(light)
+		var l := LocationView.light(small)
+		l.position = Vector2(0, -lift)
+		add_child(l)
 
 	func _process(delta: float) -> void:
 		_t += delta

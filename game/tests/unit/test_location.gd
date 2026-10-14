@@ -93,12 +93,16 @@ func test_every_obj_tag_has_reachable_object() -> void:
 		var s := StorySession.new()
 		s.new_game({"hero": HERO, "difficulty": "story"}, "ru")
 		var rng: int = seed_value
-		for i in 3000:
+		for i in 6000:
 			var item := s.next()
-			if item.type == "end" or s.chapter_name() != "prologue" and s.scene_idx > 6:
+			if item.type == "end" or not ["prologue", "chapter1"].has(s.chapter_name()):
 				break
 			if item.type == "battle":
 				s.win_battle(0)
+			elif item.type == "levelup":
+				s.choose_branch(String(s.state.hero.archetype))
+			elif item.type == "shop":
+				s.leave_shop([])
 			elif item.type == "choices":
 				var loc := LocationMap.for_scene(s.scene_name())
 				for obj in item.objects:
@@ -113,14 +117,41 @@ func test_every_obj_tag_has_reachable_object() -> void:
 					found[obj] = true
 				rng = (rng * 1103515245 + 12345) % 2147483648
 				s.choose(rng % item.options.size())
-	for obj in ["oldrik", "cart", "list", "road"]:
+	for obj in ["oldrik", "cart", "list", "road", "drift_on", "hearth", "guardroom", "gallery_end", "lever"]:
 		assert_true(found.has(obj), "объект %s встретился" % obj)
+
+
+## Объекты для свободного осмотра (поле explore): до них можно дойти, а узел Ink есть в истории.
+func test_explore_objects_reachable_and_known() -> void:
+	var story := FileAccess.get_file_as_string("res://story/game.ru.json")
+	var index: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LocationMap.DIR + "index.json"))
+	var seen := 0
+	for scene in index.scenes:
+		var m := LocationMap.load_location(String(index.scenes[scene]))
+		m.setup_scene(scene)
+		assert_eq(m.ground.size() > 0, true)
+		for o in m.objects:
+			for c in m.cells_of(o):
+				assert_true(m.ground.has(c), "%s (%s) внутри пола карты" % [o.id, scene])
+			if not o.has("explore"):
+				continue
+			seen += 1
+			assert_true(story.contains('"%s"' % o.explore), "узел %s есть в истории" % o.explore)
+			assert_ne(tr(String(o.label)), String(o.label), "подпись %s переведена" % o.label)
+			assert_true(m.path_to_object(m.spawn_of(scene), o).ok, "до %s можно дойти в сцене %s" % [o.id, scene])
+	assert_eq(seen, 6, "шесть мест осмотра главы 1")
 
 
 func _check(s: StorySession, cond: String) -> bool:
 	var neg := cond.begins_with("!")
 	var c := cond.substr(1) if neg else cond
-	var v: bool = s.state.battles.has(c.substr(4)) if c.begins_with("won:") else LocationMap.truthy(s.flag(c))
+	var v: bool
+	if c.begins_with("won:"):
+		v = s.state.battles.has(c.substr(4))
+	elif c.contains("="):
+		v = String(s.flag(c.get_slice("=", 0))) == c.get_slice("=", 1)
+	else:
+		v = LocationMap.truthy(s.flag(c))
 	return v != neg
 
 
@@ -260,3 +291,89 @@ func test_ashes_walk_talk_inspect_save() -> void:
 	await wait_seconds(0.5)
 	assert_eq(sc2.get_meta("went", ""), "res://scenes/story_screen.tscn", "храм — снова экран истории")
 	assert_eq(Game.session.state.chapter, 0)
+
+
+## Глава 1 на картах: бунт, закоулки и подсказки осмотром объектов, у рычага Гаррет останавливает,
+## штрек за досками ведёт к бою со штейгером. Сюжет между картами проходится без экрана.
+func test_chapter1_hunt_on_maps() -> void:
+	var first := _story_to("gate")
+	var sc: Node = await _screen(first)
+	assert_eq(sc._map.id, "mine_gate")
+	_until(sc, "battle")
+	Game.start_battle(1)
+	Game.finish_battle(0)
+	sc.queue_free()
+	sc = await _screen_resume()
+	_until(sc, "roam")
+	assert_eq(sc._mode, "roam", "после боя у поста можно ходить")
+	assert_true(sc._choice_obj.has("drift_on"))
+	assert_true(sc._explore_obj.has("holt_hut") and sc._explore_obj.has("face"), "караулка и забой для осмотра")
+	assert_eq(sc._goals.get_child_count(), 2, "в списке целей только выход")
+	sc._interact("face")
+	assert_eq(Game.session.flow, "explore", "осмотр идёт в отдельном потоке")
+	_until(sc, "roam")
+	assert_true(Game.session.flag("ch1_nook_face_done"), "забой осмотрен")
+	assert_true(sc._choice_obj.has("drift_on"), "после осмотра снова ходим")
+	sc._interact("holt_hut")
+	_until(sc, "roam")
+	assert_eq(int(Game.session.flag("ch1_hunt_clues")), 2, "две подсказки: зарубки и карта Хольта")
+	sc._interact("drift_on")
+	_until(sc, "leaving")
+	await wait_seconds(0.5)
+	sc.queue_free()
+
+	# Клетка: кладовая крепи; бараки: бунт и старый узник — без экрана, через сессию.
+	var s := Game.session
+	var explored := false
+	for i in 3000:
+		var item := s.next()
+		if s.scene_name() == "lift" and item.type == "choices" and item.objects.has("lever"):
+			break
+		match String(item.type):
+			"battle":
+				s.win_battle(0)
+			"levelup":
+				s.choose_branch(String(s.state.hero.archetype))
+			"shop":
+				s.leave_shop([])
+			"choices":
+				if s.scene_name() == "cage" and item.objects.has("hearth") and not explored:
+					s.explore("ch1_nook_timber")
+					explored = true
+					continue
+				var pick := 0
+				for k in item.options.size():
+					if String(item.options[k]).begins_with("Поднять бунт"):
+						pick = k
+				s.choose(pick)
+	assert_true(s.flag("ch1_nook_timber_done"), "крепь из кладовой у Гаррета")
+	assert_eq(String(s.flag("ch1_choice")), "riot")
+
+	# Подъёмник: у рычага Гаррет останавливает, герой возвращается и идёт в штрек.
+	sc = await _screen({"type": "line", "text": "…", "tags": PackedStringArray()})
+	assert_eq(sc._map.id, "mine_lift")
+	sc._advance()
+	assert_eq(sc._mode, "roam")
+	assert_false(sc._map.object("prisoner_1").is_empty(), "после бунта узники на площадке")
+	sc._interact("lever")
+	assert_eq(sc._mode, "line", "Гаррет придержал за плечо")
+	_until(sc, "choices")
+	sc._choose(0)
+	_until(sc, "roam")
+	assert_eq(sc._mode, "roam", "решили вернуться: остаёмся на площадке")
+	assert_eq(s.scene_name(), "lift")
+	sc._interact("drift_boards")
+	_until(sc, "battle")
+	assert_eq(sc._mode, "battle", "за досками штейгер")
+	assert_eq(s.pending_battle, "ch1_hunt_foreman")
+	Game.start_battle(1)
+	Game.finish_battle(0)
+	sc.queue_free()
+	sc = await _screen_resume()
+	_until(sc, "roam")
+	assert_true(s.flag("ch1_hunt_done"), "фонарь у отряда")
+	assert_true(s.state.items_of("hero").has("foreman_lantern"))
+	# Теперь рычаг уводит сразу: охота закрыта.
+	sc._interact("lever")
+	assert_ne(sc._mode, "roam")
+	assert_true(LocationMap.truthy(s.flag("hunt_leave_ok")), "проверка охоты пропускает")

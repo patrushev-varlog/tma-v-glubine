@@ -68,6 +68,9 @@ The barracks were empty within the hour. The prisoners left by an old tunnel for
     Oldric's boy lingered at the way out.
     "I'll tell my father you came," he said. "That you did come after all." # spk:boy
 }
+// On the barracks map: the foreman's hut (nook 3), the old prisoner by the bars (hunt clue).
++ [Follow Garret into the guardroom. #obj:guardroom]
+-
 In the guardroom Garret found a box of tags: copper tokens, one for every prisoner who had died here. He sorted through them for a long time, until he found one. Then he closed his fist on it and said nothing.
 ~ garret_tag_found = true
 "Her name was Annet," he said later, when you were already walking to the lift. That was all he told you. # spk:garret
@@ -86,6 +89,9 @@ Mab stepped back from the bars. She did not spit, did not shout. She simply went
 - else:
     Garret followed you in silence.
 }
+// On the barracks map on the way to the lift: the foreman's hut at the end of the gallery (nook 3).
++ [Go on to the lift. #obj:gallery_end]
+-
 Half the way you went quietly. Then a patrol came out of a side tunnel, and the quiet was over.
 // Battle 2: a patrol in the tunnel. The prisoners don't help.
 "Stand where you are!" # spk:overseer # battle:chapter1_2_patrol

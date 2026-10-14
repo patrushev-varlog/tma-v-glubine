@@ -70,7 +70,9 @@ func _next_step() -> void:
 	queue_redraw()
 
 
+## Направление по полю face: "se" … "nw" или как у статичных рисунков, "south-east" … "north-west".
 static func dir_of(face: String) -> Vector2i:
+	face = face.replace("south-", "s").replace("north-", "n").replace("east", "e").replace("west", "w")
 	return {"se": Vector2i(1, 0), "ne": Vector2i(0, -1), "sw": Vector2i(0, 1), "nw": Vector2i(-1, 0)}.get(face, Vector2i(1, 0))
 
 

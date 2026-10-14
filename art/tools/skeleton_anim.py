@@ -125,7 +125,7 @@ def hero_description(name):
     raise KeyError(name)
 
 
-def run(hero, anim, dirs=DIRS, seed=0):
+def run(hero, anim, dirs=DIRS, seed=0, root=PRO):
     if anim in ("thrust", "shoot"):
         src, key, action = None, None, THRUST_ACTION if anim == "thrust" else SHOOT_ACTION
     else:
@@ -134,7 +134,7 @@ def run(hero, anim, dirs=DIRS, seed=0):
     desc = hero_description(hero)
     results = {}
     for d in dirs:
-        rot = PRO / hero / "base" / "Idle" / "rotations" / f"{d}.png"
+        rot = root / hero / "base" / "Idle" / "rotations" / f"{d}.png"
         hero_base = estimate(rot)
         if anim in ("thrust", "shoot"):
             kps = (thrust_keypoints if anim == "thrust" else shoot_keypoints)(hero_base, d)
@@ -149,7 +149,7 @@ def run(hero, anim, dirs=DIRS, seed=0):
         r = p.call("POST", "/animate-with-skeleton-v3", body)
         j = p.wait_job(p._job_id(r), every=10, limit=1200)
         imgs = (j.get("last_response") or {}).get("images") or []
-        out = PRO / hero / "anims" / anim / d
+        out = root / hero / "anims" / anim / d
         for i, im in enumerate(imgs):
             p.save_b64(im, out / f"{i:02d}.png")
         (out / "keypoints.json").write_text(json.dumps({"base": hero_base, "frames": kps}))

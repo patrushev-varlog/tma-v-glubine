@@ -4,6 +4,8 @@ extends Node
 ## Пока на карте ждут только объекты, игрок свободно ходит: клик или тап по клетке, WASD и стрелки,
 ## стик или крестовина геймпада; осмотр — клик по объекту, Enter или A рядом с ним.
 ## Бой по тегу # battle: — переход на экран боя и после победы обратно на карту.
+## Объекты с полем explore (закоулки, тайники, места охот) можно осмотреть, пока герой ходит по карте:
+## узел Ink идёт в отдельном потоке (StorySession.explore), потом герой снова ходит.
 ## Какие сцены идут на картах — data/locations/index.json; формат карт — docs/LOCATIONS.md.
 
 const FADE_TIME := 0.35
@@ -35,6 +37,10 @@ var _mode := ""
 ## Объекты, которые сейчас можно осмотреть: id → индекс варианта выбора.
 var _choice_obj := {}
 var _choice_text := {}
+## Объекты для свободного осмотра: id → {"node", "args", "text"} (поле explore в данных карты).
+var _explore_obj := {}
+## Объект-выход, перед которым идёт проверка охоты (поле leave_check): ждёт конца осмотра.
+var _pending_leave := ""
 ## Объект, к которому герой идёт по клику: осмотреть по приходу.
 var _target_obj := ""
 var _last_line := ""
@@ -86,6 +92,8 @@ func _check(cond: String) -> bool:
 	var v: bool
 	if c.begins_with("won:"):
 		v = Game.session.state.battles.has(c.substr(4))
+	elif c.contains("="):
+		v = String(Game.session.flag(c.get_slice("=", 0))) == c.get_slice("=", 1)
 	else:
 		v = LocationMap.truthy(Game.session.flag(c))
 	return v != neg
@@ -267,7 +275,7 @@ func _advance() -> void:
 				Game.session.leave_shop(buy)
 				_camp_done())
 		"explore_end":
-			_advance()
+			_explore_done()
 		"end":
 			_mode = "end"
 			_set_active({})
@@ -327,6 +335,10 @@ func _show_choices(item: Dictionary) -> void:
 	_mode = "roam"
 	_choice_obj = on_map
 	_choice_text = texts
+	_explore_obj = {}
+	for o in _map.objects:
+		if o.has("explore"):
+			_explore_obj[o.id] = {"node": String(o.explore), "args": o.get("args", []), "text": tr(String(o.get("label", "LOC_LOOK")))}
 	_set_active(texts)
 	_panel.hide()
 	get_viewport().gui_release_focus()
@@ -340,12 +352,28 @@ func _choose(i: int) -> void:
 	_advance()
 
 
-## Осмотреть объект: выбрать вариант истории, привязанный к нему.
-func _interact(obj_id: String) -> void:
-	if _mode != "roam" or not _choice_obj.has(obj_id):
+## Осмотреть объект: выбрать вариант истории, привязанный к нему, или пройти узел осмотра.
+## У выхода с полем leave_check сперва идёт проверка охоты (hunt_leave_check, explore_common.ink):
+## если Гаррет остановил героя и тот решил вернуться, герой остаётся на карте.
+func _interact(obj_id: String, checked := false) -> void:
+	if _mode != "roam" or not (_choice_obj.has(obj_id) or _explore_obj.has(obj_id)):
 		return
 	_view.hero.stop()
 	_target_obj = ""
+	if _explore_obj.has(obj_id):
+		var ex: Dictionary = _explore_obj[obj_id]
+		_last_line = "› " + String(ex.text)
+		_set_active({})
+		Game.session.explore(String(ex.node), ex.args)
+		_advance()
+		return
+	var check := int(_map.object(obj_id).get("leave_check", 0))
+	if check > 0 and not checked:
+		_pending_leave = obj_id
+		_set_active({})
+		Game.session.explore("hunt_leave_check", [check])
+		_advance()
+		return
 	_last_line = "› " + String(_choice_text[obj_id])
 	var i := int(_choice_obj[obj_id])
 	_set_active({})
@@ -353,12 +381,36 @@ func _interact(obj_id: String) -> void:
 	_advance()
 
 
+## Осмотр кончился: история снова ждёт на карте. После проверки охоты — уйти, если можно.
+func _explore_done() -> void:
+	var leave := _pending_leave
+	_pending_leave = ""
+	_advance()
+	if leave != "" and LocationMap.truthy(Game.session.flag("hunt_leave_ok")):
+		_interact(leave, true)
+
+
+## Подпись действия у объекта: текст варианта или «Осмотреть …».
+func _action_text(id: String) -> String:
+	if _explore_obj.has(id):
+		return String(_explore_obj[id].text)
+	return String(_choice_text.get(id, ""))
+
+
+func _is_active(id: String) -> bool:
+	return _choice_obj.has(id) or _explore_obj.has(id)
+
+
 func _set_active(texts: Dictionary) -> void:
 	if texts.is_empty():
 		_choice_obj = {}
 		_choice_text = {}
+		_explore_obj = {}
 		_view.path_preview.clear()
-	_view.set_active(texts)
+	var marks := texts.duplicate()
+	for id in _explore_obj:
+		marks[id] = _explore_obj[id].text
+	_view.set_active(marks)
 	for c in _goals.get_children():
 		c.queue_free()
 	if not texts.is_empty():
@@ -441,7 +493,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _hover(c: Vector2i) -> void:
 	_view.hover_cell = c
 	var obj := _map.object_at(c)
-	if not obj.is_empty() and _choice_obj.has(obj.id):
+	if not obj.is_empty() and _is_active(obj.id):
 		_view.path_preview = _map.path_to_object(_view.hero.cell, obj).path
 	elif _map.walkable(c):
 		_view.path_preview = _map.path(_view.hero.cell, c)
@@ -452,7 +504,7 @@ func _hover(c: Vector2i) -> void:
 ## Клик или тап: по объекту для осмотра — подойти и осмотреть, по клетке — идти туда.
 func _click(c: Vector2i) -> void:
 	var obj := _map.object_at(c)
-	if not obj.is_empty() and _choice_obj.has(obj.id):
+	if not obj.is_empty() and _is_active(obj.id):
 		var r := _map.path_to_object(_view.hero.cell, obj)
 		if not r.ok:
 			return
@@ -509,8 +561,12 @@ func _on_arrived(_c: Vector2i) -> void:
 	_update_prompt()
 
 
-## Ближайший объект для осмотра, до которого герой уже дотянется, или "".
+## Ближайший объект для осмотра, до которого герой уже дотянется, или "". Сначала необязательные
+## (закоулки), чтобы Enter у тайника рядом с выходом не уводил с карты.
 func _reachable_active() -> String:
+	for id in _explore_obj:
+		if _map.can_reach_from(_map.object(id), _view.hero.cell):
+			return String(id)
 	for id in _choice_obj:
 		if _map.can_reach_from(_map.object(id), _view.hero.cell):
 			return String(id)
@@ -521,7 +577,7 @@ func _update_prompt() -> void:
 	if _prompt == null:
 		return
 	var id := _reachable_active() if _mode == "roam" else ""
-	_prompt.text = UiKit.fmt("LOC_PROMPT", {"key": InputSetup.glyph("ui_accept"), "action": _choice_text[id]}) if id != "" else ""
+	_prompt.text = UiKit.fmt("LOC_PROMPT", {"key": InputSetup.glyph("ui_accept"), "action": _action_text(id)}) if id != "" else ""
 
 
 # --- Бой --------------------------------------------------------------------------------

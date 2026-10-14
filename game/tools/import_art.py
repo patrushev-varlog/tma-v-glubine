@@ -76,6 +76,11 @@ UNITS = {
 	"crossbowman": (PRO / "crossbowman", {**_PIXELLAB, "attack": "anims/shoot/{d}"}),
 	"raised": (PRO / "parishioner_m", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
 	"raised_f": (PRO / "parishioner_f", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	# Глава 1: бойцы шахты (art/tools/ch1_batch4.py); узники чередуются, как прихожане.
+	"holt": (ART / "chapter1" / "characters" / "holt", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	"foreman_dead": (ART / "chapter1" / "characters" / "foreman_dead", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	"prisoner": (ART / "chapter1" / "characters" / "prisoner_m", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	"prisoner_f": (ART / "chapter1" / "characters" / "prisoner_f", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
 }
 # Статичные персонажи (только стойка, 8 направлений) и позы «связан» — по картинке на направление:
 # game/art/units/static/<id>/<направление>.png, холст 64×64, ноги на 23 px ниже центра.
@@ -84,11 +89,17 @@ STATICS = {
 	"spouse_f": PRO / "spouse_f/base/Idle/rotations", "spouse_m": PRO / "spouse_m/base/Idle/rotations",
 	"brandt_tied": PRO / "brandt_tied", "garret_tied": PRO / "garret_tied",
 }
+# Глава 1: люди шахты на картах (art/chapter1/characters, без анимаций).
+CH1 = ART / "chapter1" / "characters"
+for _sid in ("holt", "mab", "boy", "prisoner_m", "prisoner_f", "white_woman", "sutler", "smith", "foreman_dead"):
+	STATICS[_sid] = CH1 / _sid / "base" / "Idle" / "rotations"
 ANIM_ORDER = ("idle", "walk", "attack", "cast", "hit", "down")
 FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 
 # Наборы тайлов, которые нужны боям и локациям пролога.
-TILE_SETS = ("village_night", "village_morning", "temple", "ford", "gate")
+# Набор тайлов → папка в art/. Пролог — art/prologue/tiles/<набор>, глава 1 — шахты.
+TILE_SETS = {ts: ART / "prologue" / "tiles" / ts for ts in ("village_night", "village_morning", "temple", "ford", "gate")}
+TILE_SETS["mines"] = ART / "chapter1" / "tiles" / "mines"
 FLOOR_PREFIXES = ("floor_", "water_", "bank_", "edge")
 # Верх ромба у пола 64×64: ромб 64×32 начинается с 22-й строки.
 FLOOR_TOP = 22
@@ -98,6 +109,9 @@ LOCATION_FLOORS = {
 	"grass": "village_morning/floor_grass", "grass_scorch": "village_morning/floor_ash",
 	"mud": "village_morning/floor_ruts", "road": "village_morning/floor_path",
 	"yard": "village_morning/floor_garden", "ash": "village_morning/floor_ash",
+	# Шахты главы 1.
+	"mine_stone": "mines/floor_stone", "mine_gravel": "mines/floor_gravel", "mine_ore": "mines/floor_ore",
+	"mine_planks": "mines/floor_planks", "mine_rails": "mines/floor_rails", "mine_rails_b": "mines/floor_rails_b",
 }
 
 ABILITY_ICONS = ("disengage", "dodge", "end_turn", "fire_bolt", "hallowed_ground", "healing_word", "magic_missile",
@@ -199,8 +213,8 @@ def tiles(w: Writer) -> None:
 	"""Полы — как есть (64×64, верх ромба с FLOOR_TOP); объекты обрезаны по рисунку, в tiles.json —
 	[ox, h]: где центр клетки по x от левого края и высота до нижней точки рисунка."""
 	manifest = {}
-	for ts in TILE_SETS:
-		for f in sorted((ART / "prologue" / "tiles" / ts).glob("*.png")):
+	for ts, folder in TILE_SETS.items():
+		for f in sorted(folder.glob("*.png")):
 			name = f.stem
 			im = Image.open(f).convert("RGBA")
 			if name.startswith(FLOOR_PREFIXES):
@@ -212,8 +226,11 @@ def tiles(w: Writer) -> None:
 			w.image(OUT / "tiles" / ts / f.name, crop)
 	w.json(OUT / "tiles" / "tiles.json", manifest)
 	for kind, src in LOCATION_FLOORS.items():
-		im = Image.open(ART / "prologue" / "tiles" / f"{src}.png").convert("RGBA")
-		top = im.crop((0, FLOOR_TOP, 64, FLOOR_TOP + 32))
+		ts, name = src.split("/")
+		im = Image.open(TILE_SETS[ts] / f"{name}.png").convert("RGBA")
+		# Верх ромба — по рисунку: у полов шахт он на строку-две ниже FLOOR_TOP.
+		y0 = max(FLOOR_TOP, im.getchannel("A").getbbox()[1]) if ts == "mines" else FLOOR_TOP
+		top = im.crop((0, y0, 64, y0 + 32))
 		# Только ромб: всё, что вне него, прозрачно, чтобы соседние клетки не перекрывались.
 		out = Image.new("RGBA", (64, 32), (0, 0, 0, 0))
 		for y in range(32):

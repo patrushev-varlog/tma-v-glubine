@@ -73,6 +73,43 @@
 			52
 		]
 	},
+	"foreman_dead": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			55
+		],
+		"size": [
+			61,
+			57
+		]
+	},
 	"garret": {
 		"anims": {
 			"attack": {
@@ -421,6 +458,43 @@
 			79
 		]
 	},
+	"holt": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			55
+		],
+		"size": [
+			61,
+			58
+		]
+	},
 	"irena": {
 		"anims": {
 			"attack": {
@@ -498,6 +572,80 @@
 		"size": [
 			71,
 			72
+		]
+	},
+	"prisoner": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			55
+		],
+		"size": [
+			60,
+			57
+		]
+	},
+	"prisoner_f": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			27,
+			55
+		],
+		"size": [
+			55,
+			58
 		]
 	},
 	"raised": {

@@ -45,9 +45,13 @@ static func sprite_for(u: Combatant, hero := {}) -> String:
 	if u.is_hero:
 		var id := "hero_%s_%s" % [u.kind, "f" if bool(hero.get("hero_f", false)) else "m"]
 		return id if not unit(id).is_empty() else "hero_%s_m" % u.kind
-	if u.kind == "raised" and u.id.get_slice("_", u.id.get_slice_count("_") - 1).to_int() % 2 == 0:
-		return "raised_f"
-	return u.kind
+	if (u.kind == "raised" or u.kind == "prisoner") and u.id.get_slice("_", u.id.get_slice_count("_") - 1).to_int() % 2 == 0:
+		return u.kind + "_f"
+	return String(SPRITE_ALIAS.get(u.kind, u.kind))
+
+
+## Враги без своего листа, у которых есть похожий: лучник у клети главы 1 — арбалетчик пролога.
+const SPRITE_ALIAS := {"archer": "crossbowman"}
 
 
 ## Анимация, которая есть у листа: заклинание без своей анимации играется ударом и наоборот.

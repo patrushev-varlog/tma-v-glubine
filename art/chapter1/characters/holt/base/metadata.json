@@ -1,0 +1,36 @@
+{
+  "group_id": "a6aa65c7-1102-47e8-8dfd-e4d48b6efa56",
+  "states": [
+    {
+      "character": {
+        "id": "dddae576-43f2-489a-92d2-eb5c3d4a64f2",
+        "name": "Idle",
+        "prompt": "a veteran human mine sergeant in his fifties, black padded jacket with a dull-red iron crown-in-circle badge, steel half-helmet, grey moustache, heavy build, longsword held low in the right hand, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-13T19:39:53.686422+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-13T19:45:28.051052"
+}

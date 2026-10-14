@@ -51,7 +51,41 @@ static func load_location(location_id: String) -> LocationMap:
 			var t := String(legend.get(row[x], ""))
 			if t != "":
 				m.ground[Vector2i(x, y)] = t
+	m._add_walls()
 	return m
+
+
+## Стены штреков (поле wall): на каждой клетке со знаком char — куб скалы, рисунок по клетке из sprites.
+## Объекты стен идут первыми, чтобы остальные объекты карты были «верхними» при выборе по клетке.
+func _add_walls() -> void:
+	var wall: Dictionary = _data.get("wall", {})
+	if wall.is_empty():
+		return
+	var sprites: Array = wall.sprites
+	var walls: Array = []
+	var rows: Array = _data.ground
+	for y in rows.size():
+		var row := String(rows[y])
+		for x in row.length():
+			if row[x] != String(wall.char):
+				continue
+			var w := {"id": "wall_%d_%d" % [x, y], "kind": "box", "cell": [x, y], "height": 32, "color": "#3e3b4a", "top": "#57536a"}
+			# Ближняя к камере стена (пол за ней) — низкий уступ без рисунка, иначе закроет героя и объекты.
+			var front := false
+			for d in [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(-1, -1)]:
+				var c: Vector2i = Vector2i(x, y) + d
+				front = front or (ground.has(c) and _is_floor(c))
+			if front:
+				w.height = 8
+			else:
+				w["sprite"] = String(sprites[(((x * 73856093) ^ (y * 19349663)) & 0xffff) % sprites.size()])
+			walls.append(w)
+	walls.append_array(_data.objects)
+	_data.objects = walls
+
+
+func _is_floor(c: Vector2i) -> bool:
+	return String(_data.ground[c.y])[c.x] != String(_data.wall.char)
 
 
 ## Настройки сцены на этой карте: {"variant", "spawn": [x, y], …}.

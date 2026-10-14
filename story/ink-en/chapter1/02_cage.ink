@@ -96,4 +96,7 @@ You did not remember asking about the handwriting.
 "Sister, you frighten me. I like it." # spk:velior # mood:smile
 Garret silently handed him his flask. Velior drank half and gave it back.
 "The barracks are further down the tunnel, round the bend," he said. "But let's sit down somewhere first. I've been on my knees for a month, and my knees aren't speaking to me any more." # spk:velior
+// On the overseers' camp map: the timber store behind the bunks (nook 2).
++ [Sit down by the cold hearth. #obj:hearth]
+-
 ->->
