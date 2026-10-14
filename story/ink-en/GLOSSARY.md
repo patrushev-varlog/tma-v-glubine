@@ -88,3 +88,57 @@
 | «Вода помнит, вода не спит» | "The water remembers, the water never sleeps" | бабушкина песня супруга |
 | лагерь беглецов (наверху) | the runaways' camp | |
 | Глава 3. Дварфийские залы | Chapter 3. The Dwarven Halls | титр |
+
+Глава 3 (перевод 14.10.2026, ждут утверждения вместе с PR):
+
+| Русский | English | Где |
+|---|---|---|
+| Молчащие | the Silent | дварфы залов; как в i18n: «Наследие Молчащих» — "Legacy of the Silent", «Горн Молчащих» — "The Forge of the Silent", «Венец Молчащих» — "Crown of the Silent" |
+| дварфийский, дварфы | dwarven, the dwarves | со строчной |
+| зал арок, арки | the hall of arches, the arches | сцена 1 |
+| «Здесь молчат, чтобы он спал» | "Here we keep silent, so that he sleeps" | надпись на арках |
+| «молчать» (руна) | "Keep silent" | Велиор, Гаррет, сцена 1 |
+| стражи-конструкты, страж | construct guardians, guardian | враг `stone_guardian` — "Silent Warden" (i18n) |
+| дверь с загадкой | the riddle door | как в i18n `QUEST_ch3_riddle` |
+| «Что держат, не касаясь, и теряют, назвав?» | "What is kept without being touched, and lost once it is named?" | загадка двери |
+| Молчание / Обещание / Дыхание | Silence / A promise / Breath | ответы; верный — Silence |
+| детские (учебные) таблички | the children's tablets, lesson tablets | подсказка к двери |
+| «Его держат все, кто здесь живёт… Назвавший его теряет его в тот же миг» | "Everyone who lives here keeps it… Whoever names it loses it that same moment" | табличка |
+| кузница | the forge | постоянный лагерь главы 3 |
+| горн | the hearth (в кузнице); the Forge of the Silent (лавка, тег `shop:dwarf_forge`) | |
+| пивоварня (Молчащих) | the brewery (of the Silent) | закоулок 1 |
+| дварфийский эль | Dwarven Ale | id `dwarf_ale` (i18n) |
+| слиток (брусок) дварфийской стали | ingot / bar of dwarven steel | id `dwarf_steel`; «клеймо горна» — the mark of the forge |
+| круглый зал, чаша, каменный круг | the round hall, the bowl, the stone circle | сцена 3 |
+| фреска | the fresco | |
+| Совет Эльдмара | the Council of Eldmar | |
+| Верховный маг Эдрик Сайр | Archmage Edric Sayr | Эдрик — Edric (как раньше) |
+| Л. (в дневнике) | L. | |
+| печать | the seal | «зал печати» — the hall of the seal |
+| архив (Молчащих) | the archive (of the Silent) | сцена 4 |
+| плиты (с рунами) | slabs, tablets | |
+| мёртвые дварфы-архивариусы | dead dwarf archivists | враг `dwarf_archivist` — "Dead Archivist" (i18n) |
+| мёртвый дварф | the dead dwarf | `spk:dwarf_dead` — "Dead dwarf" (i18n) |
+| Спящий | the Sleeper | |
+| «тот, кто приходит в конце» | "the one who comes at the end" | дварфийское имя Спящего |
+| мастер Брин | Master Brin | изгнан из совета дварфов |
+| совет (дварфов) | the council | со строчной, в отличие от Council of Eldmar |
+| род людской у подножия гор | the house of men that lives at the foot of the mountains | = род Таль (the house of Tal) |
+| святилище | the shrine | сцена 5 |
+| колокол Ирены | Irena's bell | id `irena_bell` — "Bell of the Ruined Temple" (i18n) |
+| Лиара | Liara | теперь имя звучит в тексте |
+| Торвин-Без-Голоса | Torvin the Voiceless | как в i18n `ENEMY_torvin` |
+| хранитель (печати) | the keeper (of the seal) | |
+| намордник | muzzle | |
+| «Торвин. Отдал голос, чтобы не разбудить» | "Torvin. Gave his voice so as not to wake him" | |
+| «Держать» (на клинке) | "Hold" | наследие воина |
+| галерея | the gallery | сцена 6, закоулок 2 |
+| Ярн, Олаф, Берта, Кольм | Jarn, Olaf, Berta, Colm | беглые в галерее |
+| рудничный двуручник | mine greatsword | id `mine_greatsword` — "Mine Greatsword" (i18n) |
+| кинжал с короной | the dagger with the crown (on the hilt) | id `crown_dagger` — "Crowned Dagger" (i18n) |
+| литейная | the foundry | тайный путь, «щель за третьей опорой литейной» |
+| гарнизон | the garrison | |
+| двенадцать родов | twelve houses | |
+| тайник (под плитой) | the cache | id `shadowskin` — "Shadowskin" (i18n) |
+| фонарь штейгера | the foreman's lantern | |
+| Глава 4. Кузницы плоти | Chapter 4. The Flesh Forges | титр, как в i18n `CHAPTER_4` |
