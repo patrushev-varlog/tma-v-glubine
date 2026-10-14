@@ -70,7 +70,7 @@ const GROUND_ART := {
 	# Шахты главы 1: рельсы по знаку дороги (вдоль x — floor_rails, вдоль y — road_b), нары — знак скамьи.
 	"mine": {"floor": ["mines/floor_stone", "mines/floor_stone", "mines/floor_stone", "mines/floor_gravel", "mines/floor_ore"],
 		"road": "mines/floor_rails", "road_b": "mines/floor_rails_b",
-		"objects": {"pillar": "mines/timber_support", "rubble": "mines/rockfall", "cart": "mines/minecart", "fence": "mines/bars",
+		"objects": {"wall": "mines/rock_block", "pillar": "mines/timber_support", "rubble": "mines/rockfall", "cart": "mines/minecart", "fence": "mines/bars",
 			"pew": "mines/bunk", "altar": "mines/winch", "well": "mines/shaft", "tree": "mines/ore_heap"}},
 }
 ## Верх ромба у тайла пола 64×64: центр клетки приходится на (32, 38).

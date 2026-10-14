@@ -76,6 +76,11 @@ UNITS = {
 	"crossbowman": (PRO / "crossbowman", {**_PIXELLAB, "attack": "anims/shoot/{d}"}),
 	"raised": (PRO / "parishioner_m", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
 	"raised_f": (PRO / "parishioner_f", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	# Глава 1: бойцы шахты (art/tools/ch1_batch4.py); узники чередуются, как прихожане.
+	"holt": (ART / "chapter1" / "characters" / "holt", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	"foreman_dead": (ART / "chapter1" / "characters" / "foreman_dead", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	"prisoner": (ART / "chapter1" / "characters" / "prisoner_m", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
+	"prisoner_f": (ART / "chapter1" / "characters" / "prisoner_f", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
 }
 # Статичные персонажи (только стойка, 8 направлений) и позы «связан» — по картинке на направление:
 # game/art/units/static/<id>/<направление>.png, холст 64×64, ноги на 23 px ниже центра.

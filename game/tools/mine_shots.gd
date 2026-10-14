@@ -43,7 +43,7 @@ func _initialize() -> void:
 					if String(item.options[k]).begins_with("Поднять бунт"):
 						pick = k
 				s.choose(pick)
-	for bid in ["chapter1_1", "chapter1_2_riot", "chapter1_3"]:
+	for bid in ["chapter1_1", "chapter1_2_riot", "chapter1_3", "ch1_hunt_foreman"]:
 		var b := Battle.new()
 		b.setup(CombatData.scenario(bid, "cleric", "", "full", "story", "kit", {"ch1_choice": "riot"}), 3, "story")
 		game.battle = b

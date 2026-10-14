@@ -103,6 +103,14 @@
 		19,
 		27
 	],
+	"mines/rock_block": [
+		32,
+		64
+	],
+	"mines/rock_block_ore": [
+		32,
+		64
+	],
 	"mines/rockfall": [
 		25,
 		30
