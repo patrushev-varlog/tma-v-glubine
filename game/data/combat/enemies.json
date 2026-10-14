@@ -1,5 +1,5 @@
 {
-  "_doc": "Враги. xp — опыт по SRD (по нему урезается состав под неполный отряд); boss — главный враг боя: его не убирают, а снижают хиты. attacks — ударов за действие. weapon.on_hit — эффекты при попадании (как у умений). abilities и traits — те же умения и приёмы, что у героев (abilities.json, traits.json). Враги пролога (B8): raised — поднятые соседи и прихожане, у надсмотрщика аркан, арбалетчик колонны, Брандт. Глава 1 (docs/CHAPTER1_BATTLES.md): holt — сержант Хольт у верхнего ворота, archer — лучник на мостках, foreman_dead — мёртвый штейгер (охота). ally: true — союзник отряда под ИИ (узник в бунте), color — его цвет.",
+  "_doc": "Враги. xp — опыт по SRD (по нему урезается состав под неполный отряд); boss — главный враг боя: его не убирают, а снижают хиты. attacks — ударов за действие. weapon.on_hit — эффекты при попадании (как у умений). abilities и traits — те же умения и приёмы, что у героев (abilities.json, traits.json). Враги пролога (B8): raised — поднятые соседи и прихожане, у надсмотрщика аркан, арбалетчик колонны, Брандт. Глава 1 (docs/CHAPTER1_BATTLES.md): holt — сержант Хольт у верхнего ворота, archer — лучник на мостках, foreman_dead — мёртвый штейгер (охота). Глава 2 (docs/CHAPTER2_BATTLES.md): smuggler — контрабандист, renna — Ренна Сол, sluice_guardian — страж шлюза (tether — длина цепи: дальше от своего места не отходит), shrine_priest — отец Мерен (охота); утопленникам вода не мешает (swimmer). ally: true — союзник отряда под ИИ (узник в бунте), color — его цвет.",
 
   "overseer":        {"xp": 25, "hp": 11, "ac": 12, "init": 1, "speed": 6,
     "saves": {"str": 1, "dex": 1, "con": 1, "wis": 0},
@@ -19,7 +19,8 @@
     "weapon": {"id": "shortsword", "to_hit": 4, "damage": "1d6+2", "reach": 1, "kind": "melee"}},
   "drowned":         {"xp": 100, "hp": 22, "ac": 10, "init": -1, "speed": 5, "undead": true,
     "saves": {"str": 2, "dex": -1, "con": 3, "wis": 0},
-    "weapon": {"id": "grasp", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"}},
+    "weapon": {"id": "grasp", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"},
+    "traits": ["swimmer"]},
   "ghoul":           {"xp": 200, "hp": 22, "ac": 12, "init": 2, "speed": 6, "undead": true,
     "saves": {"str": 1, "dex": 2, "con": 0, "wis": 0},
     "weapon": {"id": "claws", "to_hit": 4, "damage": "2d4+2", "reach": 1, "kind": "melee",
@@ -67,5 +68,20 @@
     "weapon": {"id": "pickaxe", "to_hit": 5, "damage": "1d8+3", "reach": 1, "kind": "melee"}},
   "prisoner":        {"xp": 0, "ally": true, "color": "#b8a27a", "hp": 7, "ac": 10, "init": 0, "speed": 6,
     "saves": {"str": 1, "dex": 0, "con": 0, "wis": 0},
-    "weapon": {"id": "pick_handle", "to_hit": 3, "damage": "1d4+1", "reach": 1, "kind": "melee"}}
+    "weapon": {"id": "pick_handle", "to_hit": 3, "damage": "1d4+1", "reach": 1, "kind": "melee"}},
+  "smuggler":        {"xp": 50, "hp": 13, "ac": 13, "init": 2, "speed": 6,
+    "saves": {"str": 1, "dex": 2, "con": 1, "wis": 0},
+    "weapon": {"id": "cutlass", "to_hit": 4, "damage": "1d6+2", "reach": 1, "kind": "melee"}},
+  "renna":           {"xp": 200, "boss": true, "hp": 27, "ac": 15, "init": 3, "speed": 6, "attacks": 2,
+    "saves": {"str": 0, "dex": 3, "con": 1, "wis": 2},
+    "weapon": {"id": "rapier", "to_hit": 5, "damage": "1d6+2", "reach": 1, "kind": "melee"},
+    "abilities": ["drive_on"]},
+  "sluice_guardian": {"xp": 700, "boss": true, "hp": 85, "ac": 11, "init": -1, "speed": 4, "undead": true, "attacks": 2, "tether": 3,
+    "saves": {"str": 5, "dex": -1, "con": 4, "wis": 0},
+    "weapon": {"id": "chain_fist", "to_hit": 6, "damage": "2d6+2", "reach": 2, "kind": "melee"},
+    "traits": ["swimmer"]},
+  "shrine_priest":   {"xp": 450, "boss": true, "hp": 70, "ac": 13, "init": 1, "speed": 5, "undead": true, "attacks": 2,
+    "saves": {"str": 3, "dex": 1, "con": 3, "wis": 4},
+    "weapon": {"id": "trident", "to_hit": 5, "damage": "1d8+3", "reach": 2, "kind": "melee"},
+    "traits": ["swimmer"]}
 }

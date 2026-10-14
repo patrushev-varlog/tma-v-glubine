@@ -98,10 +98,17 @@ func _draw() -> void:
 	var size := Vector2(info.size[0], info.size[1])
 	var foot := Vector2(info.foot[0], info.foot[1])
 	var row := int(a.row) + (1 if sy < 0 else 0)
+	# В воде по пояс (глава 2) ноги скрыты, по линии воды — рябь, как на поле боя.
+	var sink := BoardView.WADE_SINK if view != null and view.map != null and String(view.map.ground.get(cell, "")) == "flood_wade" else 0.0
+	var shown := Vector2(size.x, size.y if sink == 0.0 else foot.y - sink)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(-1.0 if sx < 0 else 1.0, 1.0))
-	draw_texture_rect_region(UnitArt.unit_texture(sprite), Rect2(Vector2(0, 4) - foot, size),
-		Rect2(Vector2(frame * size.x, row * size.y), size))
+	draw_texture_rect_region(UnitArt.unit_texture(sprite), Rect2(Vector2(0, 4) - foot, shown),
+		Rect2(Vector2(frame * size.x, row * size.y), shown))
 	draw_set_transform(Vector2.ZERO)
+	if sink > 0.0:
+		draw_set_transform(Vector2(0, 4 - sink), 0.0, Vector2(1.0, 0.4) * (1.0 + 0.08 * sin(_t * 3.0)))
+		draw_arc(Vector2.ZERO, 13.0, 0.0, TAU, 24, Color(0.75, 0.85, 0.95, 0.45), 1.5)
+		draw_set_transform(Vector2.ZERO)
 
 
 ## Человек-заглушка: тень, тело, голова и тёмный край. Её же рисуют NPC на карте.

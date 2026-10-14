@@ -1,0 +1,36 @@
+{
+  "group_id": "d76b33fe-910d-40dd-8285-a8288d86066b",
+  "states": [
+    {
+      "character": {
+        "id": "a94d0290-47eb-4913-8f83-e6a74ee19b19",
+        "name": "Idle",
+        "prompt": "a drowned undead man risen from black mine water, bloated grey-blue skin, soaked rags of a miner's shirt dripping water, long wet hair plastered to the face, milky white eyes, strands of dark weed, reaching forward with bare hands, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T05:07:13.660153+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T05:09:30.598784"
+}

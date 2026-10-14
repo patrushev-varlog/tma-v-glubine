@@ -40,12 +40,12 @@ static func unit_texture(sprite: String) -> Texture2D:
 	return texture(UNITS_DIR + sprite + ".png")
 
 
-## Какой лист у участника боя. Герой — по классу и полу созданного героя, прихожане чередуются.
+## Какой лист у участника боя. Герой — по классу и полу созданного героя, прихожане, узники и утопленники чередуются.
 static func sprite_for(u: Combatant, hero := {}) -> String:
 	if u.is_hero:
 		var id := "hero_%s_%s" % [u.kind, "f" if bool(hero.get("hero_f", false)) else "m"]
 		return id if not unit(id).is_empty() else "hero_%s_m" % u.kind
-	if (u.kind == "raised" or u.kind == "prisoner") and u.id.get_slice("_", u.id.get_slice_count("_") - 1).to_int() % 2 == 0:
+	if u.kind in ["raised", "prisoner", "drowned"] and u.id.get_slice("_", u.id.get_slice_count("_") - 1).to_int() % 2 == 0:
 		return u.kind + "_f"
 	return String(SPRITE_ALIAS.get(u.kind, u.kind))
 

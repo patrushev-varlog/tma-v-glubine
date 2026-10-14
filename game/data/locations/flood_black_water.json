@@ -1,0 +1,39 @@
+{
+ "id": "flood_black_water",
+ "comment": "Глава 2, сцена 1 «Чёрная вода»: лестница от сторожки уходит в воду. Затопленная кладовая у лестницы (закоулок 1), утопленник на полке в ней (подсказка 1).",
+ "size": [17, 14],
+ "legend": {"s": "mine_stone", "g": "mine_gravel", "p": "mine_planks", "e": "flood_wet", "w": "flood_wade", "d": "flood_deep", "#": "mine_stone"},
+ "blocked_ground": ["flood_deep"],
+ "wall": {"char": "#", "sprites": ["mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block_ore"]},
+ "ground": [
+  "      #  #       ",
+  "      #ss#       ",
+  "    ###ss###     ",
+  "   ##eewwee##    ",
+  "  ##ewwwwwwe##   ",
+  " ##ewwwwwwwwe##  ",
+  " #ewwwddwwwwwe#  ",
+  " #ewwwdddwwwwe#  ",
+  " ##ewwwddwwwwe#  ",
+  "  ##ewwwwwwwe##  ",
+  "   ##eewwwee##   ",
+  "    ###www###    ",
+  "      #www#      ",
+  "      #   #      "
+ ],
+ "variants": {"flood": {"tint": "#8e9ab8"}},
+ "scenes": {"black_water": {"variant": "flood", "spawn": [7, 2]}},
+ "objects": [
+  {"id": "stair_l", "kind": "box", "cell": [6, 1], "sprite": "mines/timber_support"},
+  {"id": "stair_r", "kind": "box", "cell": [9, 1], "sprite": "mines/timber_support"},
+  {"id": "cellar", "kind": "box", "cell": [5, 3], "explore": "ch2_nook_cellar", "label": "LOC_CH2_CELLAR", "sprite": "flooded/cellar_door"},
+  {"id": "drowned_note", "kind": "figure", "cell": [4, 4], "image": "drowned_m", "face": "south-east", "explore": "ch2_look_drowned_note", "label": "LOC_CH2_DROWNED_NOTE", "if": "ch2_nook_cellar_done"},
+  {"id": "pipes", "kind": "box", "cell": [11, 4], "sprite": "flooded/pipes"},
+  {"id": "fall", "kind": "box", "cell": [13, 7], "sprite": "mines/rockfall"},
+  {"id": "support_w", "kind": "box", "cell": [3, 7], "sprite": "mines/timber_support"},
+  {"id": "support_e", "kind": "box", "cell": [11, 9], "sprite": "mines/timber_support"},
+  {"id": "dead_1", "kind": "figure", "cell": [6, 10], "unit": "drowned", "face": "ne", "if": "!won:chapter2_1"},
+  {"id": "dead_2", "kind": "figure", "cell": [9, 5], "unit": "drowned", "face": "sw", "if": "!won:chapter2_1"},
+  {"id": "drift_on", "kind": "box", "cell": [8, 12], "sprite": "mines/timber_support"}
+ ]
+}

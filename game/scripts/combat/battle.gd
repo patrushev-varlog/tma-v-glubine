@@ -12,6 +12,8 @@ const DIRS: Array[Vector2i] = [
 ]
 ## Зоны на поле: ловушки Велиора, жир, паутина, каменные шипы.
 const ZONE_KINDS: Array[String] = ["trap", "grease", "web", "spikes"]
+## Укрытие от дальних атак (in_cover): прибавка к КД.
+const COVER_AC := 2
 
 var id := ""
 var level := 2
@@ -51,7 +53,8 @@ var _casting := ""
 ## ({"type": "survive", "rounds": N}); waves — подкрепления по раундам; timed — состояния до раунда;
 ## bound — связанный союзник, который вступает в бой в раунде round или когда к нему подойдут;
 ## surprise — враги застигнуты врасплох и пропускают первый ход; cannot_lose — поражения нет (соседи
-## добивают врагов, бой засчитан как победа, rescued = true). Сохраняется вместе с боем.
+## добивают врагов, бой засчитан как победа, rescued = true); cover — укрытия от выстрелов (in_cover);
+## tether — привязанные цепью враги {id: {"cell", "r"}}; intro — строка журнала в начале. Сохраняется вместе с боем.
 var stage := {}
 
 
@@ -328,6 +331,30 @@ func ac_of(t: Combatant) -> int:
 	return t.ac + mod_sum(t, "ac") + _aura_sum(t, "ac")
 
 
+## КД против этой атаки: дальняя атака по цели в укрытии — +2 (half cover, как в SRD).
+func ac_against(attacker: Combatant, target: Combatant, ranged: bool) -> int:
+	return ac_of(target) + (COVER_AC if ranged and in_cover(attacker, target) else 0)
+
+
+## Укрытие: прямая от стрелка к цели задевает препятствие вплотную к цели (колонну, трубу, ящик),
+## а сам стрелок к этому препятствию не прижат. Вплотную (соседняя клетка) укрытия нет.
+## Правило боя с главы 2 (`cover` в battles.json): в прологе и главе 1 укрытий нет, их баланс без них.
+func in_cover(attacker: Combatant, target: Combatant) -> bool:
+	if not stage.get("cover", false) or dist(attacker.cell, target.cell) <= 1:
+		return false
+	var a := Vector2(attacker.cell)
+	var b := Vector2(target.cell)
+	var steps := dist(attacker.cell, target.cell) * 4
+	for i in range(1, steps):
+		var p := a.lerp(b, float(i) / steps)
+		var c := Vector2i(roundi(p.x), roundi(p.y))
+		if c == target.cell or c == attacker.cell or not is_obstacle(c):
+			continue
+		if dist(c, target.cell) == 1 and dist(c, attacker.cell) > 1:
+			return true
+	return false
+
+
 func can_react(u: Combatant) -> bool:
 	return u.conscious() and not u.reaction_used and not mod_any(u, "no_reactions") and not u.is_ranged()
 
@@ -339,28 +366,41 @@ func is_hidden(u: Combatant) -> bool:
 # --- Передвижение ----------------------------------------------------------
 
 ## Клетки, куда юнит может дойти за оставшееся движение: {клетка: {"cost", "prev"}}.
-## Через союзников проходить можно, останавливаться на занятой клетке нельзя.
+## Через союзников проходить можно, останавливаться на занятой клетке нельзя. Вода по пояс (`wade`)
+## стоит два шага, кроме тех, кто в ней как дома (`wade_free`, утопленники); привязанный цепью
+## (`stage.tether`) не отходит от своего места дальше длины цепи.
 func reachable(u: Combatant) -> Dictionary:
 	var best := {u.cell: {"cost": 0, "prev": u.cell}}
 	var frontier: Array[Vector2i] = [u.cell]
+	var free := mod_any(u, "wade_free")
+	var tether: Dictionary = stage.get("tether", {}).get(u.id, {})
 	while not frontier.is_empty():
-		var next: Array[Vector2i] = []
-		for c in frontier:
-			var cost: int = best[c].cost
-			if cost >= u.speed_left:
+		# Дейкстра на маленьком поле: берём клетку с наименьшей ценой.
+		var bi := 0
+		for i in frontier.size():
+			if int(best[frontier[i]].cost) < int(best[frontier[bi]].cost):
+				bi = i
+		var c: Vector2i = frontier[bi]
+		frontier.remove_at(bi)
+		var cost: int = best[c].cost
+		if cost >= u.speed_left:
+			continue
+		for d in DIRS:
+			var n := c + d
+			if not in_bounds(n) or is_obstacle(n):
 				continue
-			for d in DIRS:
-				var n := c + d
-				if not in_bounds(n) or is_obstacle(n) or best.has(n):
-					continue
-				if d.x != 0 and d.y != 0 and (is_obstacle(c + Vector2i(d.x, 0)) or is_obstacle(c + Vector2i(0, d.y))):
-					continue
-				var o := occupant(n)
-				if o != null and o.team != u.team and o.conscious():
-					continue
-				best[n] = {"cost": cost + 1, "prev": c}
-				next.append(n)
-		frontier = next
+			if d.x != 0 and d.y != 0 and (is_obstacle(c + Vector2i(d.x, 0)) or is_obstacle(c + Vector2i(0, d.y))):
+				continue
+			if not tether.is_empty() and dist(n, Vector2i(int(tether.cell[0]), int(tether.cell[1]))) > int(tether.r):
+				continue
+			var o := occupant(n)
+			if o != null and o.team != u.team and o.conscious():
+				continue
+			var nc := cost + step_cost(n, free)
+			if nc > u.speed_left or (best.has(n) and int(best[n].cost) <= nc):
+				continue
+			best[n] = {"cost": nc, "prev": c}
+			frontier.append(n)
 	var out := {}
 	for c in best:
 		var o := occupant(c)
@@ -371,22 +411,36 @@ func reachable(u: Combatant) -> Dictionary:
 	return out
 
 
+## Сколько движения стоит войти в клетку: вода по пояс — 2, остальное — 1.
+func step_cost(c: Vector2i, wade_free := false) -> int:
+	return 2 if not wade_free and String(decor.get(c, "")) == "wade" else 1
+
+
 ## Расстояние пешком до клетки from от каждой клетки поля, в обход препятствий (участники не мешают).
-func walk_distances(from: Vector2i) -> Dictionary:
+## walker — кто идёт: для него вода по пояс стоит как обычный пол, если он в ней как дома.
+func walk_distances(from: Vector2i, walker: Combatant = null) -> Dictionary:
+	var free := walker != null and mod_any(walker, "wade_free")
 	var dist_map := {from: 0}
 	var frontier: Array[Vector2i] = [from]
 	while not frontier.is_empty():
-		var next: Array[Vector2i] = []
-		for c in frontier:
-			for d in DIRS:
-				var n := c + d
-				if not in_bounds(n) or is_obstacle(n) or dist_map.has(n):
-					continue
-				if d.x != 0 and d.y != 0 and (is_obstacle(c + Vector2i(d.x, 0)) or is_obstacle(c + Vector2i(0, d.y))):
-					continue
-				dist_map[n] = int(dist_map[c]) + 1
-				next.append(n)
-		frontier = next
+		var bi := 0
+		for i in frontier.size():
+			if int(dist_map[frontier[i]]) < int(dist_map[frontier[bi]]):
+				bi = i
+		var c: Vector2i = frontier[bi]
+		frontier.remove_at(bi)
+		for d in DIRS:
+			var n := c + d
+			if not in_bounds(n) or is_obstacle(n):
+				continue
+			if d.x != 0 and d.y != 0 and (is_obstacle(c + Vector2i(d.x, 0)) or is_obstacle(c + Vector2i(0, d.y))):
+				continue
+			# Путь идёт от цели к ходящему: платим за клетку, из которой выходим к цели (c), кроме самой цели.
+			var nd := int(dist_map[c]) + (step_cost(c, free) if c != from else 1)
+			if dist_map.has(n) and int(dist_map[n]) <= nd:
+				continue
+			dist_map[n] = nd
+			frontier.append(n)
 	return dist_map
 
 
@@ -440,7 +494,7 @@ func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 						return
 		events.append({"type": "step", "unit": u.id, "from": u.cell, "to": step})
 		u.cell = step
-		u.speed_left -= 1
+		u.speed_left -= step_cost(step, mod_any(u, "wade_free"))
 		_free_bound_near(u)
 		if _enter_cell(u, step):
 			return
@@ -580,7 +634,7 @@ func attack_preview(attacker: Combatant, target: Combatant, extra_dice := "", we
 		weapon = attacker.weapon
 	var ranged: bool = weapon.get("kind", "melee") == "ranged"
 	var adv := advantage_for(attacker, target, ranged)
-	var chance := Dice.hit_chance(int(weapon.to_hit), ac_of(target), adv)
+	var chance := Dice.hit_chance(int(weapon.to_hit), ac_against(attacker, target, ranged), adv)
 	var dmg_expr: String = weapon.damage
 	var lo := float(Dice.min_of(dmg_expr))
 	var hi := float(Dice.max_of(dmg_expr))
@@ -653,7 +707,7 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 	var total := roll + int(weapon.to_hit)
 	var crit_on := mod_sum(attacker, "crit_on")
 	var crit := roll == 20 or (crit_on > 0 and roll >= crit_on)
-	var tac := ac_of(target)
+	var tac := ac_against(attacker, target, ranged)
 	if roll == 1 or (not crit and total < tac):
 		log_line("%s → %s: промах (%d против КД %d)." % [attacker.name, target.name, total, tac])
 		events.append({"type": "miss", "unit": target.id})
@@ -838,7 +892,7 @@ func _spell_attack(u: Combatant, t: Combatant, expr: String) -> int:
 	var adv := advantage_for(u, t, true)
 	var roll := _roll_attack(adv)
 	_attack_made(u, t)
-	if roll == 1 or (roll != 20 and roll + u.spell_attack < ac_of(t)):
+	if roll == 1 or (roll != 20 and roll + u.spell_attack < ac_against(u, t, true)):
 		log_line("Промах по %s." % t.name)
 		events.append({"type": "miss", "unit": t.id})
 		return 0
@@ -1376,7 +1430,7 @@ func ability_preview(u: Combatant, aid: String, cell: Vector2i) -> Dictionary:
 		"spell_attack":
 			if t != null:
 				out["kind"] = "spell_attack"
-				out["chance"] = Dice.hit_chance(u.spell_attack, ac_of(t), advantage_for(u, t, true))
+				out["chance"] = Dice.hit_chance(u.spell_attack, ac_against(u, t, true), advantage_for(u, t, true))
 				out["min"] = Dice.min_of(expr)
 				out["max"] = Dice.max_of(expr)
 				out["times"] = int(CombatData.resolve(e.get("repeat", 1), p))
@@ -1593,6 +1647,9 @@ func _stage_start() -> void:
 		var u := get_unit(String(bnd.unit))
 		if u != null:
 			add_status(u, "bound", null)
+	if stage.has("intro"):
+		# Подсказка о правилах места (вода по пояс и укрытия в главе 2).
+		log_line(TranslationServer.translate(String(stage.intro)))
 	if stage.get("surprise", false):
 		for e in enemies():
 			add_status(e, "surprised", null)

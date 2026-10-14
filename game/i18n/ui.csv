@@ -179,6 +179,8 @@ LEVELUP_SWITCH,Сменить на: {branch},Switch to {branch}
 SHOP_sutler,Маркитант,The Sutler
 SHOP_smith,Кузнец из Эшмура,The Ashmoor Smith
 SHOP_smugglers,Контрабандисты,The Smugglers
+SHOP_smugglers_favor,Ренна Сол: в долг,Renna Sol: on credit
+SHOP_FAVOR_NOTE,"Одна тёмная вещь за услугу. Какую — Ренна скажет потом.","One dark item for a favour. Renna will name the favour later."
 SHOP_dwarf_forge,Горн Молчащих,The Forge of the Silent
 SHOP_SILVER,Серебро: {silver},Silver: {silver}
 SHOP_FOR_HERO,Себе,For me
@@ -193,4 +195,5 @@ FX_spell,заклинания +{n},spells +{n}
 FX_slot,ячейки +{n},slots +{n}
 FX_heal,лечение +{n},healing +{n}
 FX_dr,снижение урона {n},damage reduction {n}
+FX_dark,+{n} Тьмы за бой,+{n} Darkness per battle
 BATTLE_LOOT,Добыча: {silver} серебра.,Loot: {silver} silver.

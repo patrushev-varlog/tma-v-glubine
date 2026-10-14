@@ -1,4 +1,24 @@
 {
+	"flooded/flatboat": [
+		29,
+		42
+	],
+	"flooded/pump_wheel": [
+		44,
+		77
+	],
+	"flooded/shrine_altar": [
+		15,
+		42
+	],
+	"flooded/sluice_gate": [
+		56,
+		102
+	],
+	"flooded/smuggler_desk": [
+		18,
+		32
+	],
 	"ford/boulder": [
 		17,
 		46

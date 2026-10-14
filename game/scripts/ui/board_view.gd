@@ -33,9 +33,11 @@ const GROUNDS := {
 	"ford": [Color("#3c4a34"), Color("#38452f"), Color("#4a5a40")],
 	"camp": [Color("#2f3a30"), Color("#2b352c"), Color("#3b483b")],
 	"gate": [Color("#3d3a37"), Color("#38352f"), Color("#4b4743")],
+	"flooded": [Color("#363a42"), Color("#31353c"), Color("#454a54")],
+	"flooded_shrine": [Color("#363a42"), Color("#31353c"), Color("#454a54")],
 }
 ## Пол, по которому можно ходить (знаки , : ;).
-const FLOOR_DECOR := {"ford": Color("#4b6b78"), "road": Color("#5a5040"), "ash": Color("#2a2826")}
+const FLOOR_DECOR := {"ford": Color("#4b6b78"), "road": Color("#5a5040"), "ash": Color("#2a2826"), "wade": Color("#263a4a")}
 ## Препятствия по виду: [цвет, высота, отступ от края клетки]. Высота 0 — плоское (вода).
 const OBSTACLE_LOOK := {
 	"wall": [Color("#5d564c"), 18.0, 3.0], "pillar": [Color("#7a7670"), 30.0, 9.0], "pew": [Color("#6b4f35"), 8.0, 5.0],
@@ -72,12 +74,26 @@ const GROUND_ART := {
 		"road": "mines/floor_rails", "road_b": "mines/floor_rails_b",
 		"objects": {"wall": "mines/rock_block", "pillar": "mines/timber_support", "rubble": "mines/rockfall", "cart": "mines/minecart", "fence": "mines/bars",
 			"pew": "mines/bunk", "altar": "mines/winch", "well": "mines/shaft", "tree": "mines/ore_heap"}},
+	# Затопленные выработки главы 2: пол шахты и мокрый камень, вода по пояс — знак -, глубокая — ~.
+	# Помост насосной — знак дороги, трубы — забор, ящики — обломки, конторка Ренны — алтарь.
+	"flooded": {"floor": ["mines/floor_stone", "mines/floor_stone", "flooded/floor_wet", "mines/floor_gravel"],
+		"wade": "flooded/floor_wade", "water": "flooded/floor_deep", "road": "mines/floor_planks",
+		"objects": {"wall": "mines/rock_block", "pillar": "mines/timber_support", "rubble": "flooded/crates", "cart": "flooded/pump_wheel",
+			"fence": "flooded/pipes", "pew": "mines/bunk", "altar": "flooded/smuggler_desk", "well": "flooded/sluice_gate", "tree": "mines/rockfall"},
+		"spans": ["cart"]},
+	# Затопленная часовня охоты главы 2: скамьи и алтарь из храма пролога.
+	"flooded_shrine": {"floor": ["flooded/floor_wet", "flooded/floor_wet", "mines/floor_stone"], "wade": "flooded/floor_wade",
+		"objects": {"wall": "mines/rock_block", "pillar": "mines/timber_support", "pew": "temple/pew", "altar": "flooded/shrine_altar",
+			"rubble": "mines/rockfall"},
+		"spans": ["pew"]},
 }
 ## Верх ромба у тайла пола 64×64: центр клетки приходится на (32, 38).
 const FLOOR_OFFSET := Vector2(-32, -38)
 ## Ноги персонажа — чуть ниже центра клетки, как на пробных сценах графики (art/tools/scene_preview.py).
 const FOOT_Y := 4.0
 const STEP_TIME := 0.14
+## Насколько скрыт в воде по пояс персонаж: столько пикселей рисунка над ступнями не видно.
+const WADE_SINK := 13.0
 const IMPACT_AT := 0.28
 const FX_FPS := 12.0
 ## Эффекты умений: proj — снаряд от применившего к клетке, hit — на клетке цели, self — на себе,
@@ -479,6 +495,8 @@ func _floor_tile(c: Vector2i) -> Texture2D:
 				name = String(ga.road_b)
 		"ash":
 			name = String(ga.get("ash", ""))
+		"wade":
+			name = String(ga.get("wade", ""))
 		"water":
 			name = String(ga.get("water", ""))
 			if name == "":
@@ -498,7 +516,7 @@ func _object_tile(c: Vector2i) -> String:
 	if kind == "fence" and (battle.decor.get(c + Vector2i(1, 0), "") == "fence" or battle.decor.get(c - Vector2i(1, 0), "") == "fence"):
 		obj += "_b"
 	# Алтарь в ряд: по краям подсвечники.
-	if kind == "altar" and (battle.decor.get(c + Vector2i(1, 0), "") != "altar" or battle.decor.get(c - Vector2i(1, 0), "") != "altar"):
+	if kind == "altar" and battle.ground == "temple" and (battle.decor.get(c + Vector2i(1, 0), "") != "altar" or battle.decor.get(c - Vector2i(1, 0), "") != "altar"):
 		obj = "temple/candelabrum"
 	if kind == "tree" and ga.has("tall_tree") and _hash(c) % 3 == 0:
 		obj = String(ga.tall_tree)
@@ -688,10 +706,19 @@ func _draw_sprite(u: Combatant, info: Dictionary, st: Dictionary, base: Vector2,
 	var size := Vector2(info.size[0], info.size[1])
 	var row := int(a.row) + (1 if sy < 0 else 0)
 	var foot := Vector2(info.foot[0], info.foot[1])
+	# В воде по пояс (глава 2) ноги скрыты: рисунок обрезан снизу, по линии воды — рябь.
+	var sink := WADE_SINK if not fallen and not prone and String(battle.decor.get(_draw_cell(u), "")) == "wade" else 0.0
+	var shown := Vector2(size.x, size.y if sink == 0.0 else foot.y - sink)
 	draw_set_transform(base.round(), 0.0, Vector2(-1.0 if sx < 0 else 1.0, 1.0))
 	draw_texture_rect_region(UnitArt.unit_texture(UnitArt.sprite_for(u, hero)),
-		Rect2(Vector2(0, FOOT_Y) - foot, size), Rect2(Vector2(frame * size.x, row * size.y), size), tint)
+		Rect2(Vector2(0, FOOT_Y) - foot, shown), Rect2(Vector2(frame * size.x, row * size.y), shown), tint)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	if sink > 0.0:
+		var wl := base.round() + Vector2(0, FOOT_Y - sink)
+		var wobble := 1.0 + 0.08 * sin(_clock * 3.0 + float(u.cell.x))
+		draw_set_transform(wl, 0.0, Vector2(1.0, 0.4) * wobble)
+		draw_arc(Vector2.ZERO, 15.0, 0.0, TAU, 24, Color(0.75, 0.85, 0.95, 0.45 * tint.a), 1.5)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 static func hp_color(frac: float) -> Color:

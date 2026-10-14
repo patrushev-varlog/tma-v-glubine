@@ -1,0 +1,35 @@
+{
+ "id": "flood_sluice",
+ "comment": "Глава 2, сцена 6 «Шлюз»: стена шлюза с затвором, страж на цепи. После боя вода уходит, открывается лестница в Дварфийские залы (точка невозврата охоты); малый рычаг и решётка часовни — место охоты.",
+ "size": [18, 12],
+ "legend": {"s": "mine_stone", "g": "mine_gravel", "p": "mine_planks", "e": "flood_wet", "w": "flood_wade", "d": "flood_deep", "#": "mine_stone"},
+ "blocked_ground": ["flood_deep"],
+ "wall": {"char": "#", "sprites": ["mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block_ore"]},
+ "ground": [
+  "     ########     ",
+  "    ##wwwwww##    ",
+  "  ###wwwwwwww###  ",
+  "  #eewwwwwwwwee#  ",
+  "  #eeewwwwwweee#  ",
+  "  #ssseewweesss## ",
+  "  #ssssseessssss# ",
+  "  ##ssssssssss### ",
+  "   ###ssssss###   ",
+  "     ##ssss##     ",
+  "      #ssss#      ",
+  "      #    #      "
+ ],
+ "variants": {"flood": {"tint": "#8e9ab8"}},
+ "scenes": {"sluice": {"variant": "flood", "spawn": [8, 10]}},
+ "objects": [
+  {"id": "gate", "kind": "box", "cell": [7, 1], "size": [2, 2], "sprite": "flooded/sluice_gate"},
+  {"id": "guardian", "kind": "figure", "cell": [8, 3], "unit": "sluice_guardian", "face": "sw", "if": "!won:chapter2_3"},
+  {"id": "small_lever", "kind": "box", "cell": [11, 2], "explore": "ch2_hunt_site", "label": "LOC_CH2_SMALL_LEVER", "sprite": "flooded/small_lever"},
+  {"id": "grate", "kind": "box", "cell": [13, 3], "sprite": "flooded/grate"},
+  {"id": "stairs", "kind": "decal", "cell": [9, 4], "flat": true, "leave_check": 2, "if": "won:chapter2_3", "sprite": "flooded/stairs"},
+  {"id": "lamp_1", "kind": "box", "cell": [4, 5], "light": 34, "sprite": "mines/lamp_post"},
+  {"id": "lamp_2", "kind": "box", "cell": [14, 6], "light": 34, "sprite": "mines/lamp_post"},
+  {"id": "support_w", "kind": "box", "cell": [5, 4], "sprite": "mines/timber_support"},
+  {"id": "support_e", "kind": "box", "cell": [13, 5], "sprite": "mines/timber_support"}
+ ]
+}

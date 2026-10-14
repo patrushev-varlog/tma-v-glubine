@@ -372,3 +372,18 @@ func test_ring() -> void:
 
 func test_zones_long() -> void:
 	assert_true(CombatData.trait_def("zones_long").has("note"), "только для описания: зоны и так до конца боя")
+
+
+func test_swimmer() -> void:
+	var f := A.at(CombatData.make_hero("fighter", 2, "guardian"), Vector2i(2, 2))
+	var z := A.at(CombatData.make_enemy("drowned", 1), Vector2i(8, 8))
+	var b := A.make([f, z])
+	for x in 12:
+		for y in 12:
+			b.decor[Vector2i(x, y)] = "wade"
+	assert_true(z.has_trait("swimmer"), "утопленник в воде как дома")
+	f.speed_left = 6
+	z.speed_left = 6
+	assert_false(b.reachable(f).has(Vector2i(6, 2)), "герою вода по пояс — шаг за два")
+	assert_true(b.reachable(f).has(Vector2i(5, 2)), "на три клетки по воде хватает")
+	assert_true(b.reachable(z).has(Vector2i(2, 8)), "утопленнику вода не мешает")

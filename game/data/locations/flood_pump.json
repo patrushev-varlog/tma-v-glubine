@@ -1,0 +1,43 @@
+{
+ "id": "flood_pump",
+ "comment": "Глава 2, сцена 3 «Контрабандисты»: насосная на сваях над водой. Помосты, причал с плоскодонками, конторка Ренны. Склад под помостом (закоулок 3), лодочники у причала (подсказка 3).",
+ "size": [20, 13],
+ "legend": {"s": "mine_stone", "g": "mine_gravel", "p": "mine_planks", "e": "flood_wet", "w": "flood_wade", "d": "flood_deep", "#": "mine_stone"},
+ "blocked_ground": ["flood_deep"],
+ "wall": {"char": "#", "sprites": ["mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block_ore"]},
+ "ground": [
+  "  #   #             ",
+  "  #sss###########   ",
+  " ##sss##pppppppp##  ",
+  " #ssssspppppppppp## ",
+  " #sssssppppppppppp# ",
+  " ##wwwwwwwwwwwwppp# ",
+  "  #wwwddddddwwwppp# ",
+  "  #wwwddddddwwwppp# ",
+  "  #wwwwwwwwwwwwwpp# ",
+  "  ##ppppppwwwwwwpp# ",
+  "   #pppppppwwwwpp## ",
+  "   ##pppppp#######  ",
+  "    ########        "
+ ],
+ "variants": {"flood": {"tint": "#8e9ab8"}},
+ "scenes": {"smugglers": {"variant": "flood", "spawn": [4, 1]}},
+ "objects": [
+  {"id": "pump", "kind": "box", "cell": [8, 2], "size": [2, 2], "sprite": "flooded/pump_wheel"},
+  {"id": "desk", "kind": "box", "cell": [14, 3], "sprite": "flooded/smuggler_desk"},
+  {"id": "renna", "kind": "figure", "cell": [15, 2], "image": "renna", "face": "south-west"},
+  {"id": "brazier_1", "kind": "box", "cell": [11, 2], "light": 34, "sprite": "flooded/brazier"},
+  {"id": "brazier_2", "kind": "box", "cell": [17, 7], "light": 34, "sprite": "flooded/brazier"},
+  {"id": "xbow_1", "kind": "figure", "cell": [12, 4], "unit": "crossbowman", "face": "sw", "if": "!won:chapter2_2_smugglers"},
+  {"id": "xbow_2", "kind": "figure", "cell": [16, 5], "unit": "crossbowman", "face": "sw", "if": "!won:chapter2_2_smugglers"},
+  {"id": "smuggler_1", "kind": "figure", "cell": [17, 10], "image": "smuggler", "face": "north-west", "if": "!won:chapter2_2_smugglers"},
+  {"id": "stash", "kind": "box", "cell": [16, 4], "explore": "ch2_nook_stash", "label": "LOC_CH2_STASH", "sprite": "flooded/crates"},
+  {"id": "boat_1", "kind": "decal", "cell": [9, 7], "flat": true, "sprite": "flooded/flatboat"},
+  {"id": "boat_2", "kind": "decal", "cell": [5, 8], "flat": true, "sprite": "flooded/flatboat"},
+  {"id": "boatman_1", "kind": "figure", "cell": [6, 9], "image": "boatman", "face": "north-east", "explore": "ch2_listen_boatmen", "label": "LOC_CH2_BOATMEN"},
+  {"id": "boatman_2", "kind": "figure", "cell": [8, 10], "image": "boatman", "face": "north-west"},
+  {"id": "pier_crates", "kind": "box", "cell": [4, 10], "sprite": "flooded/crates"},
+  {"id": "pipes", "kind": "box", "cell": [13, 9], "sprite": "flooded/pipes"},
+  {"id": "lamp_1", "kind": "box", "cell": [6, 4], "light": 34, "sprite": "mines/lamp_post"}
+ ]
+}

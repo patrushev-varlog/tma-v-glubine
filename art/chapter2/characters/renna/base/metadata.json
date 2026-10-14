@@ -1,0 +1,36 @@
+{
+  "group_id": "c987aa0b-9dd7-408c-9dab-9a71978bf668",
+  "states": [
+    {
+      "character": {
+        "id": "9fc25381-9fd4-407f-bb66-067279dec157",
+        "name": "Idle",
+        "prompt": "a short sharp-featured woman smuggler boss in her fifties, neatly cropped grey hair, fitted dark-green man's doublet with brass buttons, high boots, a thin rapier at the hip, ledger under one arm, cool amused face, both hands empty, no weapon in hands, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T05:07:23.417461+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T05:09:40.181810"
+}

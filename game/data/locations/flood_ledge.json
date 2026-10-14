@@ -1,0 +1,36 @@
+{
+ "id": "flood_ledge",
+ "comment": "Глава 2, сцена 2 «Беглые»: штрек поднимается из воды к сухому уступу с костром. Лёжка на дальнем краю уступа (закоулок 2), вожак беглых (подсказка 2).",
+ "size": [17, 12],
+ "legend": {"s": "mine_stone", "g": "mine_gravel", "p": "mine_planks", "e": "flood_wet", "w": "flood_wade", "d": "flood_deep", "#": "mine_stone"},
+ "blocked_ground": ["flood_deep"],
+ "wall": {"char": "#", "sprites": ["mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block", "mines/rock_block_ore"]},
+ "ground": [
+  "  #   #          ",
+  "  #www#          ",
+  "  #wwe##         ",
+  "  #ewwe###       ",
+  "  ##eesss####    ",
+  "  ##ssssssss###  ",
+  "  #sssgsssssss## ",
+  "  #ssssssssssgs# ",
+  "  ##ssssssssss## ",
+  "   ###ssss##sss# ",
+  "     ########ss# ",
+  "            #### "
+ ],
+ "variants": {"flood": {"tint": "#8e9ab8"}},
+ "scenes": {"fugitives": {"variant": "flood", "spawn": [4, 1]}},
+ "objects": [
+  {"id": "fire", "kind": "fire", "cell": [8, 6]},
+  {"id": "leader_mab", "kind": "figure", "cell": [7, 5], "image": "mab", "face": "south-west", "explore": "ch2_talk_fugitive_tale", "label": "LOC_CH2_FUGITIVE_TALE", "if": "ch2_fugitives_leader=meb"},
+  {"id": "leader_tobin", "kind": "figure", "cell": [7, 5], "image": "tobin", "face": "south-west", "explore": "ch2_talk_fugitive_tale", "label": "LOC_CH2_FUGITIVE_TALE", "if": "ch2_fugitives_leader=tobin"},
+  {"id": "fugitive_1", "kind": "figure", "cell": [9, 7], "image": "prisoner_f", "face": "north-west"},
+  {"id": "fugitive_2", "kind": "figure", "cell": [6, 7], "image": "prisoner_m", "face": "north-east"},
+  {"id": "fugitive_3", "kind": "figure", "cell": [10, 5], "image": "prisoner_m", "face": "south-west"},
+  {"id": "ledge_nook", "kind": "decal", "cell": [13, 10], "flat": true, "explore": "ch2_nook_ledge", "label": "LOC_CH2_LEDGE", "sprite": "flooded/bedding"},
+  {"id": "ledge_rocks", "kind": "box", "cell": [14, 9], "sprite": "mines/rockfall"},
+  {"id": "lamp_1", "kind": "box", "cell": [5, 5], "light": 34, "sprite": "mines/lamp_post"},
+  {"id": "path_on", "kind": "box", "cell": [6, 9], "sprite": "mines/timber_support"}
+ ]
+}
