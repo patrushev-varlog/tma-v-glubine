@@ -38,6 +38,11 @@ STORY_SAVED,Сохранено: {slot},Saved: {slot}
 STORY_JOURNAL,Журнал,Journal
 STORY_TO_MENU,В главное меню,Main menu
 STORY_END,Конец истории.,The end.
+STORY_ENDING,Концовка: {name},Ending: {name}
+ENDING_love,«Любовь»,"""Love"""
+ENDING_peace,«Мир»,"""Peace"""
+ENDING_guardian,«Страж глубин»,"""Keeper of the Deep"""
+ENDING_tyrant,«Новый хозяин глубин»,"""The New Master of the Deep"""
 STORY_CLOSE,Закрыть,Close
 STORY_HINTS,{next} — дальше · {journal} — журнал · {menu} — меню,{next} — continue · {journal} — journal · {menu} — menu
 CHAPTER_0,Пролог,Prologue
@@ -54,6 +59,7 @@ BATTLE_OBJ_KILL_ALL,Цель: победить всех врагов.,Goal: defe
 BATTLE_OBJ_SURVIVE,Продержитесь {rounds} раунда.,Hold out for {rounds} rounds.
 BATTLE_OBJ_PROGRESS,(раунд {n} из {max}),(round {n} of {max})
 BATTLE_WAVE_AT,Подкрепление врагов: раунд {n},Enemy reinforcements: round {n}
+BATTLE_PHASE,Фаза {n} из {max},Phase {n} of {max}
 BATTLE_LOG,Журнал,Log
 BATTLE_MOVE_ATTACK,"Движение и атака оружием","Move and weapon attack"
 BATTLE_END_TURN,Конец хода,End turn

@@ -442,3 +442,8 @@ func test_raiser() -> void:
 func test_flesh_master() -> void:
 	assert_eq(_raise_once("gessar", "story"), 1, "Гессар сшивает раз")
 	assert_eq(_raise_once("gessar", "trial"), 2, "на «Испытании» — дважды")
+
+
+func test_pale_king() -> void:
+	assert_eq(_raise_once("edric", "story"), 1, "Эдрик поднимает павшего раз за бой")
+	assert_eq(_raise_once("edric", "trial"), 2, "на «Испытании» — дважды")

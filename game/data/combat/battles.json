@@ -533,5 +533,96 @@
       "#hh............#",
       "################"
     ]
+  },
+  "chapter5_1_garrison": {
+    "level": 5, "silver": 20, "ground": "deep", "cover": true, "intro": "BATTLE_LOG_CH5_PENS",
+    "waves": [{"round": 3, "at": "1", "units": ["dead_soldier", "dead_soldier"], "trial_units": ["dead_soldier"], "log": "BATTLE_LOG_CH5_GARRISON"}],
+    "legend": {"s": "dead_soldier", "S": "dead_soldier", "a": "bone_archer", "A": "bone_archer", "o": "vat_overseer", "X": "executioner"},
+    "trial_only": ["S", "A", "X"],
+    "map": [
+      "################",
+      "#+++..1.1...+++#",
+      "#+.+........+.+#",
+      "#+++....o...+++#",
+      "#hh...s..s...a.#",
+      "#h.......S..A..#",
+      "#hh...s......a.#",
+      "#+++........+++#",
+      "#+.+....X...+.+#",
+      "#+++........+++#",
+      "################"
+    ]
+  },
+  "chapter5_2": {
+    "level": 5, "silver": 20, "ground": "seal", "cover": true, "intro": "BATTLE_LOG_CH5_GUARD",
+    "waves": [{"round": 3, "at": "1", "units": ["council_guard"], "trial_units": ["council_guard"], "log": "BATTLE_LOG_CH5_PEDESTAL"}],
+    "legend": {"g": "council_guard", "G": "council_guard"},
+    "trial_only": ["G"],
+    "map": [
+      "################",
+      "#|..&..&1.&..&|#",
+      "#..............#",
+      "#hh...g...g....#",
+      "#h.......G...g.#",
+      "#hh...g........#",
+      "#..............#",
+      "#|..&..&1.&..&|#",
+      "################"
+    ]
+  },
+  "chapter5_2_raised": {
+    "level": 5, "silver": 20, "ground": "seal", "cover": true, "intro": "BATTLE_LOG_CH5_RAISED",
+    "waves": [{"round": 3, "at": "1", "units": ["council_guard"], "trial_units": ["council_guard"], "log": "BATTLE_LOG_CH5_PEDESTAL"}],
+    "legend": {"g": "council_guard", "G": "council_guard", "r": "raised_prisoner"},
+    "trial_only": ["G"],
+    "map": [
+      "################",
+      "#|..&..&1.&..&|#",
+      "#...r..........#",
+      "#hh..rg...g....#",
+      "#h.......G...g.#",
+      "#hh..rg........#",
+      "#...r..........#",
+      "#|..&..&1.&..&|#",
+      "################"
+    ]
+  },
+  "chapter5_final_peace": {
+    "level": 5, "ground": "seal", "cover": true, "intro": "BATTLE_LOG_CH5_EDRIC",
+    "phases": [{"at": "2", "units": ["sleeper_shade", "sleeper_shade"], "trial_units": ["sleeper_shade"], "rise": true,
+      "log": "BATTLE_LOG_CH5_SLEEPER"}],
+    "legend": {"E": "edric", "g": "council_guard", "G": "council_guard"},
+    "trial_only": ["G"],
+    "map": [
+      "################",
+      "#|..&..&..&..&|#",
+      "#.........2....#",
+      "#hh....g.......#",
+      "#h.......2..E..#",
+      "#hh....g...G...#",
+      "#.........2....#",
+      "#|..&..&..&..&|#",
+      "################"
+    ]
+  },
+  "chapter5_final_master": {
+    "level": 5, "ground": "seal", "cover": true, "intro": "BATTLE_LOG_CH5_EDRIC",
+    "party_drop": {"ending=tyrant": ["irena"]},
+    "phases": [{"at": "2", "units": ["sleeper_shade", "sleeper_shade"], "trial_units": ["sleeper_shade"], "rise": true,
+      "log": "BATTLE_LOG_CH5_SLEEPER"},
+      {"at": "2", "boss_return": 50, "heal_heroes": 25, "log": "BATTLE_LOG_CH5_INTERCEPT"}],
+    "legend": {"E": "edric", "g": "council_guard", "G": "council_guard"},
+    "trial_only": ["G"],
+    "map": [
+      "################",
+      "#|..&..&..&..&|#",
+      "#.........2....#",
+      "#hh....g.......#",
+      "#h.......2..E..#",
+      "#hh....g...G...#",
+      "#.........2....#",
+      "#|..&..&..&..&|#",
+      "################"
+    ]
   }
 }

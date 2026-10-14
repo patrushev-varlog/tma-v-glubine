@@ -1,0 +1,42 @@
+{
+ "id": "deep_seal_hall",
+ "comment": "Глава 5, сцена 2 «Зал печати»: пол-печать с бороздами, стража совета у входа, вдоль стены постаменты. После боя — павшие стражи (подсказка охоты) и дверца за пустым тринадцатым постаментом (место охоты, Печать совета). Центр печати — выход к супругу, проверка охоты (leave_check: 5).",
+ "size": [18, 12],
+ "legend": {"h": "dwarf_hall", "r": "dwarf_rune", "s": "mine_stone", "c": "dwarf_chasm", "#": "dwarf_hall"},
+ "blocked_ground": ["dwarf_chasm"],
+ "wall": {"char": "#", "sprites": ["dwarf/wall_runes", "dwarf/wall_block", "dwarf/wall_block", "dwarf/wall_runes"]},
+ "ground": [
+  "      #  #        ",
+  "  #####hh#######  ",
+  " ##hhhhhhhhhhhh## ",
+  " #hhhrhhhhhhrhhh# ",
+  "##hhhhrhhhhrhhhh##",
+  "#hhhhhhrrrrhhhhhh#",
+  "#hhhhhhrrrrhhhhhh#",
+  "##hhhhrhhhhrhhhh##",
+  " #hhhrhhhhhhrhhh# ",
+  " ##hhhhhhhhhhhh## ",
+  "  ####hhhhhh####  ",
+  "     ########     "
+ ],
+ "variants": {"descent": {"tint": "#a0a2b8"}, "seal": {"tint": "#b8bcd8"}},
+ "scenes": {"seal_hall": {"variant": "seal", "spawn": [7, 1]}},
+ "objects": [
+  {"id": "pedestal_1", "kind": "box", "cell": [3, 2], "sprite": "dwarf/stone_niche"},
+  {"id": "pedestal_2", "kind": "box", "cell": [5, 2], "sprite": "dwarf/stone_niche"},
+  {"id": "pedestal_3", "kind": "box", "cell": [11, 2], "sprite": "dwarf/stone_niche"},
+  {"id": "pedestal_4", "kind": "box", "cell": [13, 2], "sprite": "dwarf/stone_niche"},
+  {"id": "pedestal_5", "kind": "box", "cell": [1, 5], "sprite": "dwarf/stone_niche"},
+  {"id": "pedestal_6", "kind": "box", "cell": [16, 6], "sprite": "dwarf/stone_niche"},
+  {"id": "pedestal_7", "kind": "box", "cell": [3, 9], "sprite": "dwarf/stone_niche"},
+  {"id": "pedestal_8", "kind": "box", "cell": [13, 9], "sprite": "dwarf/stone_niche"},
+  {"id": "fallen_guards", "kind": "decal", "cell": [6, 3], "flat": true, "explore": "ch5_look_crests", "label": "LOC_CH5_CRESTS", "if": "won:chapter5_2|won:chapter5_2_raised", "sprite": "dwarf/bones"},
+  {"id": "pedestal_13", "kind": "box", "cell": [2, 7], "explore": "ch5_hunt_site", "label": "LOC_CH5_NICHE", "sprite": "dwarf/stone_niche"},
+  {"id": "guard_1", "kind": "figure", "cell": [6, 4], "unit": "dead_soldier", "face": "nw", "if": "!won:chapter5_2&!won:chapter5_2_raised"},
+  {"id": "guard_2", "kind": "figure", "cell": [10, 4], "unit": "dead_soldier", "face": "ne", "if": "!won:chapter5_2&!won:chapter5_2_raised"},
+  {"id": "guard_3", "kind": "figure", "cell": [8, 4], "unit": "dead_soldier", "face": "nw", "if": "!won:chapter5_2&!won:chapter5_2_raised"},
+  {"id": "brazier_w", "kind": "box", "cell": [4, 4], "light": 34, "sprite": "dwarf/rune_brazier"},
+  {"id": "brazier_e", "kind": "box", "cell": [13, 4], "light": 34, "sprite": "dwarf/rune_brazier"},
+  {"id": "seal_center", "kind": "decal", "cell": [8, 5], "light": 60, "leave_check": 5}
+ ]
+}

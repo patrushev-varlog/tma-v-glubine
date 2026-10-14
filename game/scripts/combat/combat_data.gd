@@ -310,6 +310,17 @@ static func party_members(level: int, party: String) -> Array[String]:
 	return out
 
 
+## Ключ состава (rules.json parties) по спутникам в бою, когда party_drop кого-то убрал.
+static func party_key_of(members: Array[String]) -> String:
+	if members.has("irena") and members.has("velior"):
+		return "full"
+	if members.has("irena"):
+		return "no_velior"
+	if members.has("velior"):
+		return "no_irena"
+	return "duo"
+
+
 ## Бой из battles.json: отряд героя того же уровня против врагов боя.
 ## gear — экипировка отряда: "none", "kit" (гарантированный набор уровня) или "full".
 ## flags — переменные Ink на момент боя (сюжетные бои пролога читают их: засада, ушедший арбалетчик).
@@ -324,6 +335,12 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 	var members: Array[String] = party_members(level, party)
 	if bt.has("party"):
 		members.assign(bt.party)
+	# party_drop — спутники, которых нет в бою при флаге (Ирена у стены в концовке «Новый хозяин»).
+	for flag in bt.get("party_drop", {}):
+		if flag_on(flags, flag):
+			for comp in bt.party_drop[flag]:
+				members.erase(String(comp))
+			party = party_key_of(members)
 	for comp in members:
 		heroes.append(make_companion(comp, level))
 	var missing := 0 if bt.has("party") else party_members(level, "full").size() + 1 - heroes.size()
@@ -428,6 +445,21 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 			"dice": String(l.get("dice", "3d6")), "dc": int(l.get("dc", 13))})
 	if not ladles.is_empty():
 		stage["ladles"] = ladles
+	# Фазы финального боя главы 5: враги следующей фазы выходят на клетки цифры at, когда пали враги текущей.
+	var phases := []
+	for ph in bt.get("phases", []):
+		var kinds: Array = ph.get("units", []).duplicate()
+		if diff == "trial":
+			kinds.append_array(ph.get("trial_units", []))
+		var phase: Dictionary = ph.duplicate(true)
+		phase.erase("trial_units")
+		phase.erase("at")
+		phase["units"] = kinds
+		phase["cells"] = marks.get(String(ph.get("at", "")), [])
+		phases.append(phase)
+	if not phases.is_empty():
+		stage["phases"] = phases
+		stage["phase"] = 1
 	return {"id": battle_id, "width": String(rows[0]).length(), "height": rows.size(), "units": heroes + allies + enemies,
 		"obstacles": obstacles, "decor": decor, "ground": String(bt.get("ground", "")), "level": level, "stage": stage}
 

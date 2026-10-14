@@ -1,5 +1,5 @@
 {
-  "_doc": "Враги. xp — опыт по SRD (по нему урезается состав под неполный отряд); boss — главный враг боя: его не убирают, а снижают хиты. attacks — ударов за действие. weapon.on_hit — эффекты при попадании (как у умений). abilities и traits — те же умения и приёмы, что у героев (abilities.json, traits.json). Враги пролога (B8): raised — поднятые соседи и прихожане, у надсмотрщика аркан, арбалетчик колонны, Брандт. Глава 1 (docs/CHAPTER1_BATTLES.md): holt — сержант Хольт у верхнего ворота, archer — лучник на мостках, foreman_dead — мёртвый штейгер (охота). Глава 2 (docs/CHAPTER2_BATTLES.md): smuggler — контрабандист, renna — Ренна Сол, sluice_guardian — страж шлюза (tether — длина цепи: дальше от своего места не отходит), shrine_priest — отец Мерен (охота); утопленникам вода не мешает (swimmer). Глава 3 (docs/CHAPTER3_BATTLES.md): stone_guardian — страж-конструкт Молчащих (stone_armor — каменная броня), dwarf_archivist — мёртвый архивариус (tether — не уходит из зала), torvin — Торвин-Без-Голоса (молот отбрасывает). Глава 4 (docs/CHAPTER4_BATTLES.md): dead_soldier — мертвец-солдат из чанов (formation — строй), vat_overseer — надсмотрщик цехов и gessar — мастер плоти (raiser, flesh_master — поднимают павшую нежить), stitched — «изделие» Гессара, foundry_dead — мёртвый литейщик (крюк отбрасывает), executioner — казнитель зала. ally: true — союзник отряда под ИИ (узник в бунте), color — его цвет.",
+  "_doc": "Враги. xp — опыт по SRD (по нему урезается состав под неполный отряд); boss — главный враг боя: его не убирают, а снижают хиты. attacks — ударов за действие. weapon.on_hit — эффекты при попадании (как у умений). abilities и traits — те же умения и приёмы, что у героев (abilities.json, traits.json). Враги пролога (B8): raised — поднятые соседи и прихожане, у надсмотрщика аркан, арбалетчик колонны, Брандт. Глава 1 (docs/CHAPTER1_BATTLES.md): holt — сержант Хольт у верхнего ворота, archer — лучник на мостках, foreman_dead — мёртвый штейгер (охота). Глава 2 (docs/CHAPTER2_BATTLES.md): smuggler — контрабандист, renna — Ренна Сол, sluice_guardian — страж шлюза (tether — длина цепи: дальше от своего места не отходит), shrine_priest — отец Мерен (охота); утопленникам вода не мешает (swimmer). Глава 3 (docs/CHAPTER3_BATTLES.md): stone_guardian — страж-конструкт Молчащих (stone_armor — каменная броня), dwarf_archivist — мёртвый архивариус (tether — не уходит из зала), torvin — Торвин-Без-Голоса (молот отбрасывает). Глава 4 (docs/CHAPTER4_BATTLES.md): dead_soldier — мертвец-солдат из чанов (formation — строй), vat_overseer — надсмотрщик цехов и gessar — мастер плоти (raiser, flesh_master — поднимают павшую нежить), stitched — «изделие» Гессара, foundry_dead — мёртвый литейщик (крюк отбрасывает), executioner — казнитель зала. Глава 5 (docs/CHAPTER5_BATTLES.md): council_guard — почётная стража совета Эльдмара (алебарда на 2 клетки, строй), edric — Эдрик Сайр, Бледный Король (главный финального боя, pale_king — поднимает павших), sleeper_shade — тень Спящего (фазы финала), raised_prisoner — павший узник, которого поднял герой (союзник под ИИ). ally: true — союзник отряда под ИИ (узник в бунте), color — его цвет.",
 
   "overseer":        {"xp": 25, "hp": 11, "ac": 12, "init": 1, "speed": 6,
     "saves": {"str": 1, "dex": 1, "con": 1, "wis": 0},
@@ -117,5 +117,19 @@
       "on_hit": [{"op": "shove", "to": "target"}]}},
   "executioner":     {"xp": 450, "hp": 40, "ac": 14, "init": 0, "speed": 5, "undead": true,
     "saves": {"str": 4, "dex": 0, "con": 4, "wis": 0},
-    "weapon": {"id": "greataxe", "to_hit": 6, "damage": "2d6+3", "reach": 1, "kind": "melee"}}
+    "weapon": {"id": "greataxe", "to_hit": 6, "damage": "2d6+3", "reach": 1, "kind": "melee"}},
+  "council_guard":   {"xp": 450, "hp": 38, "ac": 16, "init": 0, "speed": 5, "undead": true,
+    "saves": {"str": 4, "dex": 0, "con": 4, "wis": 1},
+    "weapon": {"id": "halberd", "to_hit": 6, "damage": "1d10+3", "reach": 2, "kind": "melee"},
+    "traits": ["formation"]},
+  "raised_prisoner": {"xp": 0, "ally": true, "undead": true, "color": "#8f86a8", "hp": 16, "ac": 10, "init": -1, "speed": 5,
+    "saves": {"str": 2, "dex": -1, "con": 2, "wis": -1},
+    "weapon": {"id": "slam", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"}},
+  "edric":           {"xp": 1800, "boss": true, "hp": 95, "ac": 14, "init": 2, "speed": 5, "undead": true, "attacks": 2,
+    "saves": {"str": 0, "dex": 2, "con": 3, "wis": 6},
+    "weapon": {"id": "grave_touch", "to_hit": 7, "damage": "2d6+3", "range": 8, "kind": "ranged"},
+    "traits": ["pale_king"]},
+  "sleeper_shade":   {"xp": 700, "hp": 42, "ac": 13, "init": 3, "speed": 6, "undead": true, "attacks": 2,
+    "saves": {"str": 2, "dex": 3, "con": 3, "wis": 2},
+    "weapon": {"id": "cold_touch", "to_hit": 6, "damage": "1d10+2", "reach": 1, "kind": "melee"}}
 }

@@ -128,7 +128,9 @@ func test_explore_objects_reachable_and_known() -> void:
 	var seen := 0
 	for scene in index.scenes:
 		var m := LocationMap.load_location(String(index.scenes[scene]))
-		m.setup_scene(scene)
+		# Объекты под отрицанием («ещё не выиграли бой», завал без прощённого Велиора) убраны: место осмотра
+		# видно после боя, а путь к нему проверяется по карте без преград, которые к тому времени ушли.
+		m.setup_scene(scene, func(c: String) -> bool: return not c.begins_with("!"))
 		assert_eq(m.ground.size() > 0, true)
 		for o in m.objects:
 			for c in m.cells_of(o):
@@ -139,10 +141,12 @@ func test_explore_objects_reachable_and_known() -> void:
 			assert_true(story.contains('"%s"' % o.explore), "узел %s есть в истории" % o.explore)
 			assert_ne(tr(String(o.label)), String(o.label), "подпись %s переведена" % o.label)
 			assert_true(m.path_to_object(m.spawn_of(scene), o).ok, "до %s можно дойти в сцене %s" % [o.id, scene])
-	assert_eq(seen, 26, "шесть мест осмотра главы 1, восемь главы 2 (у вожака беглых два вида), пять главы 3 и семь главы 4")
+	assert_eq(seen, 30, "шесть мест осмотра главы 1, восемь главы 2 (у вожака беглых два вида), пять главы 3, семь главы 4 и четыре главы 5")
 
 
 func _check(s: StorySession, cond: String) -> bool:
+	if cond.contains("|"):
+		return Array(cond.split("|")).any(func(part: String) -> bool: return _check(s, part))
 	if cond.contains("&"):
 		return Array(cond.split("&")).all(func(part: String) -> bool: return _check(s, part))
 	var neg := cond.begins_with("!")

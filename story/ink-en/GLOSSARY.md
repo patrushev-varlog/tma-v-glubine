@@ -187,3 +187,44 @@
 | сейф писаря, язычки (замка) | the clerk's safe, tumblers | закоулок 3 |
 | Свиток громовой волны | Scroll of Thunderwave | id `scroll_thunderwave` (i18n) |
 | Глава 5. Дно | Chapter 5. The Bottom | титр, как в i18n `CHAPTER_5` |
+
+Глава 5 (перевод 14.10.2026, ждут утверждения вместе с PR):
+
+| Русский | English | Где |
+|---|---|---|
+| дно | the Bottom (титр), the bottom (в тексте) | титр как в i18n `CHAPTER_5` |
+| главный спуск | the main descent | сцена 1 |
+| тайный путь, трещина, лаз, карниз | the secret way, the crack, the crawlway, the ledge | сцена 1; Велиор |
+| третья опора (литейной) | the third pillar (of the foundry) | `#obj:third_pillar` |
+| загоны, решётки | the pens, the gratings | как в главе 4 |
+| зал печати | the hall of the seal | сцена 2 |
+| борозды (печати) | the grooves | |
+| почётная стража (королевского) совета, стражи | the honour guard of the (royal) council, the guards | враг `council_guard` — "Council Guard" (i18n) |
+| герб Эльдмара: башня над тремя звёздами | the arms of Eldmar: a tower over three stars | |
+| «Верны до конца» | "Loyal to the end" | строка на нагрудниках |
+| постаменты, пустой тринадцатый постамент | the pedestals, the empty thirteenth pedestal | охота |
+| раскрытая ладонь с печатью | an open palm with a seal on it | дверца тайника |
+| «Здесь хранится» | "Here it is kept" | руны над ладонью |
+| Эдрик Сайр, Бледный Король | Edric Sayr, the Pale King | Sayr — как в главе 3 |
+| не-носитель | one who is not a Bearer | Эдрик, сцена 4 |
+| «Двести сорок одна ступень» | "Two hundred and forty-one steps" | как в дневнике главы 3 |
+| караульня (совета) | the (council) guardroom | закоулок, `LOC_CH5_GUARDROOM` |
+| памятная доска | the memorial plaque | |
+| Совет Эльдмара | the Council of Eldmar | как в главе 3; в тексте также the council |
+| знак своей власти | the token of its authority | надпись на доске |
+| Первый советник лорд Аверин Кейл | First Councillor Lord Averin Keil | имя — заглушка |
+| Печать совета | the council seal; The Council Seal (название предмета) | id `council_seal`, как в i18n `ITEM_council_seal`, `QUEST_ch5_hunt` |
+| «Совет Эльдмара. Ради блага» | "Council of Eldmar. For the good of the realm." | надпись на печати |
+| «Нашёл» | "Found." | приписка на приказе |
+| приказ (о Лиаре) | the order (about Liara) | |
+| Корвин Хаас | Corvin Haas | как в главе 4 |
+| Спящий, тот, кто спит | the Sleeper, the one who sleeps | |
+| орден | a medal | «наградил меня орденом» — decorated me |
+| столица | the capital | |
+| КОНЕЦ | THE END | строка перед тегом `ending:` |
+| «Любовь» | "Love" | концовка `ending:love`, как в i18n `ENDING_love` |
+| «Мир» | "Peace" | концовка `ending:peace`, `ENDING_peace` |
+| «Страж глубин» | "Keeper of the Deep" | концовка `ending:guardian`, `ENDING_guardian` |
+| «Новый хозяин глубин» | "The New Master of the Deep" | концовка `ending:tyrant`, `ENDING_tyrant` |
+| сказка о тьме в глубине | a tale about the darkness in the deep | эпилог «Нового хозяина» |
+| человек / человека (функция `people`) | person / people | 1 person, иначе people |

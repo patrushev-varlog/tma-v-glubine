@@ -1,7 +1,5 @@
 // Точка входа английской истории (демо для Next Fest — английский пролог, решение 6 плана 07).
-// Пролог, главы 1–4 и common.ink — переведённые файлы из этой папки; глава 5 пока подключена из
-// story/ink и идёт по-русски, пока её не переведут (перед её сборкой). Переведённую
-// главу подключать отсюда так же, как пролог и главу 1. Структура обязана совпадать с story/ink/game.ink:
+// Пролог, главы 1–5 и common.ink — переведённые файлы из этой папки. Структура обязана совпадать с story/ink/game.ink:
 // игра переносит сохранения между языками проигрыванием журнала выборов.
 INCLUDE common.ink
 INCLUDE ../ink/explore_common.ink
@@ -50,13 +48,13 @@ INCLUDE chapter4/05_foundry.ink
 INCLUDE chapter4/06_camp.ink
 INCLUDE chapter4/explore.ink
 
-INCLUDE ../ink/chapter5/01_descent.ink
-INCLUDE ../ink/chapter5/02_seal_hall.ink
-INCLUDE ../ink/chapter5/03_reunion.ink
-INCLUDE ../ink/chapter5/04_offer.ink
-INCLUDE ../ink/chapter5/05_finale.ink
-INCLUDE ../ink/chapter5/06_epilogue.ink
-INCLUDE ../ink/chapter5/explore.ink
+INCLUDE chapter5/01_descent.ink
+INCLUDE chapter5/02_seal_hall.ink
+INCLUDE chapter5/03_reunion.ink
+INCLUDE chapter5/04_offer.ink
+INCLUDE chapter5/05_finale.ink
+INCLUDE chapter5/06_epilogue.ink
+INCLUDE chapter5/explore.ink
 
 -> prologue -> chapter1 -> chapter2 -> chapter3 -> chapter4 -> chapter5 -> END
 

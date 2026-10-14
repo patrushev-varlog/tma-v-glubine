@@ -41,6 +41,8 @@ const GROUNDS := {
 	"forge": [Color("#3e3836"), Color("#383231"), Color("#4e4644")],
 	"forge_anatomy": [Color("#4a4846"), Color("#444240"), Color("#5a5856")],
 	"foundry": [Color("#3e3836"), Color("#383231"), Color("#4e4644")],
+	"deep": [Color("#3a3a40"), Color("#35353b"), Color("#48484f")],
+	"seal": [Color("#42424e"), Color("#3d3d48"), Color("#55556a")],
 }
 ## Пол, по которому можно ходить (знаки , : ;).
 const FLOOR_DECOR := {"ford": Color("#4b6b78"), "road": Color("#5a5040"), "ash": Color("#2a2826"), "wade": Color("#263a4a"),
@@ -118,6 +120,12 @@ const GROUND_ART := {
 	"foundry": {"floor": ["forge/floor_works", "forge/floor_works", "forge/floor_works", "forge/floor_grate"],
 		"molten": "forge/floor_molten",
 		"objects": {"wall": "forge/wall_block", "pillar": "forge/ladle", "rubble": "forge/slag_heap", "fence": "forge/cage"}},
+	# Дно главы 5: главный спуск с загонами по бокам (решётки — знак забора) и зал печати — плиты с бороздами,
+	# пустые постаменты стражи совета — знак алтаря, колонны с рунами. Своих листов пока нет: пол и камень Молчащих.
+	"deep": {"floor": ["dwarf/floor_hall", "dwarf/floor_hall", "mines/floor_stone", "mines/floor_gravel"],
+		"objects": {"wall": "mines/rock_block", "fence": "forge/cage", "pillar": "dwarf/rune_column", "rubble": "mines/rockfall"}},
+	"seal": {"floor": ["dwarf/floor_rune", "dwarf/floor_rune", "dwarf/floor_hall"],
+		"objects": {"wall": "dwarf/wall_runes", "pillar": "dwarf/rune_column", "altar": "dwarf/stone_niche", "rubble": "dwarf/rubble"}},
 }
 ## Верх ромба у тайла пола 64×64: центр клетки приходится на (32, 38).
 const FLOOR_OFFSET := Vector2(-32, -38)

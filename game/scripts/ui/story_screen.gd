@@ -131,7 +131,7 @@ func _advance() -> void:
 			_advance()
 			return
 		"end":
-			_bottom.add_child(UiKit.label(tr("STORY_END"), UiKit.FONT_BODY, UiKit.ACCENT))
+			_bottom.add_child(UiKit.label(Game.end_text(), UiKit.FONT_BODY, UiKit.ACCENT))
 			_bottom.add_child(UiKit.button(tr("STORY_TO_MENU"), _to_menu))
 	_refresh_hints()
 	UiKit.focus_first(_bottom)
@@ -270,3 +270,4 @@ func _save(slot: String) -> void:
 
 func _to_menu() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
