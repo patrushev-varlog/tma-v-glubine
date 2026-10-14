@@ -565,3 +565,4 @@
 {"t": "2026-10-14T08:09:18Z", "kind": "animation", "name": "dwarf_dead/hit", "id": "4957767b-3644-439e-8cb3-142862ae2a9f", "template": "taking-punch", "status": ["completed", "completed"], "cost": 6.0}
 {"t": "2026-10-14T08:10:05Z", "kind": "animation", "name": "stone_guardian/walk", "id": "7830353d-cb97-4b57-9f7e-60e6e5108be1", "template": "walking-6-frames", "status": ["completed", "completed"], "cost": 6.0}
 {"t": "2026-10-14T08:10:35Z", "kind": "animation", "name": "stone_guardian/down", "id": "5f891531-d486-4bd5-b9ae-ee5cb6b7e527", "template": "falling-back-death", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T08:11:56Z", "kind": "animation", "name": "torvin/idle", "id": "d7d7b4a4-dd97-4a86-a5c8-3c379d2af86e", "template": "breathing-idle", "status": ["completed", "completed"], "cost": 6.0}
