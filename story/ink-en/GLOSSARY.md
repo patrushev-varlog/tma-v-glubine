@@ -60,3 +60,31 @@
 | масло против мёртвых | oil against the dead | id `oil_undead` |
 | лагерь беглецов | the runaways' camp | |
 | Глава 2. Затопленные выработки | Chapter 2. The Flooded Workings | титр |
+
+Глава 2 (перевод 14.10.2026, ждут утверждения вместе с PR):
+
+| Русский | English | Где |
+|---|---|---|
+| Ренна Сол, госпожа Сол | Renna Sol, Mistress Sol | контрабандисты, сцена 3, письмо |
+| Тобин | Tobin | вожак беглых без бунта |
+| беглые (узники) | the fugitives | |
+| контрабандисты | the smugglers | торговец, теги `shop:smugglers`, `shop:smugglers_favor` |
+| «услуга» (плата Ренне) | a "favour" | +5 Тьмы |
+| насосная станция | the pumping station | |
+| помост, причал, плоскодонка | the platform, the landing stage, a flat-bottomed boat | |
+| шлюз, затвор | the sluice, the gate | |
+| страж шлюза | the sluice warden | враг `sluice_guardian` (ENEMY_sluice_guardian) |
+| обходной канал | the bypass channel | |
+| утопленники | the drowned | |
+| перечень старых родов | a register of the old houses | письмо |
+| разведчик В. | Scout V. | |
+| проекция Эдрика | (без названия в тексте) | |
+| отец Мерен | Father Meren | страж охоты |
+| часовня у шлюза | the chapel by the sluice | |
+| малый рычаг | the small lever | |
+| острога | fishing spear | «Острога затопленного святилища» — "Spear of the Sunken Shrine" (id `sunken_shrine_spear`) |
+| Хьюго из Эшмура | Hugo of Ashmoor | лук из закоулка 2 |
+| плащ подводного хода | Cloak of the Underwater Passage | id `cloak_underwater` (как в i18n) |
+| «Вода помнит, вода не спит» | "The water remembers, the water never sleeps" | бабушкина песня супруга |
+| лагерь беглецов (наверху) | the runaways' camp | |
+| Глава 3. Дварфийские залы | Chapter 3. The Dwarven Halls | титр |

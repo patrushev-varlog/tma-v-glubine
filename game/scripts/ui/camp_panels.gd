@@ -80,17 +80,20 @@ static func shop(root: Control, shop_id: String, on_done: Callable) -> Control:
 	var owners: Array[String] = ["hero"]
 	owners.append_array(Game.session.companions())
 	var buttons: Array[Button] = []
+	var favor := Shops.is_favor(shop_id)
+	var limit := Shops.limit(shop_id)
 	var refresh := func() -> void:
-		purse.text = UiKit.fmt("SHOP_SILVER", {"silver": silver[0]})
+		purse.text = tr_("SHOP_FAVOR_NOTE") if favor else UiKit.fmt("SHOP_SILVER", {"silver": silver[0]})
+		var full := limit > 0 and buy.size() >= limit
 		for b in buttons:
-			b.disabled = int(b.get_meta("price")) > silver[0] or bool(b.get_meta("sold"))
+			b.disabled = int(b.get_meta("price")) > silver[0] or bool(b.get_meta("sold")) or full
 	var grid := GridContainer.new()
 	grid.columns = 3
 	grid.add_theme_constant_override("h_separation", 16)
 	grid.add_theme_constant_override("v_separation", 8)
 	col.add_child(grid)
 	for s in Shops.stock(shop_id):
-		var name := UiKit.label("%s — %d" % [tr_("ITEM_" + String(s.id)), int(s.price)], UiKit.FONT_SMALL)
+		var name := UiKit.label(tr_("ITEM_" + String(s.id)) if favor else "%s — %d" % [tr_("ITEM_" + String(s.id)), int(s.price)], UiKit.FONT_SMALL)
 		name.autowrap_mode = TextServer.AUTOWRAP_OFF
 		grid.add_child(name)
 		var fx := UiKit.label(_item_effect(String(s.id)), UiKit.FONT_SMALL, UiKit.MUTED)
@@ -107,7 +110,7 @@ static func shop(root: Control, shop_id: String, on_done: Callable) -> Control:
 			b.set_meta("price", int(s.price))
 			b.set_meta("sold", false)
 			b.pressed.connect(func() -> void:
-				if int(s.price) > silver[0]:
+				if int(s.price) > silver[0] or (limit > 0 and buy.size() >= limit):
 					return
 				silver[0] -= int(s.price)
 				buy.append([String(s.id), o])
@@ -130,7 +133,7 @@ static func _item_effect(item_id: String) -> String:
 		return ""
 	var fx: Dictionary = Items.catalog()[item_id].fx
 	var parts := PackedStringArray()
-	for k in ["hit", "dmg", "ac", "save", "hp", "spell", "slot", "heal", "dr"]:
+	for k in ["hit", "dmg", "ac", "save", "hp", "spell", "slot", "heal", "dr", "dark"]:
 		if int(fx.get(k, 0)) != 0:
 			parts.append(UiKit.fmt("FX_" + k, {"n": int(fx[k])}))
 	return ", ".join(parts)

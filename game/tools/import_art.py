@@ -36,6 +36,8 @@ PORTRAIT_FILES = ("base_128.png", "base_64.png", "dark_1_dusk.png", "dark_2_gloo
 
 # Ноги персонажа во всех выгрузках PixelLab стоят на 23 px ниже центра холста (64, 80, 96, 112 и 128 px).
 FOOT_BELOW_CENTER = 23
+# Крупные персонажи на холсте 96×96 (страж шлюза главы 2): ноги ниже центра на столько.
+FOOT_BIG = {"sluice_guardian": 37}
 
 # Анимация в игре → папка с кадрами относительно корня персонажа. "{d}" — направление.
 _HERO = {a: f"composited/{a}/{{d}}" for a in ("idle", "walk", "hit", "down", "attack")}
@@ -82,6 +84,10 @@ UNITS = {
 	"prisoner": (ART / "chapter1" / "characters" / "prisoner_m", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
 	"prisoner_f": (ART / "chapter1" / "characters" / "prisoner_f", {**_PIXELLAB, "attack": "anims/attack/{d}"}),
 }
+# Глава 2: бойцы затопленных выработок (art/tools/ch2_batch3.py); утопленники чередуются (drowned_f).
+for _uid, _folder in {"drowned": "drowned_m", "drowned_f": "drowned_f", "smuggler": "smuggler", "renna": "renna",
+		"shrine_priest": "shrine_priest", "sluice_guardian": "sluice_guardian"}.items():
+	UNITS[_uid] = (ART / "chapter2" / "characters" / _folder, {**_PIXELLAB, "attack": "anims/attack/{d}"})
 # Статичные персонажи (только стойка, 8 направлений) и позы «связан» — по картинке на направление:
 # game/art/units/static/<id>/<направление>.png, холст 64×64, ноги на 23 px ниже центра.
 STATICS = {
@@ -93,6 +99,10 @@ STATICS = {
 CH1 = ART / "chapter1" / "characters"
 for _sid in ("holt", "mab", "boy", "prisoner_m", "prisoner_f", "white_woman", "sutler", "smith", "foreman_dead"):
 	STATICS[_sid] = CH1 / _sid / "base" / "Idle" / "rotations"
+# Глава 2: люди затопленных выработок на картах (art/chapter2/characters).
+CH2 = ART / "chapter2" / "characters"
+for _sid in sorted(p.name for p in CH2.iterdir() if (p / "base" / "Idle" / "rotations").is_dir()) if CH2.is_dir() else ():
+	STATICS[_sid] = CH2 / _sid / "base" / "Idle" / "rotations"
 ANIM_ORDER = ("idle", "walk", "attack", "cast", "hit", "down")
 FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 
@@ -100,6 +110,7 @@ FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 # Набор тайлов → папка в art/. Пролог — art/prologue/tiles/<набор>, глава 1 — шахты.
 TILE_SETS = {ts: ART / "prologue" / "tiles" / ts for ts in ("village_night", "village_morning", "temple", "ford", "gate")}
 TILE_SETS["mines"] = ART / "chapter1" / "tiles" / "mines"
+TILE_SETS["flooded"] = ART / "chapter2" / "tiles" / "flooded"
 FLOOR_PREFIXES = ("floor_", "water_", "bank_", "edge")
 # Верх ромба у пола 64×64: ромб 64×32 начинается с 22-й строки.
 FLOOR_TOP = 22
@@ -112,6 +123,8 @@ LOCATION_FLOORS = {
 	# Шахты главы 1.
 	"mine_stone": "mines/floor_stone", "mine_gravel": "mines/floor_gravel", "mine_ore": "mines/floor_ore",
 	"mine_planks": "mines/floor_planks", "mine_rails": "mines/floor_rails", "mine_rails_b": "mines/floor_rails_b",
+	# Затопленные выработки главы 2.
+	"flood_wade": "flooded/floor_wade", "flood_deep": "flooded/floor_deep", "flood_wet": "flooded/floor_wet",
 }
 
 ABILITY_ICONS = ("disengage", "dodge", "end_turn", "fire_bolt", "hallowed_ground", "healing_word", "magic_missile",
@@ -201,7 +214,7 @@ def units(w: Writer) -> None:
 				sheet.alpha_composite(f, (i * cw + (-cx - left), r * ch + (-cy - top)))
 			if d == DIRS[0]:
 				info[anim] = {"row": r, "frames": len(frames), "fps": FPS[anim]}
-		manifest[uid] = {"size": [cw, ch], "foot": [-left, FOOT_BELOW_CENTER - top], "anims": info}
+		manifest[uid] = {"size": [cw, ch], "foot": [-left, FOOT_BIG.get(uid, FOOT_BELOW_CENTER) - top], "anims": info}
 		w.image(OUT / "units" / f"{uid}.png", sheet)
 	w.json(OUT / "units" / "units.json", manifest)
 	for sid, folder in STATICS.items():
@@ -229,7 +242,7 @@ def tiles(w: Writer) -> None:
 		ts, name = src.split("/")
 		im = Image.open(TILE_SETS[ts] / f"{name}.png").convert("RGBA")
 		# Верх ромба — по рисунку: у полов шахт он на строку-две ниже FLOOR_TOP.
-		y0 = max(FLOOR_TOP, im.getchannel("A").getbbox()[1]) if ts == "mines" else FLOOR_TOP
+		y0 = max(FLOOR_TOP, im.getchannel("A").getbbox()[1]) if ts in ("mines", "flooded") else FLOOR_TOP
 		top = im.crop((0, y0, 64, y0 + 32))
 		# Только ромб: всё, что вне него, прозрачно, чтобы соседние клетки не перекрывались.
 		out = Image.new("RGBA", (64, 32), (0, 0, 0, 0))

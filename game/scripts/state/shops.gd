@@ -45,3 +45,13 @@ static func fits(shop_id: String, item_id: String, owner: String) -> bool:
 		if s.id == item_id:
 			return (s["for"] as Array).is_empty() or (s["for"] as Array).has(owner)
 	return false
+
+
+## Плата «услугой» (контрабандисты главы 2): вещи без серебра.
+static func is_favor(shop_id: String) -> bool:
+	return has_shop(shop_id) and bool(table()[shop_id].get("favor", false))
+
+
+## Сколько вещей можно взять за один заход; 0 — без ограничения.
+static func limit(shop_id: String) -> int:
+	return int(table()[shop_id].get("limit", 0)) if has_shop(shop_id) else 0

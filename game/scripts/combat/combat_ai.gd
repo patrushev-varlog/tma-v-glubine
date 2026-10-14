@@ -116,7 +116,7 @@ static func _best_victim(b: Battle, u: Combatant, candidates: Array[Combatant]) 
 		if p.max >= f.hp:
 			score += 4.0 * p.chance
 		score += (16.0 - f.max_hp) * 0.25
-		var gap := Battle.dist(u.cell, f.cell) if u.is_ranged() else int(b.walk_distances(f.cell).get(u.cell, 99))
+		var gap := Battle.dist(u.cell, f.cell) if u.is_ranged() else int(b.walk_distances(f.cell, u).get(u.cell, 99))
 		var steps := maxi(0, gap - reach)
 		if steps > 0 and not u.is_ranged():
 			# Уход от героя рядом провоцирует атаку — умный враг этого избегает.
@@ -165,7 +165,7 @@ static func _move_toward(b: Battle, u: Combatant, target: Combatant, want_range:
 	if u.speed_left <= 0:
 		return
 	var reach := b.reachable(u)
-	var walk := b.walk_distances(target.cell)
+	var walk := b.walk_distances(target.cell, u)
 	var best_cell := u.cell
 	var best_score := 1_000_000
 	for c in reach:
@@ -439,7 +439,7 @@ static func _main_action(b: Battle, u: Combatant, use_dark: bool) -> void:
 
 static func _weapon_score(b: Battle, u: Combatant, target: Combatant) -> float:
 	var p := b.attack_preview(u, target)
-	var walk := int(b.walk_distances(target.cell).get(u.cell, 99))
+	var walk := int(b.walk_distances(target.cell, u).get(u.cell, 99))
 	var score: float = p.expected * u.attacks_per_action
 	if walk - u.reach() > u.speed_left:
 		score *= 0.4
@@ -451,7 +451,7 @@ static func _weapon_action(b: Battle, u: Combatant, target: Combatant) -> void:
 	for aid in _phase(b, u, "weapon"):
 		if not b.can_use(u, aid):
 			continue
-		var walk := int(b.walk_distances(target.cell).get(u.cell, 99))
+		var walk := int(b.walk_distances(target.cell, u).get(u.cell, 99))
 		var reachable := walk - u.reach() <= u.speed_left
 		var when: Dictionary = _ai(b, aid).get("when", {})
 		if when.get("target_out_of_reach", false) and reachable:
@@ -532,7 +532,7 @@ static func _single_value(b: Battle, u: Combatant, aid: String, t: Combatant) ->
 					if x.op == "status" and not t.has_status(String(x.status)):
 						value += fail_s * float(CombatData.status_def(String(x.status)).get("ai_value", 0))
 			"spell_attack":
-				var ch := Dice.hit_chance(u.spell_attack, b.ac_of(t), b.advantage_for(u, t, true))
+				var ch := Dice.hit_chance(u.spell_attack, b.ac_against(u, t, true), b.advantage_for(u, t, true))
 				value = ch * avg * int(CombatData.resolve(e.get("repeat", 1), p))
 				if e.get("drain", false):
 					value *= 1.5

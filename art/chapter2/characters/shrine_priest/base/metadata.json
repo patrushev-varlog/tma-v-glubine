@@ -1,0 +1,36 @@
+{
+  "group_id": "b7019bd2-8c74-4721-b98b-c0f278a3b046",
+  "states": [
+    {
+      "character": {
+        "id": "8833b8b4-6ec1-4dec-932f-8014261caa3e",
+        "name": "Idle",
+        "prompt": "an undead drowned priest in heavy waterlogged dark vestments, face almost gone, white fish-like eyes, holding a long three-pronged fishing spear trident upright in both hands, river weed hanging from the robe, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T05:21:44.212364+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T05:24:02.443025"
+}

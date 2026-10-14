@@ -10,7 +10,7 @@ const OBSTACLE_GLYPHS := {
 	"=": "cart", "@": "well", "^": "fire", "~": "water",
 }
 ## Знаки карты боя, по которым можно ходить: только вид пола.
-const FLOOR_GLYPHS := {",": "ford", ":": "road", ";": "ash"}
+const FLOOR_GLYPHS := {",": "ford", ":": "road", ";": "ash", "-": "wade"}
 
 static var _cache := {}
 
@@ -397,7 +397,15 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 			Items.equip(h, Items.kit_for(h, level, gear, owned.get("hero" if h.is_hero else h.kind, [])))
 	if not bound.is_empty():
 		stage["bound"] = bound.duplicate(true)
-	for key in ["timed", "objective", "cannot_lose"]:
+	# Привязанный цепью враг (страж шлюза, tether в enemies.json) не отходит от своего места дальше цепи.
+	var tether := {}
+	for e in enemies:
+		var tr := int(table("enemies").get(e.kind, {}).get("tether", 0))
+		if tr > 0:
+			tether[e.id] = {"cell": [e.cell.x, e.cell.y], "r": tr}
+	if not tether.is_empty():
+		stage["tether"] = tether
+	for key in ["timed", "objective", "cannot_lose", "cover", "intro"]:
 		if bt.has(key):
 			stage[key] = bt[key].duplicate(true) if bt[key] is Array or bt[key] is Dictionary else bt[key]
 	if String(bt.get("ambush_flag", "")) != "" and flags.get(String(bt.ambush_flag), false):

@@ -46,6 +46,10 @@ ENEMY_holt,Сержант Хольт,Sergeant Holt
 ENEMY_archer,Лучник,Archer
 ENEMY_foreman_dead,Мёртвый штейгер,The Dead Foreman
 ALLY_prisoner,Узник,Prisoner
+ENEMY_smuggler,Контрабандист,Smuggler
+ENEMY_renna,Ренна Сол,Renna Sol
+ENEMY_sluice_guardian,Страж шлюза,The Sluice Warden
+ENEMY_shrine_priest,Отец Мерен,Father Meren
 DIFF_story,История,Story
 DIFF_trial,Испытание,Trial
 DARK_shadow,Тень,Shadow
@@ -213,6 +217,8 @@ TRAIT_bolt_splash,Брызги огня,Fire Splash
 TRAIT_rally,Клятва держит,The Oath Holds
 TRAIT_rescue,Цепь поднимает,The Chain Lifts
 TRAIT_ring,Без меры,Beyond Measure
+TRAIT_swimmer,Как рыба в воде,At Home in the Water
+TRAIT_swimmer_DESC,Вода по пояс не замедляет.,Waist-deep water does not slow it.
 TRAIT_cleave_full,Полное рассечение,Full Cleave
 TRAIT_zones_long,Долгие зоны,Lasting Zones
 TRAIT_protector_plus,Надёжный защитник,Steadfast Protector
@@ -286,3 +292,6 @@ BATTLE_OBJ_P4_CAMP,"Продержитесь {rounds} раунда, пока с�
 BATTLE_LOG_CH1_RAISED,"Шум разбудил мертвецов в бараке.","The noise has woken the dead in the barracks."
 BATTLE_LOG_CH1_ALARM,"По штреку бегут на гонг ещё стражники.","More guards come running down the drift at the gong."
 BATTLE_LOG_CH1_BONES,"Из-под завала поднимаются кости засыпанных рудокопов.","The bones of buried miners rise from under the rubble."
+BATTLE_LOG_CH2_WATER,"Вода по пояс: шаг по ней стоит двух. Утопленникам она не мешает. Колонны и трубы укрывают от выстрелов (+2 КД).","Waist-deep water: each step through it costs two. The drowned are not slowed. Pillars and pipes give cover from shots (+2 AC)."
+BATTLE_LOG_CH2_RISE,"Из чёрной воды поднимаются ещё утопленники.","More of the drowned rise from the black water."
+BATTLE_LOG_CH2_SHRINE,"Из-под пола часовни встают утопленники, которых он прибил когда-то.","The drowned he once pinned down rise from under the chapel floor."

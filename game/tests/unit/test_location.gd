@@ -139,7 +139,7 @@ func test_explore_objects_reachable_and_known() -> void:
 			assert_true(story.contains('"%s"' % o.explore), "узел %s есть в истории" % o.explore)
 			assert_ne(tr(String(o.label)), String(o.label), "подпись %s переведена" % o.label)
 			assert_true(m.path_to_object(m.spawn_of(scene), o).ok, "до %s можно дойти в сцене %s" % [o.id, scene])
-	assert_eq(seen, 6, "шесть мест осмотра главы 1")
+	assert_eq(seen, 14, "шесть мест осмотра главы 1 и восемь главы 2 (у вожака беглых два вида)")
 
 
 func _check(s: StorySession, cond: String) -> bool:

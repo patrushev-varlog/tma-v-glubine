@@ -227,12 +227,17 @@ func _apply(ev: Dictionary) -> void:
 		state.branch = String(ev.branch)
 		pending_levelup = 0
 	elif ev.has("shop"):
+		var lim := Shops.limit(String(ev.shop))
+		var bought := 0
 		for b in ev.get("buy", []):
+			if lim > 0 and bought >= lim:
+				break
 			var price := Shops.price(String(ev.shop), String(b[0]))
 			if price < 0 or price > state.silver:
 				continue
 			state.silver -= price
 			state.inventory.append({"id": String(b[0]), "owner": String(b[1])})
+			bought += 1
 		pending_shop = ""
 	_set_mark()
 

@@ -1,5 +1,5 @@
 {
- "_doc": "Торговцы по тегу # shop:<id> (design/equipment-catalog.md, «Торговцы»). price — цена в серебре до скидки; discount — скидка в процентах, цена округляется до 5. for — кому вещь подходит: hero, irena, garret, velior (без ключа — всем). Покупка идёт в инвентарь отряда (StorySession.leave_shop). Расходников (зелья, масло, свитки) в бою пока нет, поэтому их здесь тоже нет.",
+ "_doc": "Торговцы по тегу # shop:<id> (design/equipment-catalog.md, «Торговцы»). price — цена в серебре до скидки; discount — скидка в процентах, цена округляется до 5. for — кому вещь подходит: hero, irena, garret, velior (без ключа — всем). Покупка идёт в инвентарь отряда (StorySession.leave_shop). Расходников (зелья, масло, свитки) в бою пока нет, поэтому их здесь тоже нет. favor — плата «услугой» (глава 2, Ренна Сол): вещи без серебра, limit — сколько вещей можно взять.",
  "shops": {
   "sutler": {
    "discount": 0,
@@ -16,6 +16,24 @@
     {"id": "sutler_amulet", "price": 30},
     {"id": "sutler_censer", "price": 35, "for": ["hero", "irena"]},
     {"id": "village_mail", "price": 90, "for": ["hero", "irena", "garret"]}
+   ]
+  },
+  "smugglers": {
+   "discount": 0,
+   "stock": [
+    {"id": "silver_bow", "price": 90, "for": ["hero", "velior"]},
+    {"id": "blackwater_scale", "price": 90, "for": ["hero", "velior"]},
+    {"id": "drowned_shroud", "price": 120},
+    {"id": "bone_focus", "price": 120, "for": ["hero", "irena"]}
+   ]
+  },
+  "smugglers_favor": {
+   "favor": true,
+   "limit": 1,
+   "stock": [
+    {"id": "black_steel", "price": 0, "for": ["hero", "garret"]},
+    {"id": "drowned_shroud", "price": 0},
+    {"id": "bone_focus", "price": 0, "for": ["hero", "irena"]}
    ]
   }
  }

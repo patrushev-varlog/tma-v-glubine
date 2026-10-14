@@ -1,5 +1,5 @@
 {
-  "_doc": "Тестовые бои уровней 1–5 из серого прототипа (prototypes/combat). Карта 18×14: # — стена или телега, h — места отряда, буквы — враги по legend. trial_only — враги только на «Испытании». boost — усиление врагов под гарантированный набор экипировки: hp — проценты к хитам (также hit, dmg, ac). Бои пролога (prologue_*) и главы 1 (chapter1_*, ch1_hunt_foreman) — карты мест из сцен: party — отряд боя, b — связанный союзник (bound), цифры — выходы подкреплений (waves[].at), ground — пол (mine — шахты главы 1); silver — добыча серебра за победу; flag_add — буквы только при флаге (имя или имя=значение); знаки препятствий (| _ & * % + = @ ^ ~) и пола (, : ;) и остальные ключи — docs/COMBAT_DATA.md.",
+  "_doc": "Тестовые бои уровней 1–5 из серого прототипа (prototypes/combat). Карта 18×14: # — стена или телега, h — места отряда, буквы — враги по legend. trial_only — враги только на «Испытании». boost — усиление врагов под гарантированный набор экипировки: hp — проценты к хитам (также hit, dmg, ac). Бои пролога (prologue_*) и главы 1 (chapter1_*, ch1_hunt_foreman) — карты мест из сцен: party — отряд боя, b — связанный союзник (bound), цифры — выходы подкреплений (waves[].at), ground — пол (mine — шахты главы 1, flooded — затопленные выработки главы 2); знак - — вода по пояс (шаг за два), cover — укрытия от выстрелов (+2 КД), intro — строка журнала в начале боя; silver — добыча серебра за победу; flag_add — буквы только при флаге (имя или имя=значение); знаки препятствий (| _ & * % + = @ ^ ~) и пола (, : ;) и остальные ключи — docs/COMBAT_DATA.md.",
   "level_1": {
     "level": 1,
     "legend": {
@@ -334,6 +334,74 @@
       "#....*.....#",
       "#..........#",
       "#....|.....#",
+      "#.h......h.#",
+      "##..h..h..##",
+      "############"
+    ]
+  },
+  "chapter2_1": {"level": 2, "silver": 15, "ground": "flooded", "cover": true, "intro": "BATTLE_LOG_CH2_WATER", "party": ["irena", "garret", "velior"], "waves": [{"round": 2, "at": "1", "units": ["drowned", "drowned"], "trial_units": ["drowned", "drowned"], "log": "BATTLE_LOG_CH2_RISE"}], "legend": {"z": "drowned", "Z": "drowned"}, "trial_only": ["Z"],
+    "map": [
+      "################",
+      "#hh..-----~~---#",
+      "#h..---|-Z--1--#",
+      "#h.----------~~#",
+      "##.--z-----z---#",
+      "#..---|---Z-|--#",
+      "#*.--------1---#",
+      "#..-z--~~---Z--#",
+      "##.----~~---|--#",
+      "################"
+    ]
+  },
+  "chapter2_2_smugglers": {"level": 2, "silver": 15, "ground": "flooded", "cover": true, "party": ["irena", "garret", "velior"], "legend": {"R": "renna", "s": "smuggler", "S": "smuggler", "a": "crossbowman", "A": "crossbowman", "p": "prisoner"}, "trial_only": ["S", "A"],
+    "map": [
+      "################",
+      "#h...|....=..a.#",
+      "#hh.p......&R..#",
+      "#h.p..----..s..#",
+      "#..p.----~-..s.#",
+      "#....----~~-...#",
+      "#.s..----.-.Sa.#",
+      "#...|.---..|.A.#",
+      "#..S......=....#",
+      "################"
+    ]
+  },
+  "chapter2_2_flooded": {"level": 2, "silver": 15, "ground": "flooded", "cover": true, "party": ["irena", "garret", "velior"], "waves": [{"round": 2, "at": "1", "units": ["drowned", "drowned"], "trial_units": ["drowned", "drowned"], "log": "BATTLE_LOG_CH2_RISE"}], "legend": {"z": "drowned", "Z": "drowned"}, "trial_only": ["Z"],
+    "map": [
+      "################",
+      "#hh----~~~-----#",
+      "#h-----~~-Z-z--#",
+      "#h--|------z--1#",
+      "#~~---z--|-----#",
+      "#~~~------Z--1~#",
+      "#~~~~--z---~~~~#",
+      "################"
+    ]
+  },
+  "chapter2_3": {"level": 2, "silver": 15, "ground": "flooded", "cover": true, "party": ["irena", "garret", "velior"], "waves": [{"round": 2, "at": "1", "units": ["drowned"], "trial_units": [], "log": "BATTLE_LOG_CH2_RISE"}, {"round": 4, "at": "2", "units": ["drowned", "drowned"], "trial_units": ["drowned"], "log": "BATTLE_LOG_CH2_RISE"}], "legend": {"G": "sluice_guardian", "z": "drowned"},
+    "map": [
+      "################",
+      "#####|1-G-1|####",
+      "####...---...###",
+      "###..-------..##",
+      "##..---------..#",
+      "#..z----2----..#",
+      "#....-------...#",
+      "#h.....|.......#",
+      "#hh...*....*...#",
+      "#h.............#",
+      "################"
+    ]
+  },
+  "ch2_hunt_priest": {"level": 2, "silver": 20, "ground": "flooded_shrine", "cover": true, "party": ["irena", "garret", "velior"], "waves": [{"round": 2, "at": "1", "units": ["drowned", "drowned"], "trial_units": ["drowned", "drowned"], "log": "BATTLE_LOG_CH2_SHRINE"}], "legend": {"P": "shrine_priest"},
+    "map": [
+      "############",
+      "####-&-#####",
+      "##...P....##",
+      "#..._..._..#",
+      "#-..._..._-#",
+      "#1........1#",
       "#.h......h.#",
       "##..h..h..##",
       "############"
