@@ -52,13 +52,14 @@ func _init() -> void:
 	quit()
 
 
-## Сюжетные бои (battle=…): отряд задан в бою, уровень тоже; перебираются классы героя.
+## Сюжетные бои (battle=…): уровень задан в бою, отряд тоже, если у боя есть ключ party (иначе — party=…,
+## как в сюжете: глава 4 без прощённого Велиора — no_velior); перебираются классы героя.
 func _story_battles(opt: Dictionary, flags: Dictionary, runs: int, darks: Array) -> void:
 	print("Бой | Класс | Режим | Тёмные дары | Победы | Раундов | Выбыло | Герой выбыл")
 	for bid in String(opt.battle).split(","):
 		for cls in String(opt["class"]).split(","):
 			for dark in darks:
-				var s := Simulator.summarize(bid, cls, "", "full", opt.diff, runs, dark, opt.gear, 1000, flags)
+				var s := Simulator.summarize(bid, cls, "", String(opt.party), opt.diff, runs, dark, opt.gear, 1000, flags)
 				print("%s | %s | %s | %s | %d%% | %.1f | %.1f | %d%%%s" % [bid, tr("CLASS_" + cls), tr("DIFF_" + opt.diff),
 					"да" if dark else "нет", roundi(s.win_rate * 100), s.avg_rounds, s.avg_down,
 					roundi(s.hero_down_rate * 100), "" if s.timeouts == 0 else " (не кончились: %d)" % s.timeouts])

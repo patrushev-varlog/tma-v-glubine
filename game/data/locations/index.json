@@ -1,4 +1,4 @@
 {
  "comment": "Сцена истории → локация. Сцены без карты идут на экране истории.",
- "scenes": {"raid": "ashmoor", "ashes": "ashmoor", "gate": "mine_gate", "cage": "mine_cage", "barracks": "mine_barracks", "lift": "mine_lift", "black_water": "flood_black_water", "fugitives": "flood_ledge", "smugglers": "flood_pump", "sluice": "flood_sluice", "arches": "dwarf_arches", "refuge": "dwarf_forge", "archive": "dwarf_archive", "keeper": "dwarf_gallery"}
+ "scenes": {"raid": "ashmoor", "ashes": "ashmoor", "gate": "mine_gate", "cage": "mine_cage", "barracks": "mine_barracks", "lift": "mine_lift", "black_water": "flood_black_water", "fugitives": "flood_ledge", "smugglers": "flood_pump", "sluice": "flood_sluice", "arches": "dwarf_arches", "refuge": "dwarf_forge", "archive": "dwarf_archive", "keeper": "dwarf_gallery", "workshops": "forge_works", "reports": "forge_office", "flesh_master": "forge_anatomy", "foundry": "forge_foundry"}
 }

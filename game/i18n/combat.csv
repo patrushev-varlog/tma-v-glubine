@@ -53,6 +53,12 @@ ENEMY_shrine_priest,Отец Мерен,Father Meren
 ENEMY_stone_guardian,Страж Молчащих,Silent Warden
 ENEMY_dwarf_archivist,Мёртвый архивариус,Dead Archivist
 ENEMY_torvin,Торвин-Без-Голоса,Torvin the Voiceless
+ENEMY_dead_soldier,Мертвец-солдат,Vat Soldier
+ENEMY_vat_overseer,Надсмотрщик цехов,Workshop Overseer
+ENEMY_gessar,Мастер Гессар,Master Gessar
+ENEMY_stitched,Изделие,Stitched Work
+ENEMY_foundry_dead,Мёртвый литейщик,Dead Founder
+ENEMY_executioner,Казнитель,Executioner
 DIFF_story,История,Story
 DIFF_trial,Испытание,Trial
 DARK_shadow,Тень,Shadow
@@ -226,6 +232,12 @@ TRAIT_stone_armor,Каменная броня,Stone Body
 TRAIT_stone_armor_DESC,"Урон от оружия меньше на 4, если оно не дробящее и страж не обойдён: союзник атакующего стоит вплотную к нему с другой стороны.","Weapon damage is reduced by 4 unless the weapon is blunt or the warden is flanked: an ally of the attacker stands next to it on the other side."
 TRAIT_keeper_oath,Клятва хранителя,Keeper's Oath
 TRAIT_keeper_oath_DESC,Урон от оружия меньше на 2.,Weapon damage is reduced by 2.
+TRAIT_formation,Строй,Formation
+TRAIT_formation_DESC,Союзники вплотную к мертвецу-солдату получают +2 к КД.,Allies standing next to a vat soldier gain +2 AC.
+TRAIT_raiser,Поднять павшего,Raise the Fallen
+TRAIT_raiser_DESC,"В начале своего хода поднимает павшую нежить в 5 клетках с половиной хитов: раз за бой, на «Испытании» дважды.","At the start of its turn raises a fallen undead within 5 squares at half hit points: once per battle, twice on Trial."
+TRAIT_flesh_master,Сшить заново,Stitch Anew
+TRAIT_flesh_master_DESC,"В начале своего хода поднимает павшую нежить в 6 клетках с половиной хитов: раз за бой, на «Испытании» дважды.","At the start of its turn raises a fallen undead within 6 squares at half hit points: once per battle, twice on Trial."
 TRAIT_cleave_full,Полное рассечение,Full Cleave
 TRAIT_zones_long,Долгие зоны,Lasting Zones
 TRAIT_protector_plus,Надёжный защитник,Steadfast Protector
@@ -272,6 +284,7 @@ ITEM_silent_crown,Венец Молчащих,Crown of the Silent
 ITEM_shadowskin,Тенекожа,Shadowskin
 ITEM_dwarf_steel,Слиток дварфийской стали,Ingot of Dwarven Steel
 ITEM_dwarf_ale,Дварфийский эль,Dwarven Ale
+ITEM_scroll_thunderwave,Свиток громовой волны,Scroll of Thunderwave
 ITEM_FORGED_MARK," (горн Молчащих)"," (Forge of the Silent)"
 ITEM_pale_ring,Перстень Бледного Короля,Ring of the Pale King
 ITEM_foreman_lantern,Фонарь первого штейгера,Lantern of the First Foreman
@@ -310,3 +323,15 @@ BATTLE_LOG_CH3_ARCHIVE,"Из-за полок поднимаются ещё ар�
 BATTLE_LOG_CH3_KEEPER,"Молот хранителя отбрасывает на клетку. Внизу, за краем галереи, светится печать.","The keeper's hammer knocks you back a step. Below the edge of the gallery the seal glows."
 BATTLE_LOG_CH3_NICHES,"В нишах галереи просыпаются стражи.","Wardens awaken in the gallery niches."
 BATTLE_LOG_CH2_SHRINE,"Из-под пола часовни встают утопленники, которых он прибил когда-то.","The drowned he once pinned down rise from under the chapel floor."
+BATTLE_LOG_MOLTEN,"{name} в жидком железе!","{name} is in the molten iron!"
+BATTLE_LOG_LADLE_WARN,"Ковш над литейной качнулся: в начале следующего раунда расплав польётся на подсвеченные клетки.","A ladle sways above the foundry: at the start of the next round molten iron will pour onto the marked squares."
+BATTLE_LOG_LADLE_POUR,"Ковш опрокидывается, по полу течёт жидкое железо.","The ladle tips over and molten iron floods the floor."
+BATTLE_LOG_LADLE_DODGE,"{name} успевает отскочить: половина урона.","{name} jumps clear in time: half damage."
+BATTLE_LOG_RAISE,"{name} поднимает павшего: {target} снова в строю.","{name} raises the fallen: {target} stands again."
+BATTLE_LOG_CH4_WORKS,"Мертвецы-солдаты держат строй: рядом с ними +2 к КД. Надсмотрщики поднимают павших, бейте их первыми. Чаны и конвейер укрывают от выстрелов.","The vat soldiers hold formation: +2 AC next to them. The overseers raise the fallen, strike them first. Vats and the conveyor give cover from shots."
+BATTLE_LOG_CH4_GONG,"На гонг из глубины цехов идёт ещё строй.","Another rank marches up from the depths of the works at the sound of the gong."
+BATTLE_LOG_CH4_GESSAR,"Гессар сшивает павшие изделия заново, пока жив сам.","Gessar stitches his fallen works back together for as long as he himself lives."
+BATTLE_LOG_CH4_TABLES,"Со столов поднимаются ещё изделия.","More works rise from the tables."
+BATTLE_LOG_CH4_FOUNDRY,"Желоба с жидким железом не перейти, но туда можно столкнуть: 2d6 огнём. Крюки литейщиков отбрасывают. Ковши опрокидываются по раундам, их клетки подсвечены заранее.","The channels of molten iron cannot be crossed, but someone can be shoved in: 2d6 fire. The founders' hooks knock you back. The ladles tip over on set rounds, their squares are marked in advance."
+BATTLE_LOG_CH4_GARRISON,"С галерей литейной спускается гарнизон.","The garrison comes down from the foundry galleries."
+BATTLE_LOG_CH4_EXECUTIONERS,"Казнители из зала идут следом за вами вниз.","The executioners from the hall follow you down."

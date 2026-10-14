@@ -459,5 +459,79 @@
       "#.....hhhh.....#",
       "################"
     ]
+  },
+  "chapter4_1": {
+    "level": 4, "silver": 15, "ground": "forge", "cover": true, "intro": "BATTLE_LOG_CH4_WORKS",
+    "waves": [{"round": 2, "at": "1", "units": ["dead_soldier", "dead_soldier"], "trial_units": ["dead_soldier"], "log": "BATTLE_LOG_CH4_GONG"}],
+    "legend": {"s": "dead_soldier", "S": "dead_soldier", "o": "vat_overseer", "O": "vat_overseer"},
+    "trial_only": ["S", "O"],
+    "map": [
+      "################",
+      "#..@..@..@..@.1#",
+      "#..............#",
+      "#hh....s.....o.#",
+      "#h.....s..S....#",
+      "#hh...s....O..1#",
+      "#..====...====.#",
+      "#..............#",
+      "#..@..@..@..@..#",
+      "################"
+    ]
+  },
+  "chapter4_2": {
+    "level": 4, "silver": 15, "ground": "forge_anatomy", "cover": true, "intro": "BATTLE_LOG_CH4_GESSAR",
+    "waves": [{"round": 3, "at": "1", "units": ["stitched"], "trial_units": ["stitched"], "log": "BATTLE_LOG_CH4_TABLES"}],
+    "legend": {"G": "gessar", "k": "stitched", "K": "stitched"},
+    "trial_only": ["K"],
+    "map": [
+      "################",
+      "#.1..........1.#",
+      "#..___....___..#",
+      "#........G.....#",
+      "#hh..k......k..#",
+      "#h......K......#",
+      "#hh.___....___.#",
+      "#.......k......#",
+      "#..............#",
+      "################"
+    ]
+  },
+  "chapter4_3": {
+    "level": 4, "silver": 20, "ground": "foundry", "cover": true, "intro": "BATTLE_LOG_CH4_FOUNDRY",
+    "ladles": [{"at": "5", "rounds": [2, 4, 6], "dice": "3d6", "dc": 13}, {"at": "6", "rounds": [3, 5, 7], "dice": "3d6", "dc": 13}],
+    "waves": [{"round": 3, "at": "1", "units": ["dead_soldier"], "trial_units": ["foundry_dead"], "log": "BATTLE_LOG_CH4_GARRISON"}],
+    "legend": {"f": "foundry_dead", "s": "dead_soldier", "S": "dead_soldier", "a": "bone_archer", "A": "bone_archer"},
+    "trial_only": ["S", "A"],
+    "map": [
+      "################",
+      "#|5.....1....6|#",
+      "#.55..f....f.66#",
+      "#!!!!.!!!!.!!!!#",
+      "#....a..s..A...#",
+      "#..s.....f..S..#",
+      "#!!!!.!!!!.!!!!#",
+      "#hh.....2......#",
+      "#hh............#",
+      "################"
+    ]
+  },
+  "chapter4_3_refuse": {
+    "level": 4, "silver": 20, "ground": "foundry", "cover": true, "intro": "BATTLE_LOG_CH4_FOUNDRY",
+    "ladles": [{"at": "5", "rounds": [2, 4, 6], "dice": "3d6", "dc": 13}, {"at": "6", "rounds": [3, 5, 7], "dice": "3d6", "dc": 13}],
+    "waves": [{"round": 2, "at": "2", "units": ["executioner"], "trial_units": ["executioner"], "log": "BATTLE_LOG_CH4_EXECUTIONERS"}],
+    "legend": {"f": "foundry_dead", "s": "dead_soldier", "a": "bone_archer", "A": "bone_archer"},
+    "trial_only": ["A"],
+    "map": [
+      "################",
+      "#|5.....1....6|#",
+      "#.55..f....f.66#",
+      "#!!!!.!!!!.!!!!#",
+      "#....a..s..A...#",
+      "#..s.....f..S..#",
+      "#!!!!.!!!!.!!!!#",
+      "#hh.....2......#",
+      "#hh............#",
+      "################"
+    ]
   }
 }

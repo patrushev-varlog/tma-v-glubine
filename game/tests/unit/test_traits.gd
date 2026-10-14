@@ -411,3 +411,34 @@ func test_keeper_oath() -> void:
 	var t := CombatData.make_enemy("torvin", 1)
 	var b := _pair(CombatData.make_hero("fighter", 3, "guardian"), t)
 	assert_eq(b._mitigate(t, 10), 8, "клятва хранителя: урон от оружия −2")
+
+
+func test_formation() -> void:
+	var s1 := A.at(CombatData.make_enemy("dead_soldier", 1), Vector2i(5, 5))
+	var s2 := A.at(CombatData.make_enemy("dead_soldier", 2), Vector2i(6, 5))
+	var b := A.make([A.at(CombatData.make_hero("fighter", 4, "guardian"), Vector2i(1, 1)), s1, s2])
+	assert_eq(b.ac_of(s1), s1.ac + 2, "строй: сосед-мертвец даёт +2 к КД")
+
+
+func _raise_once(kind: String, diff: String) -> int:
+	var r := A.at(CombatData.make_enemy(kind, 1), Vector2i(5, 5))
+	var z := A.at(CombatData.make_enemy("dead_soldier", 1), Vector2i(6, 6))
+	var b := A.make([A.at(CombatData.make_hero("fighter", 4, "guardian"), Vector2i(1, 1)), r, z])
+	b.difficulty = diff
+	var n := 0
+	for i in 5:
+		z.dead = true
+		b._raise_fallen(r, b.mod_get(r, "raise"))
+		if not z.dead:
+			n += 1
+	return n
+
+
+func test_raiser() -> void:
+	assert_eq(_raise_once("vat_overseer", "story"), 1, "надсмотрщик поднимает раз за бой")
+	assert_eq(_raise_once("vat_overseer", "trial"), 2, "на «Испытании» — дважды")
+
+
+func test_flesh_master() -> void:
+	assert_eq(_raise_once("gessar", "story"), 1, "Гессар сшивает раз")
+	assert_eq(_raise_once("gessar", "trial"), 2, "на «Испытании» — дважды")

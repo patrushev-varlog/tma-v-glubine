@@ -14,6 +14,8 @@ const DIRS: Array[Vector2i] = [
 const ZONE_KINDS: Array[String] = ["trap", "grease", "web", "spikes"]
 ## Укрытие от дальних атак (in_cover): прибавка к КД.
 const COVER_AC := 2
+## Жидкое железо в желобах литейной (глава 4, знак ! карты): кто попал туда толчком или начал там ход, горит.
+const MOLTEN_DICE := "2d6"
 
 var id := ""
 var level := 2
@@ -54,7 +56,8 @@ var _casting := ""
 ## bound — связанный союзник, который вступает в бой в раунде round или когда к нему подойдут;
 ## surprise — враги застигнуты врасплох и пропускают первый ход; cannot_lose — поражения нет (соседи
 ## добивают врагов, бой засчитан как победа, rescued = true); cover — укрытия от выстрелов (in_cover);
-## tether — привязанные цепью враги {id: {"cell", "r"}}; intro — строка журнала в начале. Сохраняется вместе с боем.
+## tether — привязанные цепью враги {id: {"cell", "r"}}; intro — строка журнала в начале; ladles — ковши литейной
+## [{"rounds", "cells", "dice", "dc"}]: в начале этих раундов расплав льётся на клетки (_pour). Сохраняется вместе с боем.
 var stage := {}
 
 
@@ -387,7 +390,7 @@ func reachable(u: Combatant) -> Dictionary:
 			continue
 		for d in DIRS:
 			var n := c + d
-			if not in_bounds(n) or is_obstacle(n):
+			if not in_bounds(n) or is_obstacle(n) or is_molten(n):
 				continue
 			if d.x != 0 and d.y != 0 and (is_obstacle(c + Vector2i(d.x, 0)) or is_obstacle(c + Vector2i(0, d.y))):
 				continue
@@ -411,6 +414,19 @@ func reachable(u: Combatant) -> Dictionary:
 	return out
 
 
+## Желоб с жидким железом: своими ногами туда не идут, попасть можно только толчком.
+func is_molten(c: Vector2i) -> bool:
+	return String(decor.get(c, "")) == "molten"
+
+
+## Ожог в желобе: при толчке туда и в начале хода, пока участник там.
+func _burn(u: Combatant) -> void:
+	if not u.conscious():
+		return
+	log_line(TranslationServer.translate("BATTLE_LOG_MOLTEN").format({"name": u.name}))
+	deal_damage(u, Dice.roll(rng, MOLTEN_DICE), "fire")
+
+
 ## Сколько движения стоит войти в клетку: вода по пояс — 2, остальное — 1.
 func step_cost(c: Vector2i, wade_free := false) -> int:
 	return 2 if not wade_free and String(decor.get(c, "")) == "wade" else 1
@@ -431,7 +447,7 @@ func walk_distances(from: Vector2i, walker: Combatant = null) -> Dictionary:
 		frontier.remove_at(bi)
 		for d in DIRS:
 			var n := c + d
-			if not in_bounds(n) or is_obstacle(n):
+			if not in_bounds(n) or is_obstacle(n) or is_molten(n):
 				continue
 			if d.x != 0 and d.y != 0 and (is_obstacle(c + Vector2i(d.x, 0)) or is_obstacle(c + Vector2i(0, d.y))):
 				continue
@@ -502,6 +518,9 @@ func move_along(u: Combatant, path: Array[Vector2i]) -> void:
 
 ## Ловушка, шипы, жир и паутина на клетке, куда участник вошёл. Возвращает true, если он остановился.
 func _enter_cell(u: Combatant, c: Vector2i) -> bool:
+	if is_molten(c) and u.conscious():
+		_burn(u)
+		return true
 	if zones.trap.has(c) and u.team == 1:
 		var trap: Dictionary = zones.trap[c]
 		zones.trap.erase(c)
@@ -1075,7 +1094,7 @@ func ability_targets(u: Combatant, aid: String) -> Array[Vector2i]:
 					var c := Vector2i(x, y)
 					if is_obstacle(c) or dist(u.cell, c) > rng_cells:
 						continue
-					if empty and (occupant(c) != null or zones.trap.has(c)):
+					if empty and (occupant(c) != null or zones.trap.has(c) or is_molten(c)):
 						continue
 					if has_los(u.cell, c):
 						out.append(c)
@@ -1557,8 +1576,12 @@ func _start_turn() -> void:
 	for o in units:
 		_end_statuses(o, "src_turn_start", u.id)
 	_aura_damage(u)
+	if is_molten(u.cell):
+		_burn(u)
 	if not u.conscious():
 		return
+	if mod_get(u, "raise") != null:
+		_raise_fallen(u, mod_get(u, "raise"))
 	for tid in u.traits:
 		var hook: Array = CombatData.trait_def(tid).get("turn_start", [])
 		if not hook.is_empty():
@@ -1707,6 +1730,11 @@ func _new_round() -> void:
 	for w in stage.get("waves", []):
 		if int(w.round) == round_num and not w.get("done", false):
 			_spawn_wave(w)
+	for l in stage.get("ladles", []):
+		if _ladle_at(l, round_num):
+			_pour(l)
+		elif _ladle_at(l, round_num + 1):
+			log_line(TranslationServer.translate("BATTLE_LOG_LADLE_WARN"))
 	var obj: Dictionary = stage.get("objective", {})
 	if String(obj.get("type", "")) == "survive" and round_num > int(obj.rounds):
 		outcome = "victory"
@@ -1754,6 +1782,70 @@ func _spawn_wave(w: Dictionary) -> void:
 	log_line(TranslationServer.translate(String(w.get("log", "BATTLE_LOG_WAVE"))))
 
 
+## Ковш литейной опрокидывается: все на его клетках делают спасбросок Ловкости, при успехе половина урона.
+func _pour(l: Dictionary) -> void:
+	log_line(TranslationServer.translate("BATTLE_LOG_LADLE_POUR"))
+	var cells: Array[Vector2i] = []
+	for c in l.cells:
+		cells.append(Vector2i(int(c[0]), int(c[1])))
+	events.append({"type": "ladle", "unit": "", "cells": cells})
+	for c in cells:
+		var u := occupant(c)
+		if u == null or not u.conscious():
+			continue
+		var dmg := Dice.roll(rng, String(l.get("dice", "3d6")))
+		if saving_throw(u, "dex", int(l.get("dc", 13))):
+			dmg = dmg / 2
+			log_line(TranslationServer.translate("BATTLE_LOG_LADLE_DODGE").format({"name": u.name}))
+		deal_damage(u, dmg, "fire")
+
+
+## Опрокинется ли ковш в начале раунда r (номера раундов после загрузки могут прийти дробными).
+func _ladle_at(l: Dictionary, r: int) -> bool:
+	for x in l.rounds:
+		if int(x) == r:
+			return true
+	return false
+
+
+## Клетки ковшей, которые опрокинутся в начале следующего раунда (для подсветки и ИИ).
+func ladle_cells_next() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for l in stage.get("ladles", []):
+		if _ladle_at(l, round_num + 1):
+			for c in l.cells:
+				out.append(Vector2i(int(c[0]), int(c[1])))
+	return out
+
+
+## Надсмотрщик цехов и мастер плоти поднимают павшую нежить рядом (приём raise: {"range", "uses", "trial_uses"}):
+## в начале своего хода, раз на ход, павший встаёт с половиной хитов. Боссов не поднимают.
+func _raise_fallen(u: Combatant, rz: Dictionary) -> void:
+	var limit := int(rz.get("uses", 1)) + (int(rz.get("trial_uses", 0)) if difficulty == "trial" else 0)
+	if int(u.counters.get("raise", 0)) >= limit:
+		return
+	var best: Combatant = null
+	for o in units:
+		if o.team != u.team or not o.dead or not o.undead or dist(u.cell, o.cell) > int(rz.get("range", 4)):
+			continue
+		if CombatData.table("enemies").get(o.kind, {}).get("boss", false):
+			continue
+		if best == null or o.max_hp > best.max_hp:
+			best = o
+	if best == null:
+		return
+	var cell := _free_cell_near(best.cell)
+	if cell.x < 0:
+		return
+	u.counters["raise"] = int(u.counters.get("raise", 0)) + 1
+	best.dead = false
+	best.statuses.clear()
+	best.cell = cell
+	best.hp = maxi(1, best.max_hp / 2)
+	log_line(TranslationServer.translate("BATTLE_LOG_RAISE").format({"name": u.name, "target": best.name}))
+	events.append({"type": "raise", "unit": best.id})
+
+
 ## Свободная клетка поблизости: сама клетка или ближайшая проходимая без участника.
 func _free_cell_near(start: Vector2i) -> Vector2i:
 	var seen := {start: true}
@@ -1761,7 +1853,7 @@ func _free_cell_near(start: Vector2i) -> Vector2i:
 	while not frontier.is_empty():
 		var next: Array[Vector2i] = []
 		for c in frontier:
-			if in_bounds(c) and not is_obstacle(c) and occupant(c) == null:
+			if in_bounds(c) and not is_obstacle(c) and not is_molten(c) and occupant(c) == null:
 				return c
 			for d in DIRS:
 				var n := c + d

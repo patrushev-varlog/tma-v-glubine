@@ -38,9 +38,15 @@ const GROUNDS := {
 	"dwarf": [Color("#4a4640"), Color("#45413b"), Color("#59544c")],
 	"dwarf_archive": [Color("#4a4640"), Color("#45413b"), Color("#59544c")],
 	"dwarf_seal": [Color("#44424a"), Color("#3f3d44"), Color("#54525c")],
+	"forge": [Color("#3e3836"), Color("#383231"), Color("#4e4644")],
+	"forge_anatomy": [Color("#4a4846"), Color("#444240"), Color("#5a5856")],
+	"foundry": [Color("#3e3836"), Color("#383231"), Color("#4e4644")],
 }
 ## Пол, по которому можно ходить (знаки , : ;).
-const FLOOR_DECOR := {"ford": Color("#4b6b78"), "road": Color("#5a5040"), "ash": Color("#2a2826"), "wade": Color("#263a4a")}
+const FLOOR_DECOR := {"ford": Color("#4b6b78"), "road": Color("#5a5040"), "ash": Color("#2a2826"), "wade": Color("#263a4a"),
+	"molten": Color("#c8551e")}
+## Клетки ковшей литейной, на которые расплав польётся в начале следующего раунда.
+const C_LADLE := Color(1.0, 0.55, 0.15, 0.85)
 ## Препятствия по виду: [цвет, высота, отступ от края клетки]. Высота 0 — плоское (вода).
 const OBSTACLE_LOOK := {
 	"wall": [Color("#5d564c"), 18.0, 3.0], "pillar": [Color("#7a7670"), 30.0, 9.0], "pew": [Color("#6b4f35"), 8.0, 5.0],
@@ -99,6 +105,19 @@ const GROUND_ART := {
 			"altar": "dwarf/tablet_shelf"}},
 	"dwarf_seal": {"floor": ["dwarf/floor_rune", "dwarf/floor_hall", "dwarf/floor_hall"], "water": "dwarf/floor_chasm",
 		"objects": {"wall": "dwarf/wall_runes", "pillar": "dwarf/rune_column", "rubble": "dwarf/rubble"}},
+	# Кузницы плоти главы 4: чаны — знак колодца, конвейер — телеги, столы мастера — скамьи,
+	# опоры ковшей — колонны, жидкое железо в желобах — знак ! (molten).
+	"forge": {"floor": ["forge/floor_works", "forge/floor_works", "forge/floor_works", "forge/floor_grate"],
+		"objects": {"wall": "forge/wall_block", "well": "forge/vat", "cart": "forge/conveyor", "pillar": "forge/ladle",
+			"rubble": "forge/slag_heap", "fence": "forge/cage"},
+		"spans": ["cart"]},
+	"forge_anatomy": {"floor": ["forge/floor_works", "forge/floor_works", "forge/floor_grate"],
+		"objects": {"wall": "forge/wall_block", "pew": "forge/anatomy_table", "altar": "forge/master_table",
+			"rubble": "forge/slag_heap"},
+		"spans": ["pew"]},
+	"foundry": {"floor": ["forge/floor_works", "forge/floor_works", "forge/floor_works", "forge/floor_grate"],
+		"molten": "forge/floor_molten",
+		"objects": {"wall": "forge/wall_block", "pillar": "forge/ladle", "rubble": "forge/slag_heap", "fence": "forge/cage"}},
 }
 ## Верх ромба у тайла пола 64×64: центр клетки приходится на (32, 38).
 const FLOOR_OFFSET := Vector2(-32, -38)
@@ -212,6 +231,11 @@ func _draw() -> void:
 		for y in battle.height:
 			_outline(Vector2i(x, y), grid, 1.0, 0.0)
 	for c in battle.decor:
+		if battle.decor[c] == "molten":
+			var glow := 1.0 + 0.08 * sin(_clock * 3.0 + c.x * 1.3 + c.y)
+			draw_set_transform(cell_to_world(c), 0.0, Vector2(1.0, 0.5) * glow)
+			draw_circle(Vector2.ZERO, 40.0, Color(1.0, 0.5, 0.15, 0.07))
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		if battle.decor[c] == "fire":
 			var flicker := 1.0 + 0.06 * sin(_clock * 9.0 + c.x * 1.7)
 			draw_set_transform(cell_to_world(c), 0.0, Vector2(1.0, 0.5) * flicker)
@@ -234,6 +258,8 @@ func _draw() -> void:
 		draw_polyline(w, C_WEB, 1.5)
 	for c in spawn_cells:
 		_outline(c, C_SPAWN, 2.0, 3.0)
+	for c in battle.ladle_cells_next():
+		_outline(c, C_LADLE, 2.5, 3.0)
 	for c in reach_cells:
 		draw_colored_polygon(_diamond(c, 2), C_REACH)
 	for c in target_cells:
@@ -332,6 +358,11 @@ func feed(events: Array) -> void:
 	var weapon_blow := false
 	var hit_sound := ""
 	for ev in events:
+		if String(ev.type) == "ladle":
+			# Ковш литейной опрокинулся: огонь на его клетках.
+			for c in ev.cells:
+				_add_fx("fire_hit", cell_to_world(c) + Vector2(0, -12), _clock)
+			continue
 		var u := battle.get_unit(String(ev.unit))
 		if u == null:
 			continue
@@ -413,6 +444,13 @@ func feed(events: Array) -> void:
 					_sound("undead_death", float(st.down_t))
 				if u.dead and u.undead:
 					_add_fx("undead_death", cell_to_world(u.cell) + Vector2(0, -20), float(st.down_t) + 0.5)
+			"raise":
+				# Поднятый надсмотрщиком или мастером плоти встаёт на месте, где лежал.
+				st.down_t = -10.0
+				st.steps.clear()
+				_popups.append({"t": _clock, "cell": u.cell, "text": "↑", "color": Color("#a596d6")})
+				_add_fx("undead_death", cell_to_world(u.cell) + Vector2(0, -20), _clock)
+				_sound("spawn", _clock)
 			"spawn":
 				_popups.append({"t": _clock, "cell": u.cell, "text": "!", "color": Color("#ff6b5a")})
 				_sound("spawn", _clock)
@@ -510,6 +548,10 @@ func _floor_tile(c: Vector2i) -> Texture2D:
 			name = String(ga.get("ash", ""))
 		"wade":
 			name = String(ga.get("wade", ""))
+		"molten":
+			name = String(ga.get("molten", ""))
+			if name == "":
+				return null
 		"water":
 			name = String(ga.get("water", ""))
 			if name == "":
