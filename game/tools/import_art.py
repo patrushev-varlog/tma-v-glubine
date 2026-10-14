@@ -91,6 +91,12 @@ for _uid, _folder in {"drowned": "drowned_m", "drowned_f": "drowned_f", "smuggle
 # Глава 3: бойцы дварфийских залов (art/tools/ch3_batch3.py); архивариус — мёртвый дварф.
 for _uid, _folder in {"stone_guardian": "stone_guardian", "dwarf_archivist": "dwarf_dead", "torvin": "torvin"}.items():
 	UNITS[_uid] = (ART / "chapter3" / "characters" / _folder, {**_PIXELLAB, "attack": "anims/attack/{d}"})
+# Глава 4: бойцы кузниц плоти (art/tools/ch4_batch3.py).
+CH4_UNITS = ("dead_soldier", "vat_overseer", "gessar", "stitched", "foundry_dead", "executioner")
+for _uid in CH4_UNITS:
+	UNITS[_uid] = (ART / "chapter4" / "characters" / _uid, {**_PIXELLAB, "attack": "anims/attack/{d}"})
+# Костяной лучник литейной — тот же скелет-лучник, только крепче.
+UNITS["bone_archer"] = UNITS["skeleton_archer"]
 # Статичные персонажи (только стойка, 8 направлений) и позы «связан» — по картинке на направление:
 # game/art/units/static/<id>/<направление>.png, холст 64×64, ноги на 23 px ниже центра.
 STATICS = {
@@ -110,6 +116,10 @@ for _sid in sorted(p.name for p in CH2.iterdir() if (p / "base" / "Idle" / "rota
 CH3 = ART / "chapter3" / "characters"
 for _sid in ("stone_guardian", "dwarf_dead", "torvin"):
 	STATICS[_sid] = CH3 / _sid / "base" / "Idle" / "rotations"
+# Глава 4: солдаты из чанов, надсмотрщики, Гессар и его «изделия» на картах (art/chapter4/characters).
+CH4 = ART / "chapter4" / "characters"
+for _sid in CH4_UNITS:
+	STATICS[_sid] = CH4 / _sid / "base" / "Idle" / "rotations"
 ANIM_ORDER = ("idle", "walk", "attack", "cast", "hit", "down")
 FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 
@@ -119,6 +129,7 @@ TILE_SETS = {ts: ART / "prologue" / "tiles" / ts for ts in ("village_night", "vi
 TILE_SETS["mines"] = ART / "chapter1" / "tiles" / "mines"
 TILE_SETS["flooded"] = ART / "chapter2" / "tiles" / "flooded"
 TILE_SETS["dwarf"] = ART / "chapter3" / "tiles" / "dwarf"
+TILE_SETS["forge"] = ART / "chapter4" / "tiles" / "forge"
 FLOOR_PREFIXES = ("floor_", "water_", "bank_", "edge")
 # Верх ромба у пола 64×64: ромб 64×32 начинается с 22-й строки.
 FLOOR_TOP = 22
@@ -135,6 +146,8 @@ LOCATION_FLOORS = {
 	"flood_wade": "flooded/floor_wade", "flood_deep": "flooded/floor_deep", "flood_wet": "flooded/floor_wet",
 	# Дварфийские залы главы 3.
 	"dwarf_hall": "dwarf/floor_hall", "dwarf_rune": "dwarf/floor_rune", "dwarf_chasm": "dwarf/floor_chasm",
+	# Кузницы плоти главы 4.
+	"forge_works": "forge/floor_works", "forge_grate": "forge/floor_grate", "forge_molten": "forge/floor_molten",
 }
 
 ABILITY_ICONS = ("disengage", "dodge", "end_turn", "fire_bolt", "hallowed_ground", "healing_word", "magic_missile",

@@ -1,0 +1,36 @@
+{
+  "group_id": "73671d53-f686-4652-be54-cca67d09e737",
+  "states": [
+    {
+      "character": {
+        "id": "85e92877-9ad2-44a9-b680-2b64f8bc9595",
+        "name": "Idle",
+        "prompt": "an undead foundry worker, grey burned skin, a scorched leather apron and thick gloves, a long iron hook on a pole held in both hands, glowing orange cracks in the skin, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T11:24:46.717060+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T11:27:15.057979"
+}
