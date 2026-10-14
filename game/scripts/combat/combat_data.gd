@@ -345,7 +345,7 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 		heroes.append(make_companion(comp, level))
 	var missing := 0 if bt.has("party") else party_members(level, "full").size() + 1 - heroes.size()
 	var boost: Dictionary = (boost_override if not boost_override.is_empty() else bt.get("boost", {})).duplicate()
-	if hunt_done:
+	if hunt_done or hunt_done_in(battle_id, flags):
 		boost["hp"] = int(boost.get("hp", 0)) + int(rules().hunt_hp)
 	var drop: Array = exclude.duplicate()
 	for flag in bt.get("flag_drop", {}):
@@ -479,6 +479,14 @@ static func _units_for_party(w: Dictionary, diff: String, party: String, missing
 ## Бюджет опыта врагов (без главного) при составе party, проценты (rules.json).
 static func party_budget(party: String) -> int:
 	return int(rules().party_budget.get(party, 100))
+
+
+## Охота главы боя закончена (флаг chN_hunt_done, решение 8): после неё у врагов главы больше хитов (hunt_hp).
+static func hunt_done_in(battle_id: String, flags: Dictionary) -> bool:
+	if not battle_id.begins_with("chapter"):
+		return false
+	var n := battle_id.trim_prefix("chapter").get_slice("_", 0)
+	return n.is_valid_int() and flag_on(flags, "ch%s_hunt_done" % n)
 
 
 ## Флаг сюжетного боя: "имя" — переменная Ink истинна, "имя=значение" — строка совпадает (ch1_choice=riot).
