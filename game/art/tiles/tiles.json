@@ -1,4 +1,76 @@
 {
+	"dwarf/anvil": [
+		13,
+		29
+	],
+	"dwarf/bones": [
+		18,
+		29
+	],
+	"dwarf/brew_door": [
+		29,
+		83
+	],
+	"dwarf/child_tablets": [
+		23,
+		30
+	],
+	"dwarf/coal_heap": [
+		20,
+		26
+	],
+	"dwarf/great_forge": [
+		40,
+		88
+	],
+	"dwarf/riddle_door": [
+		27,
+		75
+	],
+	"dwarf/rubble": [
+		22,
+		27
+	],
+	"dwarf/rune_arch": [
+		55,
+		108
+	],
+	"dwarf/rune_brazier": [
+		10,
+		25
+	],
+	"dwarf/rune_column": [
+		29,
+		73
+	],
+	"dwarf/scribe_desk": [
+		21,
+		28
+	],
+	"dwarf/steel_chest": [
+		18,
+		39
+	],
+	"dwarf/stone_niche": [
+		27,
+		86
+	],
+	"dwarf/tablet_shelf": [
+		21,
+		77
+	],
+	"dwarf/wall_block": [
+		32,
+		64
+	],
+	"dwarf/wall_runes": [
+		32,
+		64
+	],
+	"dwarf/warhammer": [
+		7,
+		21
+	],
 	"flooded/bedding": [
 		27,
 		30

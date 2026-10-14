@@ -16,6 +16,9 @@ const GROUND := {
 	"road": ["#8a7552", "#6e5a3c"],
 	"yard": ["#7a6a55", "#665844"],
 	"ash": ["#4a4446", "#2e2a2a"],
+	"dwarf_hall": ["#5e564c", "#4e463e"],
+	"dwarf_rune": ["#5e564c", "#7a8fa0"],
+	"dwarf_chasm": ["#0e0d14", "#3a4a3c"],
 }
 
 

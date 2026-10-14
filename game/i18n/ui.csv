@@ -83,6 +83,7 @@ BATTLE_PV_SELF_AGAIN,"Нажми умение ещё раз, чтобы прим
 BATTLE_PV_ADV,Преимущество.,Advantage.
 BATTLE_PV_DISADV,Помеха.,Disadvantage.
 BATTLE_PV_SNEAK,Скрытая атака.,Sneak attack.
+BATTLE_PV_STONE,"Камень гасит {n}: бейте дробящим, заклинанием или обойдите.","Stone absorbs {n}: use a blunt weapon or a spell, or flank it."
 BATTLE_PV_CHANCE_DMG,"шанс {chance}%, урон {min}–{max}{extra}","{chance}% to hit, {min}–{max} damage{extra}"
 BATTLE_PV_SAVE_FAIL,"провалит спасбросок: {chance}%","fails the save: {chance}%"
 BATTLE_PV_DMG,"урон {min}–{max}","{min}–{max} damage"
@@ -182,6 +183,14 @@ SHOP_smugglers,Контрабандисты,The Smugglers
 SHOP_smugglers_favor,Ренна Сол: в долг,Renna Sol: on credit
 SHOP_FAVOR_NOTE,"Одна тёмная вещь за услугу. Какую — Ренна скажет потом.","One dark item for a favour. Renna will name the favour later."
 SHOP_dwarf_forge,Горн Молчащих,The Forge of the Silent
+FORGE_NOTE,"Кузница не продаёт, а переносит свойство: слиток дварфийской стали и {price} серебра за вещь. Одна вещь — один перенос, только добротные и редкие, не тёмные.","The forge does not sell; it transfers a property: one ingot of dwarven steel and {price} silver per item. One transfer per item, fine and rare items only, never dark ones."
+FORGE_STEEL,Слитков дварфийской стали: {n},Ingots of dwarven steel: {n}
+FORGE_FX_weapon,+1d4 по нежити,+1d4 against the undead
+FORGE_FX_armor,снижение урона 1,damage reduction 1
+FORGE_FX_amulet,+5 хитов,+5 hit points
+FORGE_DO,Перенести,Transfer
+FORGE_DONE,Перенесено,Transferred
+FORGE_NONE,"Нечего ковать: нужна добротная или редкая вещь из найденных или купленных.","Nothing to work on: the forge needs a fine or rare item that you found or bought."
 SHOP_SILVER,Серебро: {silver},Silver: {silver}
 SHOP_FOR_HERO,Себе,For me
 SHOP_FOR,{name},{name}

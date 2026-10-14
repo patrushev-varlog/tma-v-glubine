@@ -50,6 +50,9 @@ ENEMY_smuggler,Контрабандист,Smuggler
 ENEMY_renna,Ренна Сол,Renna Sol
 ENEMY_sluice_guardian,Страж шлюза,The Sluice Warden
 ENEMY_shrine_priest,Отец Мерен,Father Meren
+ENEMY_stone_guardian,Страж Молчащих,Silent Warden
+ENEMY_dwarf_archivist,Мёртвый архивариус,Dead Archivist
+ENEMY_torvin,Торвин-Без-Голоса,Torvin the Voiceless
 DIFF_story,История,Story
 DIFF_trial,Испытание,Trial
 DARK_shadow,Тень,Shadow
@@ -219,6 +222,10 @@ TRAIT_rescue,Цепь поднимает,The Chain Lifts
 TRAIT_ring,Без меры,Beyond Measure
 TRAIT_swimmer,Как рыба в воде,At Home in the Water
 TRAIT_swimmer_DESC,Вода по пояс не замедляет.,Waist-deep water does not slow it.
+TRAIT_stone_armor,Каменная броня,Stone Body
+TRAIT_stone_armor_DESC,"Урон от оружия меньше на 4, если оно не дробящее и страж не обойдён: союзник атакующего стоит вплотную к нему с другой стороны.","Weapon damage is reduced by 4 unless the weapon is blunt or the warden is flanked: an ally of the attacker stands next to it on the other side."
+TRAIT_keeper_oath,Клятва хранителя,Keeper's Oath
+TRAIT_keeper_oath_DESC,Урон от оружия меньше на 2.,Weapon damage is reduced by 2.
 TRAIT_cleave_full,Полное рассечение,Full Cleave
 TRAIT_zones_long,Долгие зоны,Lasting Zones
 TRAIT_protector_plus,Надёжный защитник,Steadfast Protector
@@ -263,6 +270,9 @@ ITEM_crown_dagger,Кинжал с короной,Crowned Dagger
 ITEM_crown_dagger_taken,Кинжал с короной (забран),Crowned Dagger (taken)
 ITEM_silent_crown,Венец Молчащих,Crown of the Silent
 ITEM_shadowskin,Тенекожа,Shadowskin
+ITEM_dwarf_steel,Слиток дварфийской стали,Ingot of Dwarven Steel
+ITEM_dwarf_ale,Дварфийский эль,Dwarven Ale
+ITEM_FORGED_MARK," (горн Молчащих)"," (Forge of the Silent)"
 ITEM_pale_ring,Перстень Бледного Короля,Ring of the Pale King
 ITEM_foreman_lantern,Фонарь первого штейгера,Lantern of the First Foreman
 ITEM_sunken_shrine_spear,Острога затопленного святилища,Spear of the Sunken Shrine
@@ -294,4 +304,9 @@ BATTLE_LOG_CH1_ALARM,"По штреку бегут на гонг ещё стра
 BATTLE_LOG_CH1_BONES,"Из-под завала поднимаются кости засыпанных рудокопов.","The bones of buried miners rise from under the rubble."
 BATTLE_LOG_CH2_WATER,"Вода по пояс: шаг по ней стоит двух. Утопленникам она не мешает. Колонны и трубы укрывают от выстрелов (+2 КД).","Waist-deep water: each step through it costs two. The drowned are not slowed. Pillars and pipes give cover from shots (+2 AC)."
 BATTLE_LOG_CH2_RISE,"Из чёрной воды поднимаются ещё утопленники.","More of the drowned rise from the black water."
+BATTLE_LOG_CH3_STONE,"Стражи из камня: клинки и стрелы теряют 4 урона. Молоты, булавы, посохи и заклинания бьют в полную силу, как и удар по стражу, которого обошли с двух сторон.","Wardens of stone: blades and arrows lose 4 damage. Hammers, maces, staves and spells strike in full, as does any blow against a warden flanked from both sides."
+BATTLE_LOG_CH3_WAKE,"Из ниши между арками шагает ещё один страж.","Another warden steps out of a niche between the arches."
+BATTLE_LOG_CH3_ARCHIVE,"Из-за полок поднимаются ещё архивариусы. Из своего зала они не уходят.","More archivists rise from behind the shelves. They will not leave their hall."
+BATTLE_LOG_CH3_KEEPER,"Молот хранителя отбрасывает на клетку. Внизу, за краем галереи, светится печать.","The keeper's hammer knocks you back a step. Below the edge of the gallery the seal glows."
+BATTLE_LOG_CH3_NICHES,"В нишах галереи просыпаются стражи.","Wardens awaken in the gallery niches."
 BATTLE_LOG_CH2_SHRINE,"Из-под пола часовни встают утопленники, которых он прибил когда-то.","The drowned he once pinned down rise from under the chapel floor."

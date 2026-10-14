@@ -186,6 +186,8 @@ func _attack_values(o: Combatant, p: Dictionary) -> Dictionary:
 		extra = " " + tr("BATTLE_PV_DISADV")
 	if p.get("sneak", false):
 		extra += " " + tr("BATTLE_PV_SNEAK")
+	if int(p.get("stone", 0)) > 0:
+		extra += " " + UiKit.fmt("BATTLE_PV_STONE", {"n": p.stone})
 	return {"name": o.name, "chance": roundi(p.chance * 100), "min": p.min, "max": p.max, "extra": extra}
 
 

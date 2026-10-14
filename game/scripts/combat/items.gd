@@ -5,6 +5,10 @@ extends RefCounted
 
 const TIER_RANK := {"common": 0, "fine": 1, "rare": 2, "legendary": 3}
 const SLOTS: Array[String] = ["weapon", "armor", "amulet"]
+## Перенос свойства в кузнице Молчащих (глава 3, design/equipment-catalog.md): id вещи с этим окончанием
+## получает свойство по слоту. В инвентаре такая вещь помечена "forged": true.
+const FORGED := "+forge"
+const FORGE_FX := {"weapon": {"undead": "1d4"}, "armor": {"dr": 1}, "amulet": {"hp": 5}}
 
 
 static func catalog() -> Dictionary:
@@ -12,21 +16,53 @@ static func catalog() -> Dictionary:
 
 
 static func has_item(item_id: String) -> bool:
-	return catalog().has(item_id)
+	return catalog().has(base_id(item_id))
+
+
+## Id вещи без отметки кузницы.
+static func base_id(item_id: String) -> String:
+	return item_id.trim_suffix(FORGED)
+
+
+static func is_forged(item_id: String) -> bool:
+	return item_id.ends_with(FORGED)
+
+
+## Можно ли перенести на вещь свойство в кузнице: добротная или редкая, не тёмная.
+static func forgeable(item_id: String) -> bool:
+	if not has_item(item_id) or is_forged(item_id):
+		return false
+	var it: Dictionary = catalog()[base_id(item_id)]
+	return ["fine", "rare"].has(String(it.tier)) and not it.get("dark_item", false)
 
 
 ## Вид предмета для участника: слот, ступень и свойства с учётом варианта под ветку, класс или спутника.
 static func resolve(item_id: String, c: Combatant) -> Dictionary:
-	var it: Dictionary = catalog()[item_id]
-	var out := {"id": item_id, "name_key": "ITEM_" + item_id, "slot": it.slot, "tier": it.tier, "fx": it.fx,
-		"dark_item": it.get("dark_item", false)}
+	var base := base_id(item_id)
+	var it: Dictionary = catalog()[base]
+	var out := {"id": item_id, "name_key": "ITEM_" + base, "slot": it.slot, "tier": it.tier, "fx": it.fx,
+		"dark_item": it.get("dark_item", false), "forged": is_forged(item_id)}
 	var v: Dictionary = it.get("variants", {})
 	for key in [c.archetype, c.kind, "caster" if c.max_slots > 0 else "other"]:
 		if key != "" and v.has(key):
 			out.fx = v[key].fx
 			out.slot = v[key].get("slot", it.slot)
-			out.name_key = "ITEM_%s_%s" % [item_id, key]
+			out.name_key = "ITEM_%s_%s" % [base, key]
 			break
+	if out.forged:
+		out.fx = with_forge(out.fx, String(out.slot))
+	return out
+
+
+## Свойства вещи вместе с перенесённым в кузнице: кости по нежити складываются, снижение и хиты — тоже.
+static func with_forge(fx: Dictionary, slot: String) -> Dictionary:
+	var out := fx.duplicate(true)
+	var add: Dictionary = FORGE_FX.get(slot, {})
+	for k in add:
+		if k == "undead":
+			out[k] = Dice.add(String(out.get(k, "")), String(add[k]))
+		else:
+			out[k] = int(out.get(k, 0)) + int(add[k])
 	return out
 
 
@@ -127,5 +163,7 @@ static func boost_weapon(w: Dictionary, hit: int, dmg: int) -> Dictionary:
 static func names_of(c: Combatant) -> Array[String]:
 	var out: Array[String] = []
 	for id in c.items:
-		out.append(TranslationServer.translate(resolve(id, c).name_key))
+		var it := resolve(id, c)
+		var name := TranslationServer.translate(it.name_key)
+		out.append(name + TranslationServer.translate("ITEM_FORGED_MARK") if it.forged else name)
 	return out

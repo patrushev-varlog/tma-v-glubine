@@ -36,8 +36,8 @@ PORTRAIT_FILES = ("base_128.png", "base_64.png", "dark_1_dusk.png", "dark_2_gloo
 
 # Ноги персонажа во всех выгрузках PixelLab стоят на 23 px ниже центра холста (64, 80, 96, 112 и 128 px).
 FOOT_BELOW_CENTER = 23
-# Крупные персонажи на холсте 96×96 (страж шлюза главы 2): ноги ниже центра на столько.
-FOOT_BIG = {"sluice_guardian": 37}
+# Крупные персонажи на холсте 96×96 (страж шлюза главы 2, Торвин главы 3): ноги ниже центра на столько.
+FOOT_BIG = {"sluice_guardian": 37, "torvin": 37}
 
 # Анимация в игре → папка с кадрами относительно корня персонажа. "{d}" — направление.
 _HERO = {a: f"composited/{a}/{{d}}" for a in ("idle", "walk", "hit", "down", "attack")}
@@ -88,6 +88,9 @@ UNITS = {
 for _uid, _folder in {"drowned": "drowned_m", "drowned_f": "drowned_f", "smuggler": "smuggler", "renna": "renna",
 		"shrine_priest": "shrine_priest", "sluice_guardian": "sluice_guardian"}.items():
 	UNITS[_uid] = (ART / "chapter2" / "characters" / _folder, {**_PIXELLAB, "attack": "anims/attack/{d}"})
+# Глава 3: бойцы дварфийских залов (art/tools/ch3_batch3.py); архивариус — мёртвый дварф.
+for _uid, _folder in {"stone_guardian": "stone_guardian", "dwarf_archivist": "dwarf_dead", "torvin": "torvin"}.items():
+	UNITS[_uid] = (ART / "chapter3" / "characters" / _folder, {**_PIXELLAB, "attack": "anims/attack/{d}"})
 # Статичные персонажи (только стойка, 8 направлений) и позы «связан» — по картинке на направление:
 # game/art/units/static/<id>/<направление>.png, холст 64×64, ноги на 23 px ниже центра.
 STATICS = {
@@ -103,6 +106,10 @@ for _sid in ("holt", "mab", "boy", "prisoner_m", "prisoner_f", "white_woman", "s
 CH2 = ART / "chapter2" / "characters"
 for _sid in sorted(p.name for p in CH2.iterdir() if (p / "base" / "Idle" / "rotations").is_dir()) if CH2.is_dir() else ():
 	STATICS[_sid] = CH2 / _sid / "base" / "Idle" / "rotations"
+# Глава 3: стражи, мёртвые дварфы и Торвин на картах (art/chapter3/characters).
+CH3 = ART / "chapter3" / "characters"
+for _sid in ("stone_guardian", "dwarf_dead", "torvin"):
+	STATICS[_sid] = CH3 / _sid / "base" / "Idle" / "rotations"
 ANIM_ORDER = ("idle", "walk", "attack", "cast", "hit", "down")
 FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 
@@ -111,6 +118,7 @@ FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 TILE_SETS = {ts: ART / "prologue" / "tiles" / ts for ts in ("village_night", "village_morning", "temple", "ford", "gate")}
 TILE_SETS["mines"] = ART / "chapter1" / "tiles" / "mines"
 TILE_SETS["flooded"] = ART / "chapter2" / "tiles" / "flooded"
+TILE_SETS["dwarf"] = ART / "chapter3" / "tiles" / "dwarf"
 FLOOR_PREFIXES = ("floor_", "water_", "bank_", "edge")
 # Верх ромба у пола 64×64: ромб 64×32 начинается с 22-й строки.
 FLOOR_TOP = 22
@@ -125,6 +133,8 @@ LOCATION_FLOORS = {
 	"mine_planks": "mines/floor_planks", "mine_rails": "mines/floor_rails", "mine_rails_b": "mines/floor_rails_b",
 	# Затопленные выработки главы 2.
 	"flood_wade": "flooded/floor_wade", "flood_deep": "flooded/floor_deep", "flood_wet": "flooded/floor_wet",
+	# Дварфийские залы главы 3.
+	"dwarf_hall": "dwarf/floor_hall", "dwarf_rune": "dwarf/floor_rune", "dwarf_chasm": "dwarf/floor_chasm",
 }
 
 ABILITY_ICONS = ("disengage", "dodge", "end_turn", "fire_bolt", "hallowed_ground", "healing_word", "magic_missile",

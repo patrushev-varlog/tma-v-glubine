@@ -26,7 +26,8 @@ static func journal(root: Control, on_close: Callable) -> Control:
 	var items := PackedStringArray()
 	for it in s.state.inventory:
 		var key := "ITEM_" + String(it.id)
-		items.append(tr_(key) if tr_(key) != key else String(it.id))
+		var name := tr_(key) if tr_(key) != key else String(it.id)
+		items.append(name + tr_("ITEM_FORGED_MARK") if it.get("forged", false) else name)
 	col.add_child(UiKit.label(UiKit.fmt("JOURNAL_ITEMS", {"items": ", ".join(items)}) if not items.is_empty()
 		else tr_("JOURNAL_NO_ITEMS"), UiKit.FONT_SMALL))
 	col.add_child(UiKit.label(tr_("JOURNAL_QUESTS"), UiKit.FONT_SMALL, UiKit.MUTED))

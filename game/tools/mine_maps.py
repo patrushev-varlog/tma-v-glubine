@@ -45,8 +45,8 @@ def _shift(v):
     return [v[0] + 1, v[1] + 1]
 
 
-def write(lid, comment, rows, scenes, objects, exits=(), legend=None, variants=None, extra=None):
-    """legend и variants — свои у карт других глав (flood_maps.py), extra — поля карты сверх обычных (blocked_ground)."""
+def write(lid, comment, rows, scenes, objects, exits=(), legend=None, variants=None, extra=None, wall=None):
+    """legend, variants и wall — свои у карт других глав (flood_maps.py, dwarf_maps.py), extra — поля карты сверх обычных (blocked_ground)."""
     rows = _walled(rows, {tuple(e) for e in exits})
     for sc in scenes.values():
         sc["spawn"] = _shift(sc["spawn"])
@@ -58,7 +58,7 @@ def write(lid, comment, rows, scenes, objects, exits=(), legend=None, variants=N
     s += ' "legend": %s,\n' % json.dumps(legend or LEG)
     for k, v in (extra or {}).items():
         s += ' %s: %s,\n' % (json.dumps(k), json.dumps(v))
-    s += ' "wall": %s,\n' % json.dumps(WALL)
+    s += ' "wall": %s,\n' % json.dumps(wall or WALL)
     s += ' "ground": [\n' + ",\n".join("  " + json.dumps(r) for r in rows) + "\n ],\n"
     s += ' "variants": %s,\n' % json.dumps(variants or VAR)
     s += ' "scenes": %s,\n' % json.dumps(scenes)

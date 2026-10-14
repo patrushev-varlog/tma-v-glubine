@@ -1,0 +1,32 @@
+{
+ "id": "dwarf_gallery",
+ "comment": "Глава 3, сцена 6 «Хранитель печати»: галерея над пропастью, внизу светится плита печати. Обвалившийся боковой ход с костями беглых (закоулок 2, слиток). Торвин — в дальнем конце.",
+ "size": [19, 9],
+ "legend": {"h": "dwarf_hall", "r": "dwarf_rune", "c": "dwarf_chasm", "#": "dwarf_hall"},
+ "blocked_ground": ["dwarf_chasm"],
+ "wall": {"char": "#", "sprites": ["dwarf/wall_block", "dwarf/wall_block", "dwarf/wall_block", "dwarf/wall_runes"]},
+ "ground": [
+  "  #  #             ",
+  "  #hh############# ",
+  "  #hhhhhhhhhhhhhh##",
+  "  #hhhhhhhhhhhhhhh#",
+  "  #hhhhrhhhhrhhhh##",
+  "  #cccccccccccccc# ",
+  "  #cccccccccccccc# ",
+  "  #cccccccccccccc# ",
+  "  ################ "
+ ],
+ "variants": {"halls": {"tint": "#b4a690"}},
+ "scenes": {"keeper": {"variant": "halls", "spawn": [3, 1]}},
+ "objects": [
+  {"id": "col_1", "kind": "box", "cell": [6, 2], "sprite": "dwarf/rune_column"},
+  {"id": "col_2", "kind": "box", "cell": [10, 2], "sprite": "dwarf/rune_column"},
+  {"id": "niche_1", "kind": "box", "cell": [14, 2], "sprite": "dwarf/stone_niche"},
+  {"id": "side_rubble", "kind": "box", "cell": [8, 1], "sprite": "dwarf/rubble"},
+  {"id": "side_passage", "kind": "decal", "cell": [9, 1], "flat": true, "explore": "ch3_nook_gallery", "label": "LOC_CH3_GALLERY_NOOK", "sprite": "dwarf/bones"},
+  {"id": "torvin", "kind": "figure", "cell": [15, 4], "unit": "torvin", "face": "sw", "if": "!won:chapter3_3"},
+  {"id": "hammer", "kind": "decal", "cell": [16, 3], "flat": true, "if": "won:chapter3_3", "sprite": "dwarf/warhammer"},
+  {"id": "brazier_1", "kind": "box", "cell": [4, 4], "light": 34, "sprite": "dwarf/rune_brazier"},
+  {"id": "gallery_out", "kind": "box", "cell": [3, 2], "sprite": "dwarf/rune_column"}
+ ]
+}
