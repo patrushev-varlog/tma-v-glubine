@@ -121,11 +121,11 @@ const GROUND_ART := {
 		"molten": "forge/floor_molten",
 		"objects": {"wall": "forge/wall_block", "pillar": "forge/ladle", "rubble": "forge/slag_heap", "fence": "forge/cage"}},
 	# Дно главы 5: главный спуск с загонами по бокам (решётки — знак забора) и зал печати — плиты с бороздами,
-	# пустые постаменты стражи совета — знак алтаря, колонны с рунами. Своих листов пока нет: пол и камень Молчащих.
-	"deep": {"floor": ["dwarf/floor_hall", "dwarf/floor_hall", "mines/floor_stone", "mines/floor_gravel"],
-		"objects": {"wall": "mines/rock_block", "fence": "forge/cage", "pillar": "dwarf/rune_column", "rubble": "mines/rockfall"}},
-	"seal": {"floor": ["dwarf/floor_rune", "dwarf/floor_rune", "dwarf/floor_hall"],
-		"objects": {"wall": "dwarf/wall_runes", "pillar": "dwarf/rune_column", "altar": "dwarf/stone_niche", "rubble": "dwarf/rubble"}},
+	# пустые постаменты стражи совета — знак алтаря, жаровни с бледным огнём — колонны.
+	"deep": {"floor": ["deep/floor_descent", "deep/floor_descent", "deep/floor_rock", "deep/floor_rock"],
+		"objects": {"wall": "deep/wall_bedrock", "fence": "forge/cage", "pillar": "dwarf/rune_column", "rubble": "mines/rockfall"}},
+	"seal": {"floor": ["deep/floor_seal", "deep/floor_seal", "deep/floor_seal", "deep/floor_groove"],
+		"objects": {"wall": "deep/wall_seal", "pillar": "deep/pale_brazier", "altar": "deep/pedestal", "rubble": "deep/fallen_guard"}},
 }
 ## Верх ромба у тайла пола 64×64: центр клетки приходится на (32, 38).
 const FLOOR_OFFSET := Vector2(-32, -38)

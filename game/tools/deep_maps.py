@@ -4,26 +4,29 @@
     python3 game/tools/deep_maps.py
 
 Как dwarf_maps.py: пол строками, объекты списком, кольцо стен вокруг пола и сдвиг на клетку — в mine_maps.py.
-Своих листов у дна пока нет: пол и камень — Молчащих и шахт (тёсаные плиты h, плиты с бороздами r, камень
-спуска s), пустота под карнизом (c) — blocked_ground, решётки загонов — клетки из кузниц плоти.
+Листы дна — art/chapter5/tiles/deep (ch5_batch1.py, ch5_batch2.py): на спуске тёсаные плиты h, плиты с бороздами r
+и голый камень s, в зале печати плиты с бороздами h, светлые борозды r и сердце печати o (одна клетка, под столбом света). Пустота под карнизом (c) —
+пропасть Молчащих, blocked_ground; решётки загонов — клетки из кузниц плоти.
 """
 from mine_maps import write, T, LAMP
 
 D = "dwarf/"
+E = "deep/"
 F = "forge/"
 M = "mines/"
-LEG = {"h": "dwarf_hall", "r": "dwarf_rune", "s": "mine_stone", "c": "dwarf_chasm", "#": "dwarf_hall"}
+LEG = {"h": "deep_descent", "r": "deep_groove", "s": "deep_rock", "c": "dwarf_chasm", "#": "deep_descent"}
+HALL_LEG = {"h": "deep_seal", "r": "deep_groove", "o": "deep_core", "#": "deep_seal"}
 VAR = {"descent": {"tint": "#a0a2b8"}, "seal": {"tint": "#b8bcd8"}}
 EXTRA = {"blocked_ground": ["dwarf_chasm"]}
-WALL = {"char": "#", "sprites": ["mines/rock_block", "mines/rock_block", "dwarf/wall_block", "mines/rock_block"]}
-HALL_WALL = {"char": "#", "sprites": ["dwarf/wall_runes", "dwarf/wall_block", "dwarf/wall_block", "dwarf/wall_runes"]}
+WALL = {"char": "#", "sprites": ["deep/wall_bedrock", "deep/wall_bedrock", "mines/rock_block", "deep/wall_bedrock"]}
+HALL_WALL = {"char": "#", "sprites": ["deep/wall_seal", "deep/wall_seal", "deep/wall_bedrock", "deep/wall_seal"]}
 
 GARRISON = "!won:chapter5_1_garrison"
 GUARDS = "!won:chapter5_2&!won:chapter5_2_raised"
 
 
-def deep(lid, comment, rows, scenes, objects, exits=(), wall=WALL):
-    write(lid, comment, rows, scenes, objects, exits, legend=LEG, variants=VAR, extra=EXTRA, wall=wall)
+def deep(lid, comment, rows, scenes, objects, exits=(), wall=WALL, legend=LEG):
+    write(lid, comment, rows, scenes, objects, exits, legend=legend, variants=VAR, extra=EXTRA, wall=wall)
 
 
 def main():
@@ -48,7 +51,8 @@ def main():
      {"descent": {"variant": "descent", "spawn": [2, 0]}},
      [T((1, 0), "flooded/stairs", id="stairs_in", kind="decal", flat=True),
       T((0, 2), M + "guard_hut", id="guardroom", size=[2, 1], explore="ch5_look_plaque", label="LOC_CH5_GUARDROOM"),
-      T((5, 2), D + "rune_brazier", id="brazier_top", **LAMP),
+      T((2, 2), E + "plaque", id="plaque"),
+      T((5, 2), E + "pale_brazier", id="brazier_top", **LAMP),
       T((6, 4), D + "rune_column", id="third_pillar"),
       T((8, 4), M + "rockfall", id="crack_stones", **{"if": "!velior_fate=forgiven"}),
       T((1, 7), F + "cage", id="pen_w1", size=[1, 2]), T((1, 10), F + "cage", id="pen_w2", size=[1, 2]),
@@ -61,7 +65,7 @@ def main():
       T((14, 4), "", id="ledge_edge", kind="decal", explore="ch5_talk_velior_niche", label="LOC_CH5_LEDGE",
         **{"if": "ch5_secret_path"}),
       T((15, 7), "flooded/stairs", id="ledge_end", kind="decal", flat=True),
-      T((3, 11), D + "rune_brazier", id="brazier_low", **LAMP),
+      T((3, 11), E + "pale_brazier", id="brazier_low", **LAMP),
       T((4, 12), D + "rune_arch", id="hall_gate", size=[2, 1])],
      exits=[(2, 0), (3, 0), (4, 12), (5, 12), (15, 7), (16, 7)])
 
@@ -73,26 +77,26 @@ def main():
       "  hhhhhhhhhhhh  ",
       " hhhrhhhhhhrhhh ",
       " hhhhrhhhhrhhhh ",
-      "hhhhhhrrrrhhhhhh",
+      "hhhhhhrorrhhhhhh",
       "hhhhhhrrrrhhhhhh",
       " hhhhrhhhhrhhhh ",
       " hhhrhhhhhhrhhh ",
       "  hhhhhhhhhhhh  ",
       "     hhhhhh     "],
      {"seal_hall": {"variant": "seal", "spawn": [6, 0]}},
-     [T((2, 1), D + "stone_niche", id="pedestal_1"), T((4, 1), D + "stone_niche", id="pedestal_2"),
-      T((10, 1), D + "stone_niche", id="pedestal_3"), T((12, 1), D + "stone_niche", id="pedestal_4"),
-      T((0, 4), D + "stone_niche", id="pedestal_5"), T((15, 5), D + "stone_niche", id="pedestal_6"),
-      T((2, 8), D + "stone_niche", id="pedestal_7"), T((12, 8), D + "stone_niche", id="pedestal_8"),
-      T((5, 2), D + "bones", id="fallen_guards", kind="decal", flat=True, explore="ch5_look_crests", label="LOC_CH5_CRESTS",
+     [T((2, 1), E + "pedestal", id="pedestal_1"), T((4, 1), E + "pedestal", id="pedestal_2"),
+      T((10, 1), E + "pedestal", id="pedestal_3"), T((12, 1), E + "pedestal", id="pedestal_4"),
+      T((0, 4), E + "pedestal", id="pedestal_5"), T((15, 5), E + "pedestal", id="pedestal_6"),
+      T((2, 8), E + "pedestal", id="pedestal_7"), T((12, 8), E + "pedestal", id="pedestal_8"),
+      T((5, 2), E + "fallen_guard", id="fallen_guards", kind="decal", flat=True, explore="ch5_look_crests", label="LOC_CH5_CRESTS",
         **{"if": "won:chapter5_2|won:chapter5_2_raised"}),
-      T((1, 6), D + "stone_niche", id="pedestal_13", explore="ch5_hunt_site", label="LOC_CH5_NICHE"),
-      T((5, 3), "", id="guard_1", kind="figure", unit="dead_soldier", face="nw", **{"if": GUARDS}),
-      T((9, 3), "", id="guard_2", kind="figure", unit="dead_soldier", face="ne", **{"if": GUARDS}),
-      T((7, 3), "", id="guard_3", kind="figure", unit="dead_soldier", face="nw", **{"if": GUARDS}),
-      T((3, 3), D + "rune_brazier", id="brazier_w", **LAMP), T((12, 3), D + "rune_brazier", id="brazier_e", **LAMP),
-      T((7, 4), "", id="seal_center", kind="decal", light=60, leave_check=5)],
-     exits=[(6, 0), (7, 0)], wall=HALL_WALL)
+      T((1, 6), E + "pedestal", id="pedestal_13", explore="ch5_hunt_site", label="LOC_CH5_NICHE"),
+      T((5, 3), "", id="guard_1", kind="figure", unit="council_guard", face="nw", **{"if": GUARDS}),
+      T((9, 3), "", id="guard_2", kind="figure", unit="council_guard", face="ne", **{"if": GUARDS}),
+      T((7, 3), "", id="guard_3", kind="figure", unit="council_guard", face="nw", **{"if": GUARDS}),
+      T((3, 3), E + "pale_brazier", id="brazier_w", **LAMP), T((12, 3), E + "pale_brazier", id="brazier_e", **LAMP),
+      T((7, 4), E + "seal_light", id="seal_center", kind="decal", light=60, leave_check=5)],
+     exits=[(6, 0), (7, 0)], wall=HALL_WALL, legend=HALL_LEG)
 
 
 if __name__ == "__main__":

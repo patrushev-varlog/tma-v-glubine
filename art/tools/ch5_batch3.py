@@ -1,0 +1,39 @@
+"""Глава 5, партия 3: анимации врагов дна (после проб, по слову Валерия):
+стражник совета, Эдрик и тень Спящего.
+
+Как ch4_batch3.py: стойка, ходьба, урон и выбывание — шаблоны PixelLab, удар — по скелету (skeleton_anim.py).
+Кадры: art/chapter5/characters/<имя>/pixellab (шаблоны) и anims/attack (удар). Готовое пропускается.
+
+    python3 art/tools/ch5_batch3.py [имя ...]
+"""
+import sys, concurrent.futures as cf
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
+import pixellab as p
+import skeleton_anim as s
+from k3_batch2 import heroes, todo, run
+
+CH = p.ROOT / "art" / "chapter5" / "characters"
+NAMES = ("council_guard", "edric", "sleeper_shade")
+
+
+def attack(n, d):
+    if (CH / n / "anims" / "attack" / d / "05.png").exists():
+        return n, "attack", d, "есть"
+    return n, "attack", d, s.run(n, "attack", dirs=(d,), root=CH)
+
+
+if __name__ == "__main__":
+    H = heroes(sys.argv[1:] or NAMES)
+    tasks = [(n, c, *t) for n, c in H.items() for t in todo(c)]
+    print(len(tasks), "шаблонных задач", flush=True)
+    with cf.ThreadPoolExecutor(4) as ex:
+        fs = [ex.submit(run, *t) for t in tasks] + [ex.submit(attack, n, d) for n in H for d in s.DIRS]
+        for f in cf.as_completed(fs):
+            try:
+                print("ok", f.result(), flush=True)
+            except Exception as e:
+                print("ERR", e, flush=True)
+    for n, c in H.items():
+        p.character_zip(c, CH / n / "pixellab")
+    print(p.balance()["subscription"])

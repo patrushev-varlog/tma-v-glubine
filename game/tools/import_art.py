@@ -95,6 +95,10 @@ for _uid, _folder in {"stone_guardian": "stone_guardian", "dwarf_archivist": "dw
 CH4_UNITS = ("dead_soldier", "vat_overseer", "gessar", "stitched", "foundry_dead", "executioner")
 for _uid in CH4_UNITS:
 	UNITS[_uid] = (ART / "chapter4" / "characters" / _uid, {**_PIXELLAB, "attack": "anims/attack/{d}"})
+# Глава 5: стража совета, Эдрик и тени Спящего (art/tools/ch5_batch3.py).
+CH5_UNITS = ("council_guard", "edric", "sleeper_shade")
+for _uid in CH5_UNITS:
+	UNITS[_uid] = (ART / "chapter5" / "characters" / _uid, {**_PIXELLAB, "attack": "anims/attack/{d}"})
 # Костяной лучник литейной — тот же скелет-лучник, только крепче.
 UNITS["bone_archer"] = UNITS["skeleton_archer"]
 # Статичные персонажи (только стойка, 8 направлений) и позы «связан» — по картинке на направление:
@@ -120,6 +124,10 @@ for _sid in ("stone_guardian", "dwarf_dead", "torvin"):
 CH4 = ART / "chapter4" / "characters"
 for _sid in CH4_UNITS:
 	STATICS[_sid] = CH4 / _sid / "base" / "Idle" / "rotations"
+# Глава 5: стража совета на постах и Эдрик на картах дна (art/chapter5/characters).
+CH5 = ART / "chapter5" / "characters"
+for _sid in CH5_UNITS:
+	STATICS[_sid] = CH5 / _sid / "base" / "Idle" / "rotations"
 ANIM_ORDER = ("idle", "walk", "attack", "cast", "hit", "down")
 FPS = {"idle": 5, "walk": 12, "attack": 12, "cast": 12, "hit": 12, "down": 12}
 
@@ -130,6 +138,7 @@ TILE_SETS["mines"] = ART / "chapter1" / "tiles" / "mines"
 TILE_SETS["flooded"] = ART / "chapter2" / "tiles" / "flooded"
 TILE_SETS["dwarf"] = ART / "chapter3" / "tiles" / "dwarf"
 TILE_SETS["forge"] = ART / "chapter4" / "tiles" / "forge"
+TILE_SETS["deep"] = ART / "chapter5" / "tiles" / "deep"
 FLOOR_PREFIXES = ("floor_", "water_", "bank_", "edge")
 # Верх ромба у пола 64×64: ромб 64×32 начинается с 22-й строки.
 FLOOR_TOP = 22
@@ -148,6 +157,9 @@ LOCATION_FLOORS = {
 	"dwarf_hall": "dwarf/floor_hall", "dwarf_rune": "dwarf/floor_rune", "dwarf_chasm": "dwarf/floor_chasm",
 	# Кузницы плоти главы 4.
 	"forge_works": "forge/floor_works", "forge_grate": "forge/floor_grate", "forge_molten": "forge/floor_molten",
+	# Дно главы 5: спуск и зал печати.
+	"deep_descent": "deep/floor_descent", "deep_rock": "deep/floor_rock", "deep_seal": "deep/floor_seal",
+	"deep_groove": "deep/floor_groove", "deep_core": "deep/floor_core",
 }
 
 ABILITY_ICONS = ("disengage", "dodge", "end_turn", "fire_bolt", "hallowed_ground", "healing_word", "magic_missile",
@@ -265,7 +277,7 @@ def tiles(w: Writer) -> None:
 		ts, name = src.split("/")
 		im = Image.open(TILE_SETS[ts] / f"{name}.png").convert("RGBA")
 		# Верх ромба — по рисунку: у полов шахт он на строку-две ниже FLOOR_TOP.
-		y0 = max(FLOOR_TOP, im.getchannel("A").getbbox()[1]) if ts in ("mines", "flooded") else FLOOR_TOP
+		y0 = max(FLOOR_TOP, im.getchannel("A").getbbox()[1]) if ts in ("mines", "flooded", "deep") else FLOOR_TOP
 		top = im.crop((0, y0, 64, y0 + 32))
 		# Только ромб: всё, что вне него, прозрачно, чтобы соседние клетки не перекрывались.
 		out = Image.new("RGBA", (64, 32), (0, 0, 0, 0))

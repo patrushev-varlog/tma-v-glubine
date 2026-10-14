@@ -1,4 +1,40 @@
 {
+	"deep/council_door": [
+		18,
+		68
+	],
+	"deep/descent_stairs": [
+		29,
+		85
+	],
+	"deep/fallen_guard": [
+		13,
+		29
+	],
+	"deep/pale_brazier": [
+		8,
+		40
+	],
+	"deep/pedestal": [
+		27,
+		53
+	],
+	"deep/plaque": [
+		25,
+		43
+	],
+	"deep/seal_light": [
+		28,
+		124
+	],
+	"deep/wall_bedrock": [
+		32,
+		64
+	],
+	"deep/wall_seal": [
+		32,
+		64
+	],
 	"dwarf/anvil": [
 		13,
 		29
