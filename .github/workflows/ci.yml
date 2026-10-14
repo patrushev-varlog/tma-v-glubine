@@ -1,5 +1,9 @@
 name: CI
 
+# Linux-задания идут на своём раннере (VPS, метка self-hosted): минуты GitHub не тратятся.
+# Раннер постоянный, поэтому без sudo и с unzip -o, чтобы не спотыкаться о файлы прошлых запусков.
+# Windows-smoke и подпись macOS остаются на раннерах GitHub.
+
 on:
   push:
     branches: [main]
@@ -14,14 +18,15 @@ env:
 jobs:
   prototype-tests:
     name: Тесты прототипа боя
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - name: Установить Godot
         run: |
-          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
-          unzip -q godot.zip
-          sudo mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
+          curl -sSL -o "$RUNNER_TEMP/godot.zip" "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -qo "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mv -f "$RUNNER_TEMP/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64" "$RUNNER_TEMP/godot/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
       - name: Импорт проекта
         run: godot --headless --path prototypes/combat --import
       - name: Правила боя
@@ -31,7 +36,7 @@ jobs:
 
   ink:
     name: Компиляция Ink
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,7 +47,7 @@ jobs:
 
   game-tests:
     name: Игра — тесты и самопроверка
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     env:
       DOTNET_NOLOGO: "1"
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
@@ -65,7 +70,7 @@ jobs:
         run: |
           B=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable
           curl -sSL -o mono.zip $B/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64.zip
-          unzip -q mono.zip -d ~/godot && rm mono.zip
+          unzip -qo mono.zip -d ~/godot && rm mono.zip
           echo "GODOT=$HOME/godot/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64" >> $GITHUB_ENV
       - name: Тесты GUT (бой, сюжет, сохранения)
         working-directory: ${{ env.GAME_DIR }}
@@ -79,7 +84,7 @@ jobs:
 
   export:
     name: Сборка ${{ matrix.preset }}
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     env:
       DOTNET_NOLOGO: "1"
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
@@ -120,9 +125,9 @@ jobs:
           B=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable
           curl -sSL -o mono.zip $B/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64.zip
           curl -sSL -o tpl.tpz $B/Godot_v${GODOT_VERSION}-stable_mono_export_templates.tpz
-          unzip -q mono.zip -d ~/godot
+          unzip -qo mono.zip -d ~/godot
           T="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono"
-          mkdir -p "$T" && unzip -q tpl.tpz -d tpl && mv tpl/templates/* "$T/"
+          mkdir -p "$T" && unzip -qo tpl.tpz -d tpl && mv -f tpl/templates/* "$T/"
           rm -rf tpl tpl.tpz mono.zip
           echo "GODOT=$HOME/godot/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64" >> $GITHUB_ENV
       # Все сборки делаются на Linux: экспорт .NET-проекта под Windows и macOS (universal) работает и отсюда.
