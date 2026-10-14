@@ -55,3 +55,23 @@ static func is_favor(shop_id: String) -> bool:
 ## Сколько вещей можно взять за один заход; 0 — без ограничения.
 static func limit(shop_id: String) -> int:
 	return int(table()[shop_id].get("limit", 0)) if has_shop(shop_id) else 0
+
+
+## Кузница Молчащих (глава 3): переносит свойство, а не продаёт.
+static func is_forge(shop_id: String) -> bool:
+	return has_shop(shop_id) and table()[shop_id].has("forge")
+
+
+## Цена переноса в серебре; flags — переменные Ink (кузнец из Эшмура у горна берёт дешевле), до 5 серебра.
+static func forge_price(shop_id: String, flags: Dictionary) -> int:
+	var fg: Dictionary = table()[shop_id].forge
+	var p := float(fg.price)
+	var kv := String(fg.get("flag", "")).split("=", true, 1)
+	if kv.size() == 2 and str(flags.get(kv[0], "")) == kv[1]:
+		p *= (100.0 - float(fg.get("discount", 0))) / 100.0
+	return int(round(p / 5.0)) * 5
+
+
+## Материал переноса: слиток дварфийской стали.
+static func forge_steel(shop_id: String) -> String:
+	return String(table()[shop_id].forge.get("steel", "dwarf_steel"))

@@ -123,8 +123,8 @@ func _advance() -> void:
 				_camp_done()))
 			return
 		"shop":
-			_camp_panel(CampPanels.shop(self, String(item.id), func(buy: Array) -> void:
-				Game.session.leave_shop(buy)
+			_camp_panel(CampPanels.shop(self, String(item.id), func(buy: Array, forge: Array) -> void:
+				Game.session.leave_shop(buy, forge)
 				_camp_done()))
 			return
 		"explore_end":

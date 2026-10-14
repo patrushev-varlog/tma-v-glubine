@@ -67,7 +67,8 @@ static func _branch_card(cls: String, arch: String, level: int, current: String,
 	return box
 
 
-## Торговец. on_done(buy: Array) — покупки [[предмет, владелец], …] в порядке нажатий.
+## Торговец. on_done(buy: Array, forge: Array) — покупки [[предмет, владелец], …] в порядке нажатий и номера
+## вещей инвентаря, на которые кузница Молчащих переносит свойство (у прочих торговцев пусто).
 static func shop(root: Control, shop_id: String, on_done: Callable) -> Control:
 	Sound.sfx("coin")
 	var f := _frame(root)
@@ -121,10 +122,65 @@ static func shop(root: Control, shop_id: String, on_done: Callable) -> Control:
 			buttons.append(b)
 			who.add_child(b)
 		grid.add_child(who)
-	col.add_child(UiKit.button(tr_("SHOP_LEAVE"), func() -> void: on_done.call(buy)))
+	var forge: Array = []
+	if Shops.is_forge(shop_id):
+		_forge_rows(col, shop_id, silver, forge, refresh)
+	col.add_child(UiKit.button(tr_("SHOP_LEAVE"), func() -> void: on_done.call(buy, forge)))
 	refresh.call()
 	UiKit.focus_first(col)
 	return f[0]
+
+
+## Кузница Молчащих: вещи отряда, на которые можно перенести свойство, — за слиток и серебро каждая.
+static func _forge_rows(col: VBoxContainer, shop_id: String, silver: Array, forge: Array, refresh: Callable) -> void:
+	var st := Game.session.state
+	var price := Shops.forge_price(shop_id, Game.session.flags())
+	var steel := [0]
+	for it in st.inventory:
+		if String(it.id) == Shops.forge_steel(shop_id):
+			steel[0] += 1
+	var note := UiKit.label(UiKit.fmt("FORGE_NOTE", {"price": price}), UiKit.FONT_SMALL, UiKit.MUTED)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note.custom_minimum_size = Vector2(720, 0)
+	col.add_child(note)
+	var count := UiKit.label("", UiKit.FONT_SMALL, UiKit.ACCENT)
+	col.add_child(count)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 16)
+	col.add_child(grid)
+	var buttons: Array[Button] = []
+	var update := func() -> void:
+		count.text = UiKit.fmt("FORGE_STEEL", {"n": steel[0]})
+		for b in buttons:
+			b.disabled = bool(b.get_meta("done")) or steel[0] <= 0 or silver[0] < price
+	for i in st.inventory.size():
+		var it: Dictionary = st.inventory[i]
+		if it.get("forged", false) or not Items.forgeable(String(it.id)):
+			continue
+		var owner := String(it.owner)
+		grid.add_child(UiKit.label("%s — %s" % [tr_("ITEM_" + String(it.id)),
+			tr_("SHOP_FOR_HERO") if owner == "hero" else tr_("COMPANION_" + owner)], UiKit.FONT_SMALL))
+		var slot := String(Items.catalog()[String(it.id)].slot)
+		grid.add_child(UiKit.label(tr_("FORGE_FX_" + slot), UiKit.FONT_SMALL, UiKit.MUTED))
+		var b := UiKit.button(tr_("FORGE_DO"), Callable(), UiKit.FONT_SMALL, "coin")
+		b.set_meta("done", false)
+		var idx := i
+		b.pressed.connect(func() -> void:
+			if steel[0] <= 0 or silver[0] < price or bool(b.get_meta("done")):
+				return
+			steel[0] -= 1
+			silver[0] -= price
+			forge.append(idx)
+			b.set_meta("done", true)
+			b.text = tr_("FORGE_DONE")
+			refresh.call()
+			update.call())
+		buttons.append(b)
+		grid.add_child(b)
+	if buttons.is_empty():
+		col.add_child(UiKit.label(tr_("FORGE_NONE"), UiKit.FONT_SMALL, UiKit.MUTED))
+	update.call()
 
 
 ## Свойства вещи одной строкой: «+1 КД, спасброски +1» (по fx из items.json).

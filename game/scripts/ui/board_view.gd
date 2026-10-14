@@ -35,6 +35,9 @@ const GROUNDS := {
 	"gate": [Color("#3d3a37"), Color("#38352f"), Color("#4b4743")],
 	"flooded": [Color("#363a42"), Color("#31353c"), Color("#454a54")],
 	"flooded_shrine": [Color("#363a42"), Color("#31353c"), Color("#454a54")],
+	"dwarf": [Color("#4a4640"), Color("#45413b"), Color("#59544c")],
+	"dwarf_archive": [Color("#4a4640"), Color("#45413b"), Color("#59544c")],
+	"dwarf_seal": [Color("#44424a"), Color("#3f3d44"), Color("#54525c")],
 }
 ## Пол, по которому можно ходить (знаки , : ;).
 const FLOOR_DECOR := {"ford": Color("#4b6b78"), "road": Color("#5a5040"), "ash": Color("#2a2826"), "wade": Color("#263a4a")}

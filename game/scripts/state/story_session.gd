@@ -20,7 +20,8 @@ const CASES: Array[String] = ["gen", "dat", "acc", "ins", "pre"]
 var runner := StoryRunner.new()
 var state := GameState.new()
 ## События: {"pick": i} | {"battle": id, "dark": n} | {"explore": узел, "args": []} | {"var": имя, "value": v}
-##   | {"branch": ветка} (повышение уровня в лагере) | {"shop": торговец, "buy": [[предмет, владелец], …]}.
+##   | {"branch": ветка} (повышение уровня в лагере) | {"shop": торговец, "buy": [[предмет, владелец], …],
+##   "forge": [номер вещи в инвентаре, …]} (кузница Молчащих: перенос свойства).
 var events: Array[Dictionary] = []
 ## Сцены всей истории по порядку (story/scenes.json).
 var scenes: Array = []
@@ -190,9 +191,13 @@ func choose_branch(branch: String) -> void:
 
 
 ## Уйти от торговца. buy — [[предмет, владелец], …]; цены считает Shops, серебро списывается здесь.
-func leave_shop(buy: Array = []) -> void:
+## forge — номера вещей в инвентаре, на которые кузница Молчащих переносит свойство.
+func leave_shop(buy: Array = [], forge: Array = []) -> void:
 	assert(pending_shop != "", "Нет торговца, который ждёт покупок")
-	_apply({"shop": pending_shop, "buy": buy})
+	var ev := {"shop": pending_shop, "buy": buy}
+	if not forge.is_empty():
+		ev["forge"] = forge
+	_apply(ev)
 
 
 ## Осмотр объекта на карте: узел Ink в отдельном потоке (story/ink/explore_common.ink).
@@ -238,8 +243,33 @@ func _apply(ev: Dictionary) -> void:
 			state.silver -= price
 			state.inventory.append({"id": String(b[0]), "owner": String(b[1])})
 			bought += 1
+		if ev.has("forge"):
+			_forge(String(ev.shop), ev.forge)
 		pending_shop = ""
 	_set_mark()
+
+
+## Кузница Молчащих: на каждую вещь — слиток и серебро; вещь, которую нельзя ковать, пропускается.
+func _forge(shop_id: String, picks: Array) -> void:
+	if not Shops.is_forge(shop_id):
+		return
+	var price := Shops.forge_price(shop_id, flags())
+	var steel := Shops.forge_steel(shop_id)
+	var seen := {}
+	var targets: Array[Dictionary] = []
+	for i in picks:
+		var idx := int(i)
+		if idx >= 0 and idx < state.inventory.size() and not seen.has(idx) and Items.forgeable(String(state.inventory[idx].id)) \
+				and not state.inventory[idx].get("forged", false):
+			seen[idx] = true
+			targets.append(state.inventory[idx])
+	for it in targets:
+		var si := state.inventory.find_custom(func(x: Dictionary) -> bool: return String(x.id) == steel)
+		if si < 0 or state.silver < price:
+			break
+		state.inventory.remove_at(si)
+		state.silver -= price
+		it["forged"] = true
 
 
 ## Снимок для входа в сцену: после каждого события (родное сохранение Ink — 2–8 мс).

@@ -387,3 +387,27 @@ func test_swimmer() -> void:
 	assert_false(b.reachable(f).has(Vector2i(6, 2)), "герою вода по пояс — шаг за два")
 	assert_true(b.reachable(f).has(Vector2i(5, 2)), "на три клетки по воде хватает")
 	assert_true(b.reachable(z).has(Vector2i(2, 8)), "утопленнику вода не мешает")
+
+
+func test_stone_armor() -> void:
+	var f := A.at(CombatData.make_hero("fighter", 3, "guardian"), Vector2i(5, 5))
+	var g := A.at(CombatData.make_enemy("stone_guardian", 1), Vector2i(6, 5))
+	var b := A.make([f, g])
+	assert_true(g.has_trait("stone_armor"), "страж Молчащих — каменный")
+	assert_eq(b.stone_armor_against(f, g, f.weapon), 4, "длинный меч теряет 4 урона")
+	assert_eq(int(b.attack_preview(f, g).stone), 4, "прогноз пишет, сколько гасит камень")
+	assert_eq(b.stone_armor_against(f, g, {"id": "mace"}), 0, "булава бьёт в полную силу")
+	var c := A.at(CombatData.make_hero("cleric", 3, "life"), Vector2i(7, 5))
+	b = A.make([f, g, c])
+	assert_true(b.flanked(f, g), "жрица с другой стороны — страж обойдён")
+	assert_eq(b.stone_armor_against(f, g, f.weapon), 0, "обойдённого бьют в полную силу")
+	c.cell = Vector2i(6, 4)
+	assert_false(b.flanked(f, g), "сбоку — ещё не обход")
+	# Заклинания камень не держит: броня считается только в атаке оружием.
+	assert_eq(b._mitigate(g, 10), 10)
+
+
+func test_keeper_oath() -> void:
+	var t := CombatData.make_enemy("torvin", 1)
+	var b := _pair(CombatData.make_hero("fighter", 3, "guardian"), t)
+	assert_eq(b._mitigate(t, 10), 8, "клятва хранителя: урон от оружия −2")

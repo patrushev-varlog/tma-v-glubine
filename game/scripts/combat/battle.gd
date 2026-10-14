@@ -656,9 +656,13 @@ func attack_preview(attacker: Combatant, target: Combatant, extra_dice := "", we
 	lo += flat
 	hi += flat
 	avg += flat
+	var stone := stone_armor_against(attacker, target, weapon)
+	lo = maxf(lo - stone, 0.0)
+	hi = maxf(hi - stone, 0.0)
+	avg = maxf(avg - stone, 0.0)
 	var scale := enemy_damage_scale(attacker) * _mitigation_scale(target)
 	return {"chance": chance, "adv": adv, "min": int(ceil(lo * scale)), "max": int(ceil(hi * scale)),
-		"avg": avg * scale, "expected": chance * avg * scale, "sneak": can_sneak(attacker, target, adv)}
+		"avg": avg * scale, "expected": chance * avg * scale, "sneak": can_sneak(attacker, target, adv), "stone": stone}
 
 
 ## Грубая доля урона от оружия, которая дойдёт до цели (для прогноза).
@@ -748,6 +752,10 @@ func _weapon_attack(attacker: Combatant, target: Combatant, opts: Dictionary) ->
 		dmg += Dice.roll(rng, attacker.fire_dice, crit)
 	dmg += _flat_bonus(attacker, target, ranged)
 	dmg = int(ceil(dmg * enemy_damage_scale(attacker)))
+	var stone := stone_armor_against(attacker, target, weapon)
+	if stone > 0 and dmg > 0:
+		log_line("%s: камень гасит %d урона." % [target.name, mini(stone, dmg)])
+		dmg = maxi(dmg - stone, 0)
 	dmg = _mitigate(target, dmg)
 	log_line("%s → %s: %s%d урона." % [attacker.name, target.name, "крит! " if crit else "", dmg])
 	if not after.is_empty():
@@ -786,6 +794,32 @@ func _item_dice(attacker: Combatant, target: Combatant) -> Array[String]:
 	if attacker.fire_dice != "":
 		out.append(attacker.fire_dice)
 	return out
+
+
+## Дробящее оружие: молоты, булавы, посохи, кулаки. Каменную броню они раскалывают.
+const BLUNT_WEAPONS := ["mace", "staff", "warhammer", "maul", "club", "mallet", "slam", "fist", "stone_fist",
+	"pick_handle", "chain_fist"]
+
+
+## Каменная броня (глава 3, стражи-конструкты, приём `stone_armor`): удар оружием теряет столько урона,
+## если он не дробящий и цель не обойдена — союзник атакующего стоит вплотную к цели с другой стороны.
+## Заклинаний броня не держит.
+func stone_armor_against(attacker: Combatant, target: Combatant, weapon: Dictionary) -> int:
+	var armor := mod_sum(target, "stone_armor")
+	if armor <= 0 or BLUNT_WEAPONS.has(String(weapon.get("id", ""))) or flanked(attacker, target):
+		return 0
+	return armor
+
+
+## Цель обойдена: союзник атакующего вплотную к ней, на другой стороне от атакующего.
+func flanked(attacker: Combatant, target: Combatant) -> bool:
+	var from := Vector2(attacker.cell - target.cell)
+	for a in allies_of(attacker):
+		if a == attacker or not a.conscious() or dist(a.cell, target.cell) != 1:
+			continue
+		if Vector2(a.cell - target.cell).dot(from) < 0.0:
+			return true
+	return false
 
 
 ## Доспехи, ярость, «Стойкость» и «Уворот» уменьшают урон от оружия.

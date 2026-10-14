@@ -174,7 +174,7 @@ func battle_scenario(battle_id: String) -> Dictionary:
 	var bid := battle_id if CombatData.table("battles").has(battle_id) else "level_%d" % clampi(st.level, 1, 5)
 	var owned := {}
 	for it in st.inventory:
-		owned.get_or_add(String(it.owner), []).append(String(it.id))
+		owned.get_or_add(String(it.owner), []).append(String(it.id) + (Items.FORGED if it.get("forged", false) else ""))
 	var sc := CombatData.scenario(bid, String(st.hero.get("class", "fighter")), st.hero_branch(),
 		session.party_key(), st.difficulty, "kit", session.flags(), owned)
 	sc["combat_darkness"] = st.combat_darkness

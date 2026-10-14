@@ -15,7 +15,8 @@ var level := 1
 ## Ветка класса героя со 2 уровня (classes.json, archetypes); "" — ещё не выбрана.
 var branch := ""
 var silver := 0
-## Вещи отряда: [{"id", "owner"}], owner — "hero", "garret", "irena" или "velior".
+## Вещи отряда: [{"id", "owner"}], owner — "hero", "garret", "irena" или "velior";
+## "forged": true — на вещь перенесено свойство в кузнице Молчащих (Items.FORGE_FX).
 var inventory: Array[Dictionary] = []
 ## Записи журнала: [{"id", "text"}] в порядке получения.
 var journal: Array[Dictionary] = []

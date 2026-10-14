@@ -406,5 +406,58 @@
       "##..h..h..##",
       "############"
     ]
+  },
+  "chapter3_1": {
+    "level": 3, "silver": 15, "ground": "dwarf", "cover": true, "intro": "BATTLE_LOG_CH3_STONE",
+    "party": ["irena", "garret", "velior"],
+    "waves": [{"round": 2, "at": "1", "units": ["stone_guardian"], "trial_units": ["stone_guardian", "stone_guardian"], "log": "BATTLE_LOG_CH3_WAKE"}],
+    "legend": {"g": "stone_guardian", "G": "stone_guardian"},
+    "trial_only": ["G"],
+    "map": [
+      "################",
+      "#|..|..|..|1.|.#",
+      "#..............#",
+      "#hh.....g......#",
+      "#h..........g..#",
+      "#hh..|.....|...#",
+      "#........G.....#",
+      "#..............#",
+      "#|..|..|..|1.|.#",
+      "################"
+    ]
+  },
+  "chapter3_2": {
+    "level": 3, "silver": 15, "ground": "dwarf_archive", "cover": true,
+    "party": ["irena", "garret", "velior"],
+    "waves": [{"round": 2, "at": "1", "units": ["dwarf_archivist", "dwarf_archivist"], "trial_units": ["dwarf_archivist", "dwarf_archivist"], "log": "BATTLE_LOG_CH3_ARCHIVE"}],
+    "legend": {"a": "dwarf_archivist", "A": "dwarf_archivist"},
+    "trial_only": ["A"],
+    "map": [
+      "################",
+      "#h.&..&..&1.&..#",
+      "#hh&.a&..&a.&..#",
+      "#h.....a.......#",
+      "#.........a....#",
+      "#h.&..&a.&..&A.#",
+      "#..&.A&..&1.&A.#",
+      "################"
+    ]
+  },
+  "chapter3_3": {
+    "level": 3, "silver": 20, "ground": "dwarf_seal", "cover": true, "intro": "BATTLE_LOG_CH3_KEEPER",
+    "party": ["irena", "garret", "velior"],
+    "waves": [{"round": 3, "at": "1", "units": ["stone_guardian"], "trial_units": ["stone_guardian"], "log": "BATTLE_LOG_CH3_NICHES"}],
+    "legend": {"T": "torvin"},
+    "map": [
+      "################",
+      "#~~~~~~~~~~~~~~#",
+      "#~~~~~~~~~~~~~~#",
+      "#..|...T....|..#",
+      "#..............#",
+      "#1....*....*..1#",
+      "#..............#",
+      "#.....hhhh.....#",
+      "################"
+    ]
   }
 }
