@@ -125,7 +125,7 @@
   "raised_prisoner": {"xp": 0, "ally": true, "undead": true, "color": "#8f86a8", "hp": 16, "ac": 10, "init": -1, "speed": 5,
     "saves": {"str": 2, "dex": -1, "con": 2, "wis": -1},
     "weapon": {"id": "slam", "to_hit": 4, "damage": "1d8+2", "reach": 1, "kind": "melee"}},
-  "edric":           {"xp": 1800, "boss": true, "hp": 95, "ac": 14, "init": 2, "speed": 5, "undead": true, "attacks": 2,
+  "edric":           {"xp": 1800, "boss": true, "hp": 80, "ac": 14, "init": 2, "speed": 5, "undead": true, "attacks": 2,
     "saves": {"str": 0, "dex": 2, "con": 3, "wis": 6},
     "weapon": {"id": "grave_touch", "to_hit": 7, "damage": "2d6+3", "range": 8, "kind": "ranged"},
     "traits": ["pale_king"]},

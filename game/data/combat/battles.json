@@ -536,6 +536,7 @@
   },
   "chapter5_1_garrison": {
     "level": 5, "silver": 20, "ground": "deep", "cover": true, "intro": "BATTLE_LOG_CH5_PENS",
+    "boost": {"hp": 15, "hit": 1, "dmg": 1},
     "waves": [{"round": 3, "at": "1", "units": ["dead_soldier", "dead_soldier"], "trial_units": ["dead_soldier"], "log": "BATTLE_LOG_CH5_GARRISON"}],
     "legend": {"s": "dead_soldier", "S": "dead_soldier", "a": "bone_archer", "A": "bone_archer", "o": "vat_overseer", "X": "executioner"},
     "trial_only": ["S", "A", "X"],
@@ -555,7 +556,8 @@
   },
   "chapter5_2": {
     "level": 5, "silver": 20, "ground": "seal", "cover": true, "intro": "BATTLE_LOG_CH5_GUARD",
-    "waves": [{"round": 3, "at": "1", "units": ["council_guard"], "trial_units": ["council_guard"], "log": "BATTLE_LOG_CH5_PEDESTAL"}],
+    "boost": {"hp": 55, "hit": 1, "dmg": 3},
+    "waves": [{"round": 3, "at": "1", "units": ["council_guard", "council_guard"], "trial_units": ["council_guard"], "log": "BATTLE_LOG_CH5_PEDESTAL"}],
     "legend": {"g": "council_guard", "G": "council_guard"},
     "trial_only": ["G"],
     "map": [
@@ -572,7 +574,8 @@
   },
   "chapter5_2_raised": {
     "level": 5, "silver": 20, "ground": "seal", "cover": true, "intro": "BATTLE_LOG_CH5_RAISED",
-    "waves": [{"round": 3, "at": "1", "units": ["council_guard"], "trial_units": ["council_guard"], "log": "BATTLE_LOG_CH5_PEDESTAL"}],
+    "boost": {"hp": 55, "hit": 1, "dmg": 3},
+    "waves": [{"round": 3, "at": "1", "units": ["council_guard", "council_guard"], "trial_units": ["council_guard"], "log": "BATTLE_LOG_CH5_PEDESTAL"}],
     "legend": {"g": "council_guard", "G": "council_guard", "r": "raised_prisoner"},
     "trial_only": ["G"],
     "map": [

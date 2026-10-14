@@ -346,7 +346,7 @@ BATTLE_LOG_CH5_PENS,"По бокам спуска — загоны с узник
 BATTLE_LOG_CH5_GARRISON,"Снизу, от зала печати, поднимается ещё строй.","Another rank climbs up from the seal hall below."
 BATTLE_LOG_CH5_GUARD,"Почётная стража совета бьёт алебардами через клетку и держит строй: рядом друг с другом +2 к КД. Постаменты укрывают от выстрелов.","The council's honour guard strikes with halberds two squares out and holds formation: +2 AC side by side. The pedestals give cover from shots."
 BATTLE_LOG_CH5_RAISED,"Поднятые узники стоят между тобой и строем стражи. Они ходят сами.","The raised prisoners stand between you and the guard. They move on their own."
-BATTLE_LOG_CH5_PEDESTAL,"Ещё один страж сходит с постамента.","Another guard steps down from a pedestal."
+BATTLE_LOG_CH5_PEDESTAL,"Ещё стражи сходят с постаментов.","More guards step down from their pedestals."
 BATTLE_LOG_CH5_EDRIC,"Эдрик бьёт издалека и поднимает павших стражей. Когда падут все, проснётся то, что под печатью.","Edric strikes from afar and raises the fallen guards. When they all fall, what lies under the seal will stir."
 BATTLE_LOG_CH5_SLEEPER,"Печать вздрагивает. Сила Спящего поднимает павших стражей, из света выходят тени.","The seal shudders. The Sleeper's power raises the fallen guards, and shades step out of the light."
 BATTLE_LOG_CH5_INTERCEPT,"Ты впускаешь силу в себя, и раны затягиваются. Эдрик встаёт: он хочет перехватить её.","You let the power into yourself, and your wounds close. Edric rises: he means to seize it."
