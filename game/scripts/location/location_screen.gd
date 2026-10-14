@@ -85,8 +85,14 @@ func _ready() -> void:
 	create_tween().tween_property(_fade, "color:a", 0.0, FADE_TIME)
 
 
-## Условия видимости объектов: "имя" — переменная Ink истинна, "won:<бой>" — бой выигран, "!" — не.
+## Условия видимости объектов: "имя" — переменная Ink истинна, "won:<бой>" — бой выигран, "!" — не;
+## "&" — все условия сразу (литейная главы 4: ни один из двух вариантов боя не выигран).
 func _check(cond: String) -> bool:
+	if cond.contains("&"):
+		for part in cond.split("&"):
+			if not _check(part):
+				return false
+		return true
 	var neg := cond.begins_with("!")
 	var c := cond.substr(1) if neg else cond
 	var v: bool

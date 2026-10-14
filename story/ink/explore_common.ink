@@ -75,7 +75,7 @@ VAR hunt_leave_ok = true
 - 2:
     ~ return ch2_hunt_clues >= 2 && not ch2_hunt_done
 - 4:
-    ~ return ch4_hunt_clues >= 2 && ch4_chain == ""
+    ~ return ch4_hunt_clues >= 2 && not ch4_hunt_done
 - 5:
     ~ return ch5_hunt_clues >= 2 && not ch5_hunt_done
 - else:

@@ -1,4 +1,41 @@
 {
+	"bone_archer": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			55
+		],
+		"size": [
+			59,
+			56
+		]
+	},
 	"brandt": {
 		"anims": {
 			"attack": {
@@ -71,6 +108,43 @@
 		"size": [
 			52,
 			52
+		]
+	},
+	"dead_soldier": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			55
+		],
+		"size": [
+			60,
+			57
 		]
 	},
 	"drowned": {
@@ -184,6 +258,43 @@
 			61
 		]
 	},
+	"executioner": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			27,
+			55
+		],
+		"size": [
+			60,
+			58
+		]
+	},
 	"foreman_dead": {
 		"anims": {
 			"attack": {
@@ -221,6 +332,43 @@
 			57
 		]
 	},
+	"foundry_dead": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			31,
+			52
+		],
+		"size": [
+			60,
+			53
+		]
+	},
 	"garret": {
 		"anims": {
 			"attack": {
@@ -256,6 +404,43 @@
 		"size": [
 			74,
 			75
+		]
+	},
+	"gessar": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			26,
+			55
+		],
+		"size": [
+			58,
+			57
 		]
 	},
 	"hero_cleric_f": {
@@ -1055,6 +1240,43 @@
 			57
 		]
 	},
+	"stitched": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			41,
+			62
+		],
+		"size": [
+			78,
+			70
+		]
+	},
 	"stone_guardian": {
 		"anims": {
 			"attack": {
@@ -1127,6 +1349,43 @@
 		"size": [
 			103,
 			96
+		]
+	},
+	"vat_overseer": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			55
+		],
+		"size": [
+			61,
+			57
 		]
 	},
 	"velior": {

@@ -155,6 +155,106 @@
 		29,
 		112
 	],
+	"forge/anatomy_table": [
+		23,
+		39
+	],
+	"forge/armory_door": [
+		25,
+		72
+	],
+	"forge/brazier": [
+		9,
+		46
+	],
+	"forge/cage": [
+		22,
+		63
+	],
+	"forge/clerk_desk": [
+		20,
+		28
+	],
+	"forge/conveyor": [
+		25,
+		42
+	],
+	"forge/cupola_door": [
+		28,
+		86
+	],
+	"forge/door_bright": [
+		27,
+		80
+	],
+	"forge/furnace": [
+		60,
+		120
+	],
+	"forge/gong": [
+		28,
+		78
+	],
+	"forge/ladle": [
+		28,
+		112
+	],
+	"forge/locked_drawer": [
+		12,
+		32
+	],
+	"forge/master_table": [
+		19,
+		35
+	],
+	"forge/names_wall": [
+		27,
+		87
+	],
+	"forge/report_shelf": [
+		22,
+		78
+	],
+	"forge/safe": [
+		16,
+		38
+	],
+	"forge/slag_heap": [
+		12,
+		19
+	],
+	"forge/smithy": [
+		22,
+		45
+	],
+	"forge/stairs_up": [
+		19,
+		53
+	],
+	"forge/store_book": [
+		11,
+		25
+	],
+	"forge/vat": [
+		22,
+		44
+	],
+	"forge/wall_block": [
+		32,
+		64
+	],
+	"forge/wall_pipes": [
+		32,
+		64
+	],
+	"forge/weapon_rack": [
+		28,
+		72
+	],
+	"forge/window_works": [
+		26,
+		86
+	],
 	"gate/boulder": [
 		17,
 		46

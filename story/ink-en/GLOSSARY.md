@@ -142,3 +142,48 @@
 | тайник (под плитой) | the cache | id `shadowskin` — "Shadowskin" (i18n) |
 | фонарь штейгера | the foreman's lantern | |
 | Глава 4. Кузницы плоти | Chapter 4. The Flesh Forges | титр, как в i18n `CHAPTER_4` |
+
+Глава 4 (перевод 14.10.2026, ждут утверждения вместе с PR):
+
+| Русский | English | Где |
+|---|---|---|
+| кузницы плоти | the Flesh Forges | титр, как в i18n `CHAPTER_4`; в тексте — the forges |
+| цеха | the works | сцена 1; «контора цехов» — the works office |
+| чаны, жижа | the vats, the slurry | |
+| краны (чанов), операторы | the valves, the operators | |
+| мертвецы-солдаты | vat soldiers | как в i18n `ENEMY_dead_soldier`; в тексте — the dead |
+| надсмотрщики цехов | workshop overseers | как в i18n `ENEMY_vat_overseer` |
+| контора, писарь | the office, the clerk | сцена 2 |
+| «О выработке», выработка | "On output", output | отчёты; «За выработку. Э.» — "For output. E." (перстень) |
+| носитель | the Bearer | папка «Носитель. Род Таль» — "The Bearer. House of Tal." |
+| «Предупреждён(а) семьёй» | "Warned by the family" | |
+| анатомический зал | the anatomy hall | сцена 3 |
+| мастер плоти | the flesh master | |
+| Гессар, мастер Гессар | Gessar, Master Gessar | как в i18n `ENEMY_gessar`, `SPEAKER_gessar` |
+| «изделия» (Гессара) | "works" | |
+| Перстень Бледного Короля | Ring of the Pale King | id `pale_ring` (i18n) |
+| зал над литейной, зал казней | the hall above the foundry, the hall of executions | сцена 4 |
+| «арифметика» | arithmetic | название сцены 4 |
+| костяной фонарь (якорь проекции) | bone lantern, anchor | |
+| литейная, литейщики | the foundry, the founders | сцена 5 |
+| желоба, ковши | channels, ladles | |
+| спуск на дно | the descent to the bottom | |
+| загоны (на дне) | the pens | долг Ренне |
+| Корвин Хаас | Corvin Haas | должник Ренны |
+| лодочники | boatmen | как в главе 2 |
+| кузница дварфов / кузница Молчащих | the dwarves' forge / the forge of the Silent | лагерь главы 3 |
+| Цепь Безымянных | Chain of the Nameless | id `nameless_chain`, охота `QUEST_ch4_hunt` (i18n) |
+| звено (цепи) | link | значок под именами |
+| кандальное железо | shackle iron | записка Гессара |
+| Хаскер | Hasker | имя на стене (соседи — the Haskers) |
+| вагранка, старая вагранка | the cupola, the old cupola | место охоты, как в i18n `LOC_CH4_CUPOLA` |
+| плита у горна | the slab by the hearth | |
+| седая узница | the grey-haired prisoner | `spk:prisoner` — "Prisoner" (i18n) |
+| кузня (в конце ряда чанов) | the smithy | закоулок 1, как в i18n `LOC_CH4_SMITHY` |
+| Тесак Эшмура | Ashmoor Cleaver | id `eshmur_cleaver`; клеймо «колос и молот» — an ear of wheat and a hammer |
+| оружейная гарнизона, кладовщик | the garrison armoury, the storekeeper | закоулок 2 |
+| Латы литейной | Foundry Plate | id `foundry_plate` (i18n) |
+| Слиток дварфийской стали | Ingot of Dwarven Steel | id `dwarf_steel` (i18n) |
+| сейф писаря, язычки (замка) | the clerk's safe, tumblers | закоулок 3 |
+| Свиток громовой волны | Scroll of Thunderwave | id `scroll_thunderwave` (i18n) |
+| Глава 5. Дно | Chapter 5. The Bottom | титр, как в i18n `CHAPTER_5` |

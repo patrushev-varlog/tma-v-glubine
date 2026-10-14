@@ -1,0 +1,36 @@
+{
+  "group_id": "eab43d27-00e6-436f-895c-3484c4b4da37",
+  "states": [
+    {
+      "character": {
+        "id": "bada658f-a338-43f3-94a8-1acdc2ec281c",
+        "name": "Idle",
+        "prompt": "a huge hulking undead made of several bodies stitched together with coarse dark thread, grey patchwork skin with crude seams and iron staples, one arm much bigger than the other, a leather muzzle, no clothes but a ragged loincloth, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T11:24:27.103135+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T11:26:34.093290"
+}

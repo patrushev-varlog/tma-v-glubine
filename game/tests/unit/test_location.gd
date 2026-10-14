@@ -139,10 +139,12 @@ func test_explore_objects_reachable_and_known() -> void:
 			assert_true(story.contains('"%s"' % o.explore), "узел %s есть в истории" % o.explore)
 			assert_ne(tr(String(o.label)), String(o.label), "подпись %s переведена" % o.label)
 			assert_true(m.path_to_object(m.spawn_of(scene), o).ok, "до %s можно дойти в сцене %s" % [o.id, scene])
-	assert_eq(seen, 19, "шесть мест осмотра главы 1, восемь главы 2 (у вожака беглых два вида) и пять главы 3")
+	assert_eq(seen, 26, "шесть мест осмотра главы 1, восемь главы 2 (у вожака беглых два вида), пять главы 3 и семь главы 4")
 
 
 func _check(s: StorySession, cond: String) -> bool:
+	if cond.contains("&"):
+		return Array(cond.split("&")).all(func(part: String) -> bool: return _check(s, part))
 	var neg := cond.begins_with("!")
 	var c := cond.substr(1) if neg else cond
 	var v: bool

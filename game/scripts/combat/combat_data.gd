@@ -10,7 +10,7 @@ const OBSTACLE_GLYPHS := {
 	"=": "cart", "@": "well", "^": "fire", "~": "water",
 }
 ## Знаки карты боя, по которым можно ходить: только вид пола.
-const FLOOR_GLYPHS := {",": "ford", ":": "road", ";": "ash", "-": "wade"}
+const FLOOR_GLYPHS := {",": "ford", ":": "road", ";": "ash", "-": "wade", "!": "molten"}
 
 static var _cache := {}
 
@@ -421,6 +421,13 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 		waves.append(wave)
 	if not waves.is_empty():
 		stage["waves"] = waves
+	# Ковши литейной (глава 4): в начале раундов rounds расплав льётся на клетки цифры at.
+	var ladles := []
+	for l in bt.get("ladles", []):
+		ladles.append({"rounds": l.rounds.duplicate(), "cells": marks.get(String(l.at), []),
+			"dice": String(l.get("dice", "3d6")), "dc": int(l.get("dc", 13))})
+	if not ladles.is_empty():
+		stage["ladles"] = ladles
 	return {"id": battle_id, "width": String(rows[0]).length(), "height": rows.size(), "units": heroes + allies + enemies,
 		"obstacles": obstacles, "decor": decor, "ground": String(bt.get("ground", "")), "level": level, "stage": stage}
 

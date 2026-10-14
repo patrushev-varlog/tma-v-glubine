@@ -1,0 +1,32 @@
+{
+ "id": "forge_foundry",
+ "comment": "Глава 4, сцена 5 «Литейная»: желоба с жидким железом, ковши на цепях, последняя печь у арки спуска на дно. После боя — видение Лиары в остывающем железе; у печи — лагерь главы.",
+ "size": [18, 11],
+ "legend": {"w": "forge_works", "g": "forge_grate", "m": "forge_molten", "#": "forge_works"},
+ "blocked_ground": ["forge_molten"],
+ "wall": {"char": "#", "sprites": ["forge/wall_block", "forge/wall_block", "forge/wall_block", "forge/wall_pipes"]},
+ "ground": [
+  "  #  #            ",
+  "  #ww############ ",
+  " ##wwwwwwwwwwwww##",
+  " #wwwwwwwwwwwwwww#",
+  " #mmmmmwwmmmmmwww#",
+  " #wwwwwwwwwwwwwww#",
+  " #wwwwwwwwwwwwwww#",
+  " #wwwmmmmmwwmmmmm#",
+  " #wwwwwwwwwwwwwww#",
+  " ##wwwwwwwwwwwww##",
+  "  ############### "
+ ],
+ "variants": {"works": {"tint": "#c8a088"}},
+ "scenes": {"foundry": {"variant": "works", "spawn": [3, 1]}},
+ "objects": [
+  {"id": "ladle_1", "kind": "box", "cell": [5, 2], "sprite": "forge/ladle"},
+  {"id": "ladle_2", "kind": "box", "cell": [12, 5], "sprite": "forge/ladle"},
+  {"id": "slag", "kind": "box", "cell": [8, 6], "sprite": "forge/slag_heap"},
+  {"id": "founder_1", "kind": "figure", "cell": [6, 5], "unit": "foundry_dead", "face": "sw", "if": "!won:chapter4_3&!won:chapter4_3_refuse"},
+  {"id": "soldier_1", "kind": "figure", "cell": [10, 8], "unit": "dead_soldier", "face": "sw", "if": "!won:chapter4_3&!won:chapter4_3_refuse"},
+  {"id": "last_furnace", "kind": "box", "cell": [14, 8], "size": [2, 1], "light": 40, "sprite": "forge/furnace"},
+  {"id": "lamp", "kind": "box", "cell": [2, 8], "light": 34, "sprite": "forge/brazier"}
+ ]
+}

@@ -1,0 +1,36 @@
+{
+  "group_id": "fd567958-db11-41f0-9edc-45e159c13ad5",
+  "states": [
+    {
+      "character": {
+        "id": "6a14a14f-0af7-4e4b-8d0f-60c7f5235695",
+        "name": "Idle",
+        "prompt": "an undead soldier made in a necromantic vat, grey dead skin, shaved head, blank empty face with milky eyes, identical dark iron plate armour of a royal army, a plain short sword and a round iron shield, standing in rigid formation stance, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T08:40:25.571261+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T08:42:22.305156"
+}

@@ -1,0 +1,36 @@
+{
+ "id": "forge_office",
+ "comment": "Глава 4, сцена 2 «Отчёты»: побелённая контора с окном на конвейер, оружейная гарнизона за ней (закоулок 2: латы, слиток и книга кладовщика — подсказка охоты), сейф писаря под окном (закоулок 3: плут или фонарь штейгера).",
+ "size": [16, 10],
+ "legend": {"w": "forge_works", "g": "forge_grate", "m": "forge_molten", "#": "forge_works"},
+ "blocked_ground": ["forge_molten"],
+ "wall": {"char": "#", "sprites": ["forge/wall_block", "forge/wall_block", "forge/wall_block", "forge/wall_pipes"]},
+ "ground": [
+  "  #  #          ",
+  "  #ww###########",
+  " ##wwwwwwwwwwww#",
+  " #wwwwwwwwwwwww#",
+  " #wwwwwwwwwwwww#",
+  " #wwwwwwwwwwwww#",
+  " #wwwwwwwwwwwww#",
+  " ##wwwwwwwwwww##",
+  "  ########ww### ",
+  "         #  #   "
+ ],
+ "variants": {"works": {"tint": "#c8a088"}},
+ "scenes": {"reports": {"variant": "works", "spawn": [3, 1]}},
+ "objects": [
+  {"id": "desk_1", "kind": "box", "cell": [4, 2], "sprite": "forge/clerk_desk"},
+  {"id": "desk_2", "kind": "box", "cell": [7, 2], "sprite": "forge/clerk_desk"},
+  {"id": "shelf_1", "kind": "box", "cell": [10, 2], "sprite": "forge/report_shelf"},
+  {"id": "shelf_2", "kind": "box", "cell": [11, 2], "sprite": "forge/report_shelf"},
+  {"id": "window", "kind": "box", "cell": [2, 4], "sprite": "forge/window_works"},
+  {"id": "safe", "kind": "box", "cell": [3, 5], "explore": "ch4_nook_safe", "label": "LOC_CH4_SAFE", "sprite": "forge/safe"},
+  {"id": "drawer", "kind": "box", "cell": [7, 4], "sprite": "forge/locked_drawer"},
+  {"id": "armory", "kind": "box", "cell": [13, 4], "explore": "ch4_nook_armory", "label": "LOC_CH4_ARMORY", "sprite": "forge/armory_door"},
+  {"id": "rack", "kind": "box", "cell": [13, 6], "sprite": "forge/weapon_rack"},
+  {"id": "store_book", "kind": "box", "cell": [12, 6], "explore": "ch4_look_iron_note", "label": "LOC_CH4_STORE_BOOK", "if": "ch4_nook_armory_done", "sprite": "forge/store_book"},
+  {"id": "lamp", "kind": "box", "cell": [9, 6], "light": 34, "sprite": "forge/brazier"},
+  {"id": "hall_door", "kind": "box", "cell": [10, 7], "sprite": "forge/door_bright"}
+ ]
+}

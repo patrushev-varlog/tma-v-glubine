@@ -1,0 +1,36 @@
+{
+ "id": "forge_anatomy",
+ "comment": "Глава 4, сцена 3 «Мастер плоти»: светлый зал с каменными столами в ряд. За ним, в боковом ходе, — старая вагранка (место охоты за Цепью Безымянных, после боя 2). Лестница наверх, в зал казней, — точка невозврата охоты.",
+ "size": [20, 11],
+ "legend": {"w": "forge_works", "g": "forge_grate", "m": "forge_molten", "#": "forge_works"},
+ "blocked_ground": ["forge_molten"],
+ "wall": {"char": "#", "sprites": ["forge/wall_block", "forge/wall_block", "forge/wall_block", "forge/wall_pipes"]},
+ "ground": [
+  "  #  #              ",
+  "  #ww############   ",
+  " ##wwwwwwwwwwwww##  ",
+  " #wwwwwwwwwwwwwww#  ",
+  " #wwwgwwwwwwgwwww###",
+  " #wwwwwwwwwwwwwwwww#",
+  " #wwwwwwwwwwwwwww###",
+  " #wwwgwwwwwwgwwww#  ",
+  " ##wwwwwwwwwwwww##  ",
+  "  #############ww#  ",
+  "              #  #  "
+ ],
+ "variants": {"works": {"tint": "#c8a088"}},
+ "scenes": {"flesh_master": {"variant": "works", "spawn": [3, 1]}},
+ "objects": [
+  {"id": "table_1", "kind": "box", "cell": [5, 3], "size": [2, 1], "sprite": "forge/anatomy_table"},
+  {"id": "table_2", "kind": "box", "cell": [10, 3], "size": [2, 1], "sprite": "forge/anatomy_table"},
+  {"id": "table_3", "kind": "box", "cell": [5, 6], "size": [2, 1], "sprite": "forge/anatomy_table"},
+  {"id": "table_4", "kind": "box", "cell": [10, 6], "size": [2, 1], "sprite": "forge/anatomy_table"},
+  {"id": "master_table", "kind": "box", "cell": [14, 4], "sprite": "forge/master_table"},
+  {"id": "gessar", "kind": "figure", "cell": [13, 5], "unit": "gessar", "face": "sw", "if": "!won:chapter4_2"},
+  {"id": "work_1", "kind": "figure", "cell": [8, 5], "unit": "stitched", "face": "sw", "if": "!won:chapter4_2"},
+  {"id": "cupola", "kind": "box", "cell": [17, 5], "explore": "ch4_hunt_site", "label": "LOC_CH4_CUPOLA", "if": "won:chapter4_2", "sprite": "forge/cupola_door"},
+  {"id": "lamp_w", "kind": "box", "cell": [2, 5], "light": 34, "sprite": "forge/brazier"},
+  {"id": "lamp_e", "kind": "box", "cell": [15, 8], "light": 34, "sprite": "forge/brazier"},
+  {"id": "stairs_up", "kind": "box", "cell": [15, 9], "leave_check": 4, "sprite": "forge/stairs_up"}
+ ]
+}

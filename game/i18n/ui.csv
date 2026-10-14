@@ -179,6 +179,8 @@ LEVELUP_KEEP,Оставить: {branch},Keep {branch}
 LEVELUP_SWITCH,Сменить на: {branch},Switch to {branch}
 SHOP_sutler,Маркитант,The Sutler
 SHOP_smith,Кузнец из Эшмура,The Ashmoor Smith
+SHOP_sutler_ch4,Маркитант,The Sutler
+SHOP_smith_ch4,Кузнец из Эшмура,The Ashmoor Smith
 SHOP_smugglers,Контрабандисты,The Smugglers
 SHOP_smugglers_favor,Ренна Сол: в долг,Renna Sol: on credit
 SHOP_FAVOR_NOTE,"Одна тёмная вещь за услугу. Какую — Ренна скажет потом.","One dark item for a favour. Renna will name the favour later."

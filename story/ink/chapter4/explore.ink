@@ -11,6 +11,7 @@ VAR ch4_clue_iron = false      // записка Гессара о пропаж�
 VAR ch4_clue_prisoners = false // рассказ узницы, спасённой у чанов
 VAR ch4_hunt_clues = 0
 VAR ch4_chain = ""             // "taken" — забрали цепь, "left" — оставили узникам
+VAR ch4_hunt_done = false      // место охоты осмотрено, решение о цепи принято
 VAR ch4_nook_smith_done = false
 VAR ch4_nook_armory_done = false
 VAR ch4_nook_safe_done = false
@@ -112,6 +113,7 @@ VAR ch4_nook_safe_done = false
 
 = ch4_hunt_take
 ~ ch4_chain = "taken"
+~ ch4_hunt_done = true
 Ты поднял{h("", "а")} цепь. Она оказалась легче, чем выглядела. Гаррет помог её расправить: она легла поверх куртки крест-накрест, через плечо и вокруг пояса, как кольчуга бедняка. Звенья легли холодом, а потом согрелись.
 { ch4_clue_prisoners:
     Ты вспомнил{h("", "а")} седую узницу у чана. «Значит, тебе можно».
@@ -121,6 +123,7 @@ VAR ch4_nook_safe_done = false
 
 = ch4_hunt_leave
 ~ ch4_chain = "left"
+~ ch4_hunt_done = true
 Ты положил{h("", "а")} цепь обратно и опустил{h("", "а")} плиту.
 { irena_confronted != "left":
     Ирена долго смотрела на тебя. Потом сказала:

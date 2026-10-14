@@ -19,6 +19,9 @@ const GROUND := {
 	"dwarf_hall": ["#5e564c", "#4e463e"],
 	"dwarf_rune": ["#5e564c", "#7a8fa0"],
 	"dwarf_chasm": ["#0e0d14", "#3a4a3c"],
+	"forge_works": ["#3e3836", "#2c2626"],
+	"forge_grate": ["#3e3836", "#5a3a2a"],
+	"forge_molten": ["#c8551e", "#f2a03c"],
 }
 
 
