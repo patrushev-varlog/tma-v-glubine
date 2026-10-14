@@ -159,10 +159,14 @@ static func _forge_rows(col: VBoxContainer, shop_id: String, silver: Array, forg
 		if it.get("forged", false) or not Items.forgeable(String(it.id)):
 			continue
 		var owner := String(it.owner)
-		grid.add_child(UiKit.label("%s — %s" % [tr_("ITEM_" + String(it.id)),
-			tr_("SHOP_FOR_HERO") if owner == "hero" else tr_("COMPANION_" + owner)], UiKit.FONT_SMALL))
+		var name := UiKit.label("%s — %s" % [tr_("ITEM_" + String(it.id)),
+			tr_("SHOP_FOR_HERO") if owner == "hero" else tr_("COMPANION_" + owner)], UiKit.FONT_SMALL)
+		name.autowrap_mode = TextServer.AUTOWRAP_OFF
+		grid.add_child(name)
 		var slot := String(Items.catalog()[String(it.id)].slot)
-		grid.add_child(UiKit.label(tr_("FORGE_FX_" + slot), UiKit.FONT_SMALL, UiKit.MUTED))
+		var fx := UiKit.label(tr_("FORGE_FX_" + slot), UiKit.FONT_SMALL, UiKit.MUTED)
+		fx.autowrap_mode = TextServer.AUTOWRAP_OFF
+		grid.add_child(fx)
 		var b := UiKit.button(tr_("FORGE_DO"), Callable(), UiKit.FONT_SMALL, "coin")
 		b.set_meta("done", false)
 		var idx := i

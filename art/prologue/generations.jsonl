@@ -566,3 +566,12 @@
 {"t": "2026-10-14T08:10:05Z", "kind": "animation", "name": "stone_guardian/walk", "id": "7830353d-cb97-4b57-9f7e-60e6e5108be1", "template": "walking-6-frames", "status": ["completed", "completed"], "cost": 6.0}
 {"t": "2026-10-14T08:10:35Z", "kind": "animation", "name": "stone_guardian/down", "id": "5f891531-d486-4bd5-b9ae-ee5cb6b7e527", "template": "falling-back-death", "status": ["completed", "completed"], "cost": 6.0}
 {"t": "2026-10-14T08:11:56Z", "kind": "animation", "name": "torvin/idle", "id": "d7d7b4a4-dd97-4a86-a5c8-3c379d2af86e", "template": "breathing-idle", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T08:12:49Z", "kind": "animation", "name": "torvin/hit", "id": "4cdc5825-0606-4c17-97bf-6841e965beb3", "template": "taking-punch", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T08:13:49Z", "kind": "skeleton_anim", "name": "dwarf_dead/attack/south-east", "id": "7071ccde-87a5-42ca-9ad0-3636aac5da83", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T08:14:15Z", "kind": "skeleton_anim", "name": "dwarf_dead/attack/north-east", "id": "3bad0b90-4be8-4518-abb0-9fb4c7bdf4a7", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T08:15:32Z", "kind": "animation", "name": "torvin/walk", "id": "78ad20c7-18f1-4ebe-b21f-330e77ddaef3", "template": "walking-6-frames", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T08:15:35Z", "kind": "skeleton_anim", "name": "stone_guardian/attack/south-east", "id": "bcace04f-668a-4ae7-a0e4-2d3810d5d2ab", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T08:15:51Z", "kind": "skeleton_anim", "name": "stone_guardian/attack/north-east", "id": "32679f0c-105a-40df-ac4a-38dcbfdf04dc", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T08:16:01Z", "kind": "animation", "name": "torvin/down", "id": "a563ddb2-458d-490c-a704-f5f7bc9bf66a", "template": "falling-back-death", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T08:17:40Z", "kind": "skeleton_anim", "name": "torvin/attack/south-east", "id": "302879f8-9455-4a9f-a89d-7abe198977ff", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T08:18:14Z", "kind": "skeleton_anim", "name": "torvin/attack/north-east", "id": "c4f1261e-645b-4c5f-898b-5e391fb52e99", "status": "completed", "frames": 6, "cost": 3.0}
