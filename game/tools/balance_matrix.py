@@ -17,7 +17,8 @@ CLASSES = ["fighter", "rogue", "cleric", "wizard"]
 ARCHS = {"fighter": ["guardian", "berserker"], "rogue": ["assassin", "trickster"],
          "cleric": ["life", "light"], "wizard": ["evoker", "binder"]}
 
-# Бой → варианты (подпись, отряд, флаги). Главы 4–5 без ключа party: отряд из сюжета, Велиор может не прийти.
+# Бой → варианты (подпись, отряд, флаги). Главы 4–5 без ключа party: отряд из сюжета, Велиор может не прийти,
+# а в главе 5 и Ирена (ушла в лагере главы 4 или отведена к стене в «Новом хозяине»).
 VARIANTS = {
     "prologue_2": [("", "full", "")],
     "prologue_3": [("", "full", "")],
@@ -40,11 +41,11 @@ VARIANTS = {
     "chapter4_2": [("", "full", ""), ("", "no_velior", "")],
     "chapter4_3": [("", "full", ""), ("", "no_velior", "")],
     "chapter4_3_refuse": [("", "full", ""), ("", "no_velior", "")],
-    "chapter5_1_garrison": [("", "full", ""), ("", "no_velior", "")],
-    "chapter5_2": [("", "full", ""), ("", "no_velior", "")],
-    "chapter5_2_raised": [("", "full", ""), ("", "no_velior", "")],
-    "chapter5_final_peace": [("", "full", ""), ("", "no_velior", "")],
-    "chapter5_final_master": [("", "full", ""), ("", "no_velior", ""),
+    "chapter5_1_garrison": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_2": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_2_raised": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_final_peace": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_final_master": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", ""),
                               ("без Ирены", "full", "ending=tyrant"), ("без Ирены", "no_velior", "ending=tyrant")],
 }
 
@@ -80,9 +81,13 @@ def main():
     ap.add_argument("--hunt", action="store_true")
     ap.add_argument("--boost", default="")
     ap.add_argument("--jobs", type=int, default=os.cpu_count() or 2)
+    ap.add_argument("--party", default="", help="только эти составы, через запятую")
+    ap.add_argument("--variant", default=None, help="только этот вариант боя (\"\" — основной)")
+    ap.add_argument("--classes", default=",".join(CLASSES))
     ap.add_argument("--out", default="-")
     args = ap.parse_args()
-    jobs = [(b, c, *v) for b in args.battles.split(",") for v in VARIANTS[b] for c in CLASSES]
+    jobs = [(b, c, *v) for b in args.battles.split(",") for v in VARIANTS[b] for c in args.classes.split(",")
+            if (not args.party or v[1] in args.party.split(",")) and (args.variant is None or v[0] == args.variant)]
     # Строки пишутся по мере готовности: долгий прогон можно смотреть и прервать без потерь.
     f = open(args.out, "w", newline="") if args.out != "-" else None
     w = None
