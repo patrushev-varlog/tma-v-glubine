@@ -63,10 +63,32 @@ func test_irena_stays_out_of_tyrant_fight() -> void:
 func test_raised_prisoners_fight_for_hero() -> void:
 	var b := _battle("chapter5_2_raised")
 	var allies := b.units.filter(func(h: Combatant) -> bool: return h.kind == "raised_prisoner")
-	assert_eq(allies.size(), 4, "четверо поднятых узников")
+	assert_eq(allies.size(), 2, "двое поднятых узников: четверо делали бой слишком лёгким")
 	assert_true(allies.all(func(h: Combatant) -> bool: return h.ai_ally and h.undead), "под ИИ, нежить")
 	var plain := _battle("chapter5_2")
 	assert_eq(plain.enemies().size(), b.enemies().size(), "стража та же")
+
+
+func test_incomplete_party_trims_waves_and_phases() -> void:
+	var count := func(sc: Dictionary, key: String) -> int: return sc.stage[key][0].units.size()
+	var full := CombatData.scenario("chapter5_2", "fighter", "guardian", "full", "trial")
+	var trio := CombatData.scenario("chapter5_2", "fighter", "guardian", "no_irena", "trial")
+	assert_eq(count.call(full, "waves"), 3, "полному отряду «Испытание» добавляет стражника в волну")
+	assert_eq(count.call(trio, "waves"), 1, "без Ирены волна урезана по бюджету и без добавки «Испытания»")
+	var fin := CombatData.scenario("chapter5_final_peace", "fighter", "guardian", "full", "trial")
+	var duo := CombatData.scenario("chapter5_final_peace", "fighter", "guardian", "duo", "trial")
+	assert_eq(count.call(fin, "phases"), 3)
+	assert_eq(count.call(duo, "phases"), 1, "вдвоём из света выходит одна тень")
+	assert_eq(int(fin.stage.phases[0].get("heal_heroes", 0)), 0)
+	assert_eq(int(duo.stage.phases[0].heal_heroes), int(CombatData.rules().phase_heal.duo), "вдвоём лечить некому: отряд подлечивается в фазах")
+
+
+func test_hunt_done_adds_enemy_hp() -> void:
+	var hp := func(flags: Dictionary) -> int:
+		var sc := CombatData.scenario("chapter5_2", "fighter", "guardian", "full", "trial", "kit", flags)
+		return sc.units.filter(func(u: Combatant) -> bool: return u.team == 1)[0].max_hp
+	assert_gt(hp.call({"ch5_hunt_done": true}), hp.call({}), "после охоты главы у врагов больше хитов")
+	assert_eq(hp.call({"ch4_hunt_done": true}), hp.call({}), "охота другой главы не в счёт")
 
 
 func test_council_guard_halberd_and_formation() -> void:

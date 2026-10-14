@@ -55,11 +55,21 @@ func _init() -> void:
 ## Сюжетные бои (battle=…): уровень задан в бою, отряд тоже, если у боя есть ключ party (иначе — party=…,
 ## как в сюжете: глава 4 без прощённого Велиора — no_velior); перебираются классы героя.
 func _story_battles(opt: Dictionary, flags: Dictionary, runs: int, darks: Array) -> void:
-	print("Бой | Класс | Режим | Тёмные дары | Победы | Раундов | Выбыло | Герой выбыл")
+	print("Бой | Класс | Ветка | Отряд | Режим | Тёмные дары | Победы | Раундов | Выбыло | Герой выбыл")
 	for bid in String(opt.battle).split(","):
+		var level := int(CombatData.table("battles")[bid].level)
 		for cls in String(opt["class"]).split(","):
-			for dark in darks:
-				var s := Simulator.summarize(bid, cls, "", String(opt.party), opt.diff, runs, dark, opt.gear, 1000, flags)
-				print("%s | %s | %s | %s | %d%% | %.1f | %.1f | %d%%%s" % [bid, tr("CLASS_" + cls), tr("DIFF_" + opt.diff),
-					"да" if dark else "нет", roundi(s.win_rate * 100), s.avg_rounds, s.avg_down,
-					roundi(s.hero_down_rate * 100), "" if s.timeouts == 0 else " (не кончились: %d)" % s.timeouts])
+			# arch=all — обе ветки класса; без ключа — первая, как раньше.
+			var archs: Array = [""]
+			if level >= 2 and opt.arch == "all":
+				archs = CombatData.archetypes_of(cls)
+			elif level >= 2 and opt.arch != "":
+				archs = Array(String(opt.arch).split(",")).filter(func(x): return CombatData.archetypes_of(cls).has(x))
+			for arch in archs:
+				for party in String(opt.party).split(","):
+					for dark in darks:
+						var s := Simulator.summarize(bid, cls, arch, party, opt.diff, runs, dark, opt.gear, 1000, flags)
+						print("%s | %s | %s | %s | %s | %s | %d%% | %.1f | %.1f | %d%%%s" % [bid, tr("CLASS_" + cls),
+							"—" if arch == "" else tr("ARCH_" + arch), party, tr("DIFF_" + opt.diff),
+							"да" if dark else "нет", roundi(s.win_rate * 100), s.avg_rounds, s.avg_down,
+							roundi(s.hero_down_rate * 100), "" if s.timeouts == 0 else " (не кончились: %d)" % s.timeouts])

@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""Сводная таблица вин-рейтов сюжетных боёв: все классы и обе ветки, с тёмными дарами и без.
+
+Гоняет tools/simulate.gd параллельно (по процессу Godot на бой и класс) и пишет CSV.
+    python3 tools/balance_matrix.py --runs 60 --out /tmp/matrix.csv [--battles chapter4_1,chapter5_2] [--gear kit] [--hunt]
+Godot берётся из $GODOT или `godot` в PATH. Ориентир «Испытания»: 30–50% без тёмных даров, 50–70% с ними.
+"""
+import argparse
+import csv
+import os
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+GAME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CLASSES = ["fighter", "rogue", "cleric", "wizard"]
+ARCHS = {"fighter": ["guardian", "berserker"], "rogue": ["assassin", "trickster"],
+         "cleric": ["life", "light"], "wizard": ["evoker", "binder"]}
+
+# Бой → варианты (подпись, отряд, флаги). Главы 4–5 без ключа party: отряд из сюжета, Велиор может не прийти,
+# а в главе 5 и Ирена (ушла в лагере главы 4 или отведена к стене в «Новом хозяине»).
+VARIANTS = {
+    "prologue_2": [("", "full", "")],
+    "prologue_3": [("", "full", "")],
+    "prologue_4_camp": [("", "full", "")],
+    "prologue_4_gate": [("", "full", "")],
+    "chapter1_1": [("", "full", "")],
+    "chapter1_2_riot": [("", "full", "")],
+    "chapter1_2_patrol": [("", "full", "")],
+    "chapter1_3": [("", "full", ""), ("бунт", "full", "ch1_choice=riot")],
+    "ch1_hunt_foreman": [("", "full", "")],
+    "chapter2_1": [("", "full", "")],
+    "chapter2_2_smugglers": [("", "full", "")],
+    "chapter2_2_flooded": [("", "full", "")],
+    "chapter2_3": [("", "full", "")],
+    "ch2_hunt_priest": [("", "full", "")],
+    "chapter3_1": [("", "full", "")],
+    "chapter3_2": [("", "full", "")],
+    "chapter3_3": [("", "full", "")],
+    "chapter4_1": [("", "full", ""), ("", "no_velior", "")],
+    "chapter4_2": [("", "full", ""), ("", "no_velior", "")],
+    "chapter4_3": [("", "full", ""), ("", "no_velior", "")],
+    "chapter4_3_refuse": [("", "full", ""), ("", "no_velior", "")],
+    "chapter5_1_garrison": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_2": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_2_raised": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_final_peace": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", "")],
+    "chapter5_final_master": [("", "full", ""), ("", "no_velior", ""), ("", "no_irena", ""), ("", "duo", ""),
+                              ("без Ирены", "full", "ending=tyrant"), ("без Ирены", "no_velior", "ending=tyrant")],
+}
+
+
+def run(job, args):
+    battle, cls, label, party, flags = job
+    godot = os.environ.get("GODOT", "godot")
+    cmd = [godot, "--headless", "--path", GAME, "-s", "tools/simulate.gd", "--", f"battle={battle}", f"class={cls}",
+           "arch=all", f"party={party}", "dark=both", f"runs={args.runs}", f"gear={args.gear}", "diff=trial"]
+    if flags:
+        cmd.append(f"flags={flags}")
+    if args.hunt:
+        cmd.append("hunt=1")
+    if args.boost:
+        cmd.append(f"boost={args.boost}")
+    out = subprocess.run(cmd, capture_output=True, text=True, timeout=7200).stdout
+    rows = [l.split(" | ") for l in out.splitlines() if l.startswith(battle + " | ")]
+    archs = ARCHS[cls] if len(rows) > 2 else [""]
+    res = []
+    for i, r in enumerate(rows):
+        res.append({"battle": battle, "variant": label, "party": party, "class": cls,
+                    "arch": archs[i // 2] if archs != [""] else "", "dark": r[5] == "да",
+                    "win": int(r[6].rstrip("%")), "rounds": float(r[7]), "down": float(r[8]),
+                    "hero_down": int(r[9].split("%")[0])})
+    return res
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--runs", type=int, default=60)
+    ap.add_argument("--battles", default=",".join(VARIANTS))
+    ap.add_argument("--gear", default="kit")
+    ap.add_argument("--hunt", action="store_true")
+    ap.add_argument("--boost", default="")
+    ap.add_argument("--jobs", type=int, default=os.cpu_count() or 2)
+    ap.add_argument("--party", default="", help="только эти составы, через запятую")
+    ap.add_argument("--variant", default=None, help="только этот вариант боя (\"\" — основной)")
+    ap.add_argument("--classes", default=",".join(CLASSES))
+    ap.add_argument("--out", default="-")
+    args = ap.parse_args()
+    jobs = [(b, c, *v) for b in args.battles.split(",") for v in VARIANTS[b] for c in args.classes.split(",")
+            if (not args.party or v[1] in args.party.split(",")) and (args.variant is None or v[0] == args.variant)]
+    # Строки пишутся по мере готовности: долгий прогон можно смотреть и прервать без потерь.
+    f = open(args.out, "w", newline="") if args.out != "-" else None
+    w = None
+    with ThreadPoolExecutor(args.jobs) as ex:
+        for fut in as_completed([ex.submit(run, j, args) for j in jobs]):
+            res = fut.result()
+            if not res:
+                continue
+            if w is None:
+                w = csv.DictWriter(f or sys.stdout, fieldnames=list(res[0]))
+                w.writeheader()
+            w.writerows(res)
+            (f or sys.stdout).flush()
+
+if __name__ == "__main__":
+    main()

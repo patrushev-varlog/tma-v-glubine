@@ -345,7 +345,7 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 		heroes.append(make_companion(comp, level))
 	var missing := 0 if bt.has("party") else party_members(level, "full").size() + 1 - heroes.size()
 	var boost: Dictionary = (boost_override if not boost_override.is_empty() else bt.get("boost", {})).duplicate()
-	if hunt_done:
+	if hunt_done or hunt_done_in(battle_id, flags):
 		boost["hp"] = int(boost.get("hp", 0)) + int(rules().hunt_hp)
 	var drop: Array = exclude.duplicate()
 	for flag in bt.get("flag_drop", {}):
@@ -429,9 +429,7 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 		stage["surprise"] = true
 	var waves := []
 	for w in bt.get("waves", []):
-		var kinds: Array = w.units.duplicate()
-		if diff == "trial":
-			kinds.append_array(w.get("trial_units", []))
+		var kinds: Array = _units_for_party(w, diff, party, missing)
 		var wave := {"round": int(w.round), "units": kinds, "cells": marks.get(String(w.at), [])}
 		if w.has("log"):
 			wave["log"] = w.log
@@ -448,20 +446,47 @@ static func scenario(battle_id: String, hero_class: String, archetype: String, p
 	# Фазы финального боя главы 5: враги следующей фазы выходят на клетки цифры at, когда пали враги текущей.
 	var phases := []
 	for ph in bt.get("phases", []):
-		var kinds: Array = ph.get("units", []).duplicate()
-		if diff == "trial":
-			kinds.append_array(ph.get("trial_units", []))
+		var kinds: Array = _units_for_party(ph, diff, party, missing)
 		var phase: Dictionary = ph.duplicate(true)
 		phase.erase("trial_units")
 		phase.erase("at")
 		phase["units"] = kinds
 		phase["cells"] = marks.get(String(ph.get("at", "")), [])
+		# Вдвоём лечить некому: отряд подлечивается в начале каждой фазы (rules.json phase_heal).
+		var extra := int(rules().get("phase_heal", {}).get(party, 0)) if missing > 0 else 0
+		if extra > 0:
+			phase["heal_heroes"] = int(phase.get("heal_heroes", 0)) + extra
 		phases.append(phase)
 	if not phases.is_empty():
 		stage["phases"] = phases
 		stage["phase"] = 1
 	return {"id": battle_id, "width": String(rows[0]).length(), "height": rows.size(), "units": heroes + allies + enemies,
 		"obstacles": obstacles, "decor": decor, "ground": String(bt.get("ground", "")), "level": level, "stage": stage}
+
+
+## Враги волны или фазы. Неполному отряду «Испытание» не добавляет своих (trial_units), а сама волна
+## урезается по бюджету состава (party_budget, с округлением, но не меньше одного): втроём без Ирены из двух теней выходит одна.
+static func _units_for_party(w: Dictionary, diff: String, party: String, missing: int) -> Array:
+	var kinds: Array = w.get("units", []).duplicate()
+	if missing == 0:
+		if diff == "trial":
+			kinds.append_array(w.get("trial_units", []))
+		return kinds
+	var keep := maxi(1, roundi(kinds.size() * party_budget(party) / 100.0))
+	return kinds.slice(0, keep)
+
+
+## Бюджет опыта врагов (без главного) при составе party, проценты (rules.json).
+static func party_budget(party: String) -> int:
+	return int(rules().party_budget.get(party, 100))
+
+
+## Охота главы боя закончена (флаг chN_hunt_done, решение 8): после неё у врагов главы больше хитов (hunt_hp).
+static func hunt_done_in(battle_id: String, flags: Dictionary) -> bool:
+	if not battle_id.begins_with("chapter"):
+		return false
+	var n := battle_id.trim_prefix("chapter").get_slice("_", 0)
+	return n.is_valid_int() and flag_on(flags, "ch%s_hunt_done" % n)
 
 
 ## Флаг сюжетного боя: "имя" — переменная Ink истинна, "имя=значение" — строка совпадает (ch1_choice=riot).
@@ -486,7 +511,7 @@ static func trim_for_party(enemies: Array[Combatant], party: String) -> Array[Co
 		else:
 			total += int(en[e.kind].xp)
 		out.append(e)
-	var target := total * int(rules().party_budget.get(party, 100)) / 100.0
+	var target := total * party_budget(party) / 100.0
 	var sum := float(total)
 	while sum > target * 1.05:
 		var pick: Combatant = null
@@ -504,6 +529,13 @@ static func trim_for_party(enemies: Array[Combatant], party: String) -> Array[Co
 			break
 		out.erase(pick)
 		sum -= float(en[pick.kind].xp)
+	# Враги крупные, и целым числом бойцов в бюджет не попасть: остаток добирается хитами рядовых (±20%).
+	if sum > 0.0 and sum != target:
+		var k := clampf(target / sum, 0.8, 1.2)
+		for e in out:
+			if not en[e.kind].get("boss", false):
+				e.max_hp = maxi(1, roundi(e.max_hp * k))
+				e.hp = e.max_hp
 	return out
 
 
