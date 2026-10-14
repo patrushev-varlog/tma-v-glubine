@@ -1,0 +1,107 @@
+{
+  "group_id": "62f4b566-a563-4908-a876-e165ec190c54",
+  "states": [
+    {
+      "character": {
+        "id": "b397d297-fb65-48ef-8d00-cacadeb864b5",
+        "name": "Idle",
+        "prompt": "a huge hulking undead giant stitched together from several drowned bodies with thick iron wire, grey-blue bloated skin, extra arms fused into the torso, a heavy iron collar with a broken chain on its neck, enormous fists, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T05:22:31.209408+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {
+          "falling_backward": {
+            "south-east": [
+              "Idle/animations/falling_backward/south-east/frame_000.png",
+              "Idle/animations/falling_backward/south-east/frame_001.png",
+              "Idle/animations/falling_backward/south-east/frame_002.png",
+              "Idle/animations/falling_backward/south-east/frame_003.png",
+              "Idle/animations/falling_backward/south-east/frame_004.png",
+              "Idle/animations/falling_backward/south-east/frame_005.png",
+              "Idle/animations/falling_backward/south-east/frame_006.png"
+            ],
+            "north-east": [
+              "Idle/animations/falling_backward/north-east/frame_000.png",
+              "Idle/animations/falling_backward/north-east/frame_001.png",
+              "Idle/animations/falling_backward/north-east/frame_002.png",
+              "Idle/animations/falling_backward/north-east/frame_003.png",
+              "Idle/animations/falling_backward/north-east/frame_004.png",
+              "Idle/animations/falling_backward/north-east/frame_005.png",
+              "Idle/animations/falling_backward/north-east/frame_006.png"
+            ]
+          },
+          "taking_a_punch": {
+            "south-east": [
+              "Idle/animations/taking_a_punch/south-east/frame_000.png",
+              "Idle/animations/taking_a_punch/south-east/frame_001.png",
+              "Idle/animations/taking_a_punch/south-east/frame_002.png",
+              "Idle/animations/taking_a_punch/south-east/frame_003.png",
+              "Idle/animations/taking_a_punch/south-east/frame_004.png",
+              "Idle/animations/taking_a_punch/south-east/frame_005.png"
+            ],
+            "north-east": [
+              "Idle/animations/taking_a_punch/north-east/frame_000.png",
+              "Idle/animations/taking_a_punch/north-east/frame_001.png",
+              "Idle/animations/taking_a_punch/north-east/frame_002.png",
+              "Idle/animations/taking_a_punch/north-east/frame_003.png",
+              "Idle/animations/taking_a_punch/north-east/frame_004.png",
+              "Idle/animations/taking_a_punch/north-east/frame_005.png"
+            ]
+          },
+          "breathing_idle": {
+            "north-east": [
+              "Idle/animations/breathing_idle/north-east/frame_000.png",
+              "Idle/animations/breathing_idle/north-east/frame_001.png",
+              "Idle/animations/breathing_idle/north-east/frame_002.png",
+              "Idle/animations/breathing_idle/north-east/frame_003.png"
+            ],
+            "south-east": [
+              "Idle/animations/breathing_idle/south-east/frame_000.png",
+              "Idle/animations/breathing_idle/south-east/frame_001.png",
+              "Idle/animations/breathing_idle/south-east/frame_002.png",
+              "Idle/animations/breathing_idle/south-east/frame_003.png"
+            ]
+          },
+          "walking": {
+            "south-east": [
+              "Idle/animations/walking/south-east/frame_000.png",
+              "Idle/animations/walking/south-east/frame_001.png",
+              "Idle/animations/walking/south-east/frame_002.png",
+              "Idle/animations/walking/south-east/frame_003.png",
+              "Idle/animations/walking/south-east/frame_004.png",
+              "Idle/animations/walking/south-east/frame_005.png"
+            ],
+            "north-east": [
+              "Idle/animations/walking/north-east/frame_000.png",
+              "Idle/animations/walking/north-east/frame_001.png",
+              "Idle/animations/walking/north-east/frame_002.png",
+              "Idle/animations/walking/north-east/frame_003.png",
+              "Idle/animations/walking/north-east/frame_004.png",
+              "Idle/animations/walking/north-east/frame_005.png"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T05:46:44.549131"
+}

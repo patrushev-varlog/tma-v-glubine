@@ -73,6 +73,80 @@
 			52
 		]
 	},
+	"drowned": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			32,
+			55
+		],
+		"size": [
+			64,
+			59
+		]
+	},
+	"drowned_f": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			26,
+			55
+		],
+		"size": [
+			58,
+			56
+		]
+	},
 	"foreman_dead": {
 		"anims": {
 			"attack": {
@@ -722,6 +796,80 @@
 			59
 		]
 	},
+	"renna": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			51
+		],
+		"size": [
+			50,
+			53
+		]
+	},
+	"shrine_priest": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			27,
+			58
+		],
+		"size": [
+			54,
+			60
+		]
+	},
 	"skeleton": {
 		"anims": {
 			"attack": {
@@ -794,6 +942,80 @@
 		"size": [
 			59,
 			56
+		]
+	},
+	"sluice_guardian": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			70,
+			91
+		],
+		"size": [
+			126,
+			98
+		]
+	},
+	"smuggler": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			28,
+			55
+		],
+		"size": [
+			60,
+			57
 		]
 	},
 	"velior": {

@@ -474,3 +474,19 @@
 {"t": "2026-10-14T05:37:06Z", "kind": "animation", "name": "shrine_priest/walk", "id": "3a29bd95-94aa-474e-b98f-d02937556325", "template": "walking-6-frames", "status": ["completed", "completed"], "cost": 6.0}
 {"t": "2026-10-14T05:37:27Z", "kind": "animation", "name": "shrine_priest/hit", "id": "d96dca95-0ece-444e-89e5-32f155779409", "template": "taking-punch", "status": ["completed", "completed"], "cost": 6.0}
 {"t": "2026-10-14T05:37:50Z", "kind": "animation", "name": "shrine_priest/down", "id": "cae0a7a2-69fd-4cfe-9d0b-2eabfae92f7b", "template": "falling-back-death", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T05:38:14Z", "kind": "animation", "name": "sluice_guardian/idle", "id": "cc9eeb7e-e381-44fe-a16e-331fb508df0a", "template": "breathing-idle", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T05:40:10Z", "kind": "skeleton_anim", "name": "drowned_m/attack/south-east", "id": "bbfdf477-4f89-4af8-a897-4e8488704f6e", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:40:25Z", "kind": "animation", "name": "sluice_guardian/walk", "id": "daed42c9-7ba9-4dfc-be00-a04e23dffba5", "template": "walking-6-frames", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T05:40:25Z", "kind": "animation", "name": "sluice_guardian/down", "id": "059fcc1d-9335-405d-ac30-523d40e35f0c", "template": "falling-back-death", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T05:40:50Z", "kind": "animation", "name": "sluice_guardian/hit", "id": "87be0350-10bb-47e6-a82b-7d59e944dcb8", "template": "taking-punch", "status": ["completed", "completed"], "cost": 6.0}
+{"t": "2026-10-14T05:41:45Z", "kind": "skeleton_anim", "name": "drowned_m/attack/north-east", "id": "84619b61-4b76-4f7d-b038-4e0252293698", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:42:11Z", "kind": "skeleton_anim", "name": "renna/attack/north-east", "id": "04817801-bb86-48f1-9efd-4c0245eb10ab", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:42:15Z", "kind": "skeleton_anim", "name": "renna/attack/south-east", "id": "ae51176b-31f8-4f95-8664-4cf689b5ddb1", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:42:55Z", "kind": "skeleton_anim", "name": "drowned_f/attack/south-east", "id": "1c95b12a-1739-4731-a56b-d6a348b118ae", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:43:31Z", "kind": "skeleton_anim", "name": "drowned_f/attack/north-east", "id": "4b78dd34-d763-4afa-9af3-e94d8023dc4b", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:43:51Z", "kind": "skeleton_anim", "name": "smuggler/attack/north-east", "id": "5650d008-3e69-43e6-81dd-4b3056eeaac9", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:43:56Z", "kind": "skeleton_anim", "name": "smuggler/attack/south-east", "id": "bf2306bf-c004-4e09-ab4d-c8d7870ebe54", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:44:21Z", "kind": "skeleton_anim", "name": "shrine_priest/attack/south-east", "id": "fdc15b2f-fb97-42f3-acf6-b725d384ee73", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:44:45Z", "kind": "skeleton_anim", "name": "shrine_priest/attack/north-east", "id": "38c5e03d-2847-4d43-9910-fb44e85ce292", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:46:11Z", "kind": "skeleton_anim", "name": "sluice_guardian/attack/north-east", "id": "0dfddef9-a093-4037-a583-db8e39aeb9bc", "status": "completed", "frames": 6, "cost": 3.0}
+{"t": "2026-10-14T05:46:29Z", "kind": "skeleton_anim", "name": "sluice_guardian/attack/south-east", "id": "6b05d18a-688a-4253-bc3a-791e075345b4", "status": "completed", "frames": 6, "cost": 3.0}

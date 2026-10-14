@@ -1,11 +1,47 @@
 {
+	"flooded/bedding": [
+		27,
+		30
+	],
+	"flooded/brazier": [
+		8,
+		24
+	],
+	"flooded/cellar_door": [
+		24,
+		77
+	],
+	"flooded/crates": [
+		13,
+		33
+	],
+	"flooded/crates_b": [
+		12,
+		33
+	],
 	"flooded/flatboat": [
 		29,
 		42
 	],
+	"flooded/grate": [
+		27,
+		83
+	],
+	"flooded/pipes": [
+		26,
+		44
+	],
+	"flooded/pipes_b": [
+		26,
+		44
+	],
 	"flooded/pump_wheel": [
 		44,
 		77
+	],
+	"flooded/rune_pillar": [
+		25,
+		75
 	],
 	"flooded/shrine_altar": [
 		15,
@@ -15,8 +51,16 @@
 		56,
 		102
 	],
+	"flooded/small_lever": [
+		11,
+		31
+	],
 	"flooded/smuggler_desk": [
 		18,
+		32
+	],
+	"flooded/stairs": [
+		27,
 		32
 	],
 	"ford/boulder": [
