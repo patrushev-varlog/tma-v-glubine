@@ -1,0 +1,36 @@
+{
+  "group_id": "b3e67675-5d39-46ca-8f0a-df3a53a35b01",
+  "states": [
+    {
+      "character": {
+        "id": "278d81f0-b207-4e6d-b7f2-9a2cf0a2c1d7",
+        "name": "Idle",
+        "prompt": "a huge undead dwarf warrior, the last keeper of the seal, broad and armoured in heavy green-patinaed bronze plate, very long grey beard braided with iron rings down to the belt, a riveted iron muzzle plate where the mouth should be, empty pale eyes, a long-hafted warhammer held in both hands, no ground shadow, no base under the feet, pixel art game sprite, single full-body character, isometric 3/4 view, dark fantasy, muted desaturated palette with one accent color, warm torchlight from upper left, 1px dark outline (not pure black), medium shading, readable silhouette, feet at bottom center, transparent background",
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-10-14T07:54:37.813261+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-10-14T07:56:55.993186"
+}

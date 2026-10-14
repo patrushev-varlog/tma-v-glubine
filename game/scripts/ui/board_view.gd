@@ -89,6 +89,16 @@ const GROUND_ART := {
 		"objects": {"wall": "mines/rock_block", "pillar": "mines/timber_support", "pew": "temple/pew", "altar": "flooded/shrine_altar",
 			"rubble": "mines/rockfall"},
 		"spans": ["pew"]},
+	# Дварфийские залы главы 3: тёсаная кладка, колонны с рунами; полки табличек архива — знак алтаря,
+	# пропасть у печати — знак воды (непроходима).
+	"dwarf": {"floor": ["dwarf/floor_hall", "dwarf/floor_hall", "dwarf/floor_hall", "dwarf/floor_rune"],
+		"objects": {"wall": "dwarf/wall_block", "pillar": "dwarf/rune_column", "rubble": "dwarf/rubble",
+			"altar": "dwarf/tablet_shelf"}},
+	"dwarf_archive": {"floor": ["dwarf/floor_hall", "dwarf/floor_hall", "dwarf/floor_rune"],
+		"objects": {"wall": "dwarf/wall_runes", "pillar": "dwarf/rune_column", "rubble": "dwarf/rubble",
+			"altar": "dwarf/tablet_shelf"}},
+	"dwarf_seal": {"floor": ["dwarf/floor_rune", "dwarf/floor_hall", "dwarf/floor_hall"], "water": "dwarf/floor_chasm",
+		"objects": {"wall": "dwarf/wall_runes", "pillar": "dwarf/rune_column", "rubble": "dwarf/rubble"}},
 }
 ## Верх ромба у тайла пола 64×64: центр клетки приходится на (32, 38).
 const FLOOR_OFFSET := Vector2(-32, -38)

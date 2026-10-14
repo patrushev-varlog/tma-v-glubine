@@ -2,6 +2,7 @@
 и основа Торвина. Как ch3_batch1.py: предметы по два seed в variants/, персонажи — основы в стиле Гаррета.
 
     python3 art/tools/ch3_batch2.py [tiles|chars|имя ...]     # --reroll имя... — ещё seed 3 и 4
+    python3 art/tools/ch3_batch2.py --blocks                  # стены кубами, variants/<имя>_b<seed>.png
 """
 import sys
 from pathlib import Path
@@ -14,11 +15,11 @@ from ch3_batch1 import CHARS_OUT, HALLS, run_jobs
 SETS = {
  "dwarf": {
   "tiles": {
-   "floor_chasm": FLAT + "a bottomless dark chasm seen from above, near-black void with a faint pale green-white glow far below through cracks, no rim, no border, seamless edges",
+   "floor_chasm": FLAT + "a bottomless chasm seen from above, an even near-black void with only very faint dark blue-grey mist, completely uniform, no light spots, no objects, no rim, no border, seamless edges",
   },
   "objects": {
-   "wall_block": (HALLS + "a solid block of dwarven masonry wall, large precisely cut warm-grey stone blocks, a cube filling the tile", 64, 64),
-   "wall_runes": (HALLS + "a solid block of dwarven masonry wall with one deep-cut line of angular runes, warm-grey stone, a cube filling the tile", 64, 64),
+   "wall_block": (HALLS + "a plain solid cube of dwarven masonry, large precisely cut warm-grey stone blocks on every face, flat grey stone top, no door, no window, no roof, no light", 64, 64),
+   "wall_runes": (HALLS + "a plain solid cube of dwarven masonry, large cut warm-grey stone blocks, one deep-cut band of angular runes across the front faces, flat grey stone top, no door, no window, no roof, no light", 64, 64),
    "rune_column": (HALLS + "a square carved dwarven stone column with angular runes on each face and a heavy capital", 64, 96),
    "stone_niche": (HALLS + "an empty tall stone wall niche carved in the rock where a stone guardian statue used to stand, broken stone fragments at its foot", 64, 96),
    "rune_brazier": (HALLS + "a squat dwarven stone brazier bowl on a carved rune pedestal with small warm flames", 32, 64),
@@ -28,13 +29,30 @@ SETS = {
    "coal_heap": (HALLS + "a heap of black coal with a shovel stuck in it beside a wooden barrow", 64, 64),
    "brew_door": (HALLS + "a low heavy wooden door bound with iron set in a carved stone wall, a carved tankard sign above it", 64, 96),
    "scribe_desk": (HALLS + "a low stone writing desk covered with thin rune tablets, stone chisels and a small mallet, a stone stool", 64, 64),
-   "child_tablets": (HALLS + "a small side niche with a short stone shelf of small thin rune tablets with large clumsy runes, a child's practice slate on top", 64, 64),
-   "floor_slab": (HALLS + "a single square floor slab lying very slightly raised, dust disturbed around its edges, flat on the ground", 64, 64),
-   "bones": (HALLS + "five human skeletons in tattered miner jackets lying close together against a rockfall, broken pickaxes, flat on the ground", 64, 64),
+   "child_tablets": (HALLS + "a single small low stone shelf, a free-standing object with no walls and no room, holding a few small thin stone tablets with large clumsy runes and a child's practice slate", 64, 64),
+   "floor_slab": (HALLS + "one loose square flagstone lying flat, a single isolated object with no walls and no room around it, its edges slightly raised and scraped, a thin ring of disturbed dust", 64, 64),
+   "bones": (HALLS + "several human skeletons in tattered miner jackets lying flat on their backs on the ground in a heap, seen from above, broken pickaxes beside them, nothing standing", 64, 64),
    "warhammer": (HALLS + "a huge dwarven long-hafted warhammer with an iron head lying flat on the stone floor", 64, 64),
   },
  },
 }
+# Стены объектами выходят домиками с дверью (seed 1–4); как в ch1_batch3.py — куб через create-isometric-tile (block).
+BLOCKS = {
+ "wall_block": "solid cube of dwarven masonry, large precisely cut warm-grey stone blocks on all visible faces, "
+               "the wall of an underground dwarven hall, no door, no window, no torch, no floor",
+ "wall_runes": "solid cube of dwarven masonry, large cut warm-grey stone blocks, one band of deep-cut angular runes "
+               "across the faces, the wall of an underground dwarven hall, no door, no window, no torch, no floor",
+}
+VARIANTS = p.ROOT / "art" / "chapter3" / "tiles" / "dwarf" / "variants"
+
+
+def block(name, seed):
+    out = VARIANTS / f"{name}_b{seed}.png"
+    if out.exists():
+        return out
+    return p.iso_tile(name, BLOCKS[name] + ", " + p.STYLE_ISO, out, shape="block", seed=seed)
+
+
 CHARS = {
  "torvin": "a huge undead dwarf warrior, the last keeper of the seal, broad and armoured in heavy green-patinaed bronze plate, very long grey beard braided with iron rings down to the belt, a riveted iron muzzle plate where the mouth should be, empty pale eyes, a long-hafted warhammer held in both hands, ",
 }
@@ -53,6 +71,12 @@ def char(name, desc):
 if __name__ == "__main__":
     args = sys.argv[1:]
     jobs, chars = [], []
+    if args[:1] == ["--blocks"]:
+        for n in BLOCKS:
+            for seed in (1, 2):
+                print("ok", block(n, seed).name, flush=True)
+        print(p.balance()["subscription"])
+        sys.exit()
     if args[:1] == ["--reroll"]:
         names = set(args[1:])
         jobs = [(k, s, n, sp, seed) for s in SETS for k in ("tiles", "objects") for n, sp in SETS[s][k].items()
