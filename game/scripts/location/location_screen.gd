@@ -86,8 +86,14 @@ func _ready() -> void:
 
 
 ## Условия видимости объектов: "имя" — переменная Ink истинна, "won:<бой>" — бой выигран, "!" — не;
-## "&" — все условия сразу (литейная главы 4: ни один из двух вариантов боя не выигран).
+## "&" — все условия сразу (литейная главы 4: ни один из двух вариантов боя не выигран), "|" — любое из них
+## (зал печати главы 5: выигран один из двух вариантов боя со стражей); "|" связывает слабее "&".
 func _check(cond: String) -> bool:
+	if cond.contains("|"):
+		for part in cond.split("|"):
+			if _check(part):
+				return true
+		return false
 	if cond.contains("&"):
 		for part in cond.split("&"):
 			if not _check(part):
@@ -286,7 +292,7 @@ func _advance() -> void:
 			_mode = "end"
 			_set_active({})
 			_speaker.text = ""
-			_text.text = tr("STORY_END")
+			_text.text = Game.end_text()
 			_clear_buttons()
 			_buttons.add_child(UiKit.button(tr("STORY_TO_MENU"), _to_menu))
 			_panel.show()

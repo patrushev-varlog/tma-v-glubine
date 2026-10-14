@@ -543,6 +543,8 @@ func _refresh_top() -> void:
 	var wave := battle.next_wave_round()
 	if wave > 0:
 		text += " · " + UiKit.fmt("BATTLE_WAVE_AT", {"n": wave})
+	if battle.phase_count() > 1:
+		text += " · " + UiKit.fmt("BATTLE_PHASE", {"n": battle.phase_num(), "max": battle.phase_count()})
 	_objective.text = text
 	for ch in _init_bar.get_children():
 		_init_bar.remove_child(ch)

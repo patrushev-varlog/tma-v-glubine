@@ -73,6 +73,43 @@
 			78
 		]
 	},
+	"council_guard": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			30,
+			56
+		],
+		"size": [
+			61,
+			58
+		]
+	},
 	"crossbowman": {
 		"anims": {
 			"attack": {
@@ -256,6 +293,43 @@
 		"size": [
 			64,
 			61
+		]
+	},
+	"edric": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			29,
+			53
+		],
+		"size": [
+			52,
+			56
 		]
 	},
 	"executioner": {
@@ -1164,6 +1238,43 @@
 		"size": [
 			59,
 			56
+		]
+	},
+	"sleeper_shade": {
+		"anims": {
+			"attack": {
+				"fps": 12,
+				"frames": 6,
+				"row": 4
+			},
+			"down": {
+				"fps": 12,
+				"frames": 7,
+				"row": 8
+			},
+			"hit": {
+				"fps": 12,
+				"frames": 6,
+				"row": 6
+			},
+			"idle": {
+				"fps": 5,
+				"frames": 4,
+				"row": 0
+			},
+			"walk": {
+				"fps": 12,
+				"frames": 6,
+				"row": 2
+			}
+		},
+		"foot": [
+			34,
+			55
+		],
+		"size": [
+			66,
+			61
 		]
 	},
 	"sluice_guardian": {

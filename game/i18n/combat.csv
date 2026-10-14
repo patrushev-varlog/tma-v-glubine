@@ -59,6 +59,10 @@ ENEMY_gessar,Мастер Гессар,Master Gessar
 ENEMY_stitched,Изделие,Stitched Work
 ENEMY_foundry_dead,Мёртвый литейщик,Dead Founder
 ENEMY_executioner,Казнитель,Executioner
+ENEMY_council_guard,Стражник совета,Council Guard
+ENEMY_raised_prisoner,Поднятый узник,Raised Prisoner
+ENEMY_edric,Эдрик Сайр,Edric Sayr
+ENEMY_sleeper_shade,Тень Спящего,Shade of the Sleeper
 DIFF_story,История,Story
 DIFF_trial,Испытание,Trial
 DARK_shadow,Тень,Shadow
@@ -238,6 +242,8 @@ TRAIT_raiser,Поднять павшего,Raise the Fallen
 TRAIT_raiser_DESC,"В начале своего хода поднимает павшую нежить в 5 клетках с половиной хитов: раз за бой, на «Испытании» дважды.","At the start of its turn raises a fallen undead within 5 squares at half hit points: once per battle, twice on Trial."
 TRAIT_flesh_master,Сшить заново,Stitch Anew
 TRAIT_flesh_master_DESC,"В начале своего хода поднимает павшую нежить в 6 клетках с половиной хитов: раз за бой, на «Испытании» дважды.","At the start of its turn raises a fallen undead within 6 squares at half hit points: once per battle, twice on Trial."
+TRAIT_pale_king,Бледный Король,The Pale King
+TRAIT_pale_king_DESC,"В начале своего хода поднимает павшую нежить в 8 клетках с половиной хитов: раз за бой, на «Испытании» дважды.","At the start of his turn raises a fallen undead within 8 squares at half hit points: once per battle, twice on Trial."
 TRAIT_cleave_full,Полное рассечение,Full Cleave
 TRAIT_zones_long,Долгие зоны,Lasting Zones
 TRAIT_protector_plus,Надёжный защитник,Steadfast Protector
@@ -290,6 +296,7 @@ ITEM_pale_ring,Перстень Бледного Короля,Ring of the Pale K
 ITEM_foreman_lantern,Фонарь первого штейгера,Lantern of the First Foreman
 ITEM_sunken_shrine_spear,Острога затопленного святилища,Spear of the Sunken Shrine
 ITEM_nameless_chain,Цепь Безымянных,Chain of the Nameless
+ITEM_council_seal,Печать совета,The Council Seal
 ITEM_workshop_weapon_wizard,Посох из мастерских Короля,Staff from the King's Workshops
 ITEM_ambush_armor_fighter,Кольчуга надсмотрщика,Overseer's Mail
 ITEM_ambush_armor_cleric,Кольчуга надсмотрщика,Overseer's Mail
@@ -335,3 +342,12 @@ BATTLE_LOG_CH4_TABLES,"Со столов поднимаются ещё изде�
 BATTLE_LOG_CH4_FOUNDRY,"Желоба с жидким железом не перейти, но туда можно столкнуть: 2d6 огнём. Крюки литейщиков отбрасывают. Ковши опрокидываются по раундам, их клетки подсвечены заранее.","The channels of molten iron cannot be crossed, but someone can be shoved in: 2d6 fire. The founders' hooks knock you back. The ladles tip over on set rounds, their squares are marked in advance."
 BATTLE_LOG_CH4_GARRISON,"С галерей литейной спускается гарнизон.","The garrison comes down from the foundry galleries."
 BATTLE_LOG_CH4_EXECUTIONERS,"Казнители из зала идут следом за вами вниз.","The executioners from the hall follow you down."
+BATTLE_LOG_CH5_PENS,"По бокам спуска — загоны с узниками. Решётки укрывают от выстрелов. Гарнизон держит строй, надсмотрщик поднимает павших.","Pens full of prisoners line the descent. The bars give cover from shots. The garrison holds formation, the overseer raises the fallen."
+BATTLE_LOG_CH5_GARRISON,"Снизу, от зала печати, поднимается ещё строй.","Another rank climbs up from the seal hall below."
+BATTLE_LOG_CH5_GUARD,"Почётная стража совета бьёт алебардами через клетку и держит строй: рядом друг с другом +2 к КД. Постаменты укрывают от выстрелов.","The council's honour guard strikes with halberds two squares out and holds formation: +2 AC side by side. The pedestals give cover from shots."
+BATTLE_LOG_CH5_RAISED,"Поднятые узники стоят между тобой и строем стражи. Они ходят сами.","The raised prisoners stand between you and the guard. They move on their own."
+BATTLE_LOG_CH5_PEDESTAL,"Ещё стражи сходят с постаментов.","More guards step down from their pedestals."
+BATTLE_LOG_CH5_EDRIC,"Эдрик бьёт издалека и поднимает павших стражей. Когда падут все, проснётся то, что под печатью.","Edric strikes from afar and raises the fallen guards. When they all fall, what lies under the seal will stir."
+BATTLE_LOG_CH5_SLEEPER,"Печать вздрагивает. Сила Спящего поднимает павших стражей, из света выходят тени.","The seal shudders. The Sleeper's power raises the fallen guards, and shades step out of the light."
+BATTLE_LOG_CH5_INTERCEPT,"Ты впускаешь силу в себя, и раны затягиваются. Эдрик встаёт: он хочет перехватить её.","You let the power into yourself, and your wounds close. Edric rises: he means to seize it."
+BATTLE_LOG_PHASE,"Бой ещё не кончен.","The battle is not over yet."

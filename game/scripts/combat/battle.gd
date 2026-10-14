@@ -57,7 +57,9 @@ var _casting := ""
 ## surprise — враги застигнуты врасплох и пропускают первый ход; cannot_lose — поражения нет (соседи
 ## добивают врагов, бой засчитан как победа, rescued = true); cover — укрытия от выстрелов (in_cover);
 ## tether — привязанные цепью враги {id: {"cell", "r"}}; intro — строка журнала в начале; ladles — ковши литейной
-## [{"rounds", "cells", "dice", "dc"}]: в начале этих раундов расплав льётся на клетки (_pour). Сохраняется вместе с боем.
+## [{"rounds", "cells", "dice", "dc"}]: в начале этих раундов расплав льётся на клетки (_pour); phases — фазы финального
+## боя главы 5 [{"units", "cells", "log", "rise", "boss_return", "heal_heroes"}]: когда враги фазы пали, начинается
+## следующая (_next_phase), победа — после последней. Сохраняется вместе с боем.
 var stage := {}
 
 
@@ -1689,6 +1691,8 @@ func _check_outcome() -> void:
 		outcome = "defeat"
 		log_line("Все герои выбыли. Поражение.")
 	elif enemies().all(func(e: Combatant) -> bool: return e.dead) and _waves_left() == 0:
+		if _next_phase():
+			return
 		outcome = "victory"
 		log_line("Победа!")
 
@@ -1759,7 +1763,7 @@ func next_wave_round() -> int:
 	return best
 
 
-func _spawn_wave(w: Dictionary) -> void:
+func _spawn_wave(w: Dictionary, log_it := true) -> void:
 	w["done"] = true
 	var cells: Array = w.cells
 	var i := 0
@@ -1779,7 +1783,61 @@ func _spawn_wave(w: Dictionary) -> void:
 		units.append(e)
 		order.append(e.id)
 		events.append({"type": "spawn", "unit": e.id})
-	log_line(TranslationServer.translate(String(w.get("log", "BATTLE_LOG_WAVE"))))
+	if log_it:
+		log_line(TranslationServer.translate(String(w.get("log", "BATTLE_LOG_WAVE"))))
+
+
+## Номер текущей фазы финального боя (с 1) и сколько их всего; у обычного боя фаза одна.
+func phase_num() -> int:
+	return int(stage.get("phase", 1))
+
+
+func phase_count() -> int:
+	return 1 + stage.get("phases", []).size()
+
+
+## Враги фазы пали: если есть следующая фаза — она начинается (true), иначе бой выигран (false).
+## Фаза: строка журнала, поднять павшую нежить (rise, кроме главных), вернуть главного с долей хитов
+## (boss_return, проценты), подлечить отряд (heal_heroes, проценты хитов) и новые враги на клетках цифры.
+func _next_phase() -> bool:
+	var phases: Array = stage.get("phases", [])
+	var k := phase_num() - 1
+	if k >= phases.size():
+		return false
+	var ph: Dictionary = phases[k]
+	stage["phase"] = phase_num() + 1
+	log_line(TranslationServer.translate(String(ph.get("log", "BATTLE_LOG_PHASE"))))
+	var en := CombatData.table("enemies")
+	for o in units:
+		if o.team == 0 or not o.dead:
+			continue
+		var boss: bool = en.get(o.kind, {}).get("boss", false)
+		var back := 0
+		if boss and int(ph.get("boss_return", 0)) > 0:
+			back = maxi(1, o.max_hp * int(ph.boss_return) / 100)
+		elif not boss and o.undead and ph.get("rise", false):
+			back = maxi(1, o.max_hp / 2)
+		if back == 0:
+			continue
+		var cell := _free_cell_near(o.cell)
+		if cell.x < 0:
+			continue
+		o.dead = false
+		o.statuses.clear()
+		o.counters.clear()
+		o.cell = cell
+		o.hp = back
+		events.append({"type": "raise", "unit": o.id})
+	var pct := int(ph.get("heal_heroes", 0))
+	if pct > 0:
+		for h in heroes():
+			if not h.ai_ally:
+				heal(h, h.max_hp * pct / 100)
+	if not ph.get("units", []).is_empty():
+		_spawn_wave({"units": ph.units, "cells": ph.get("cells", []), "log": ph.get("spawn_log", "")}, false)
+	if enemies().all(func(e: Combatant) -> bool: return e.dead):
+		return _next_phase()
+	return true
 
 
 ## Ковш литейной опрокидывается: все на его клетках делают спасбросок Ловкости, при успехе половина урона.

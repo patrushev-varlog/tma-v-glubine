@@ -22,6 +22,11 @@ const GROUND := {
 	"forge_works": ["#3e3836", "#2c2626"],
 	"forge_grate": ["#3e3836", "#5a3a2a"],
 	"forge_molten": ["#c8551e", "#f2a03c"],
+	"deep_descent": ["#34404c", "#28323c"],
+	"deep_rock": ["#3a4652", "#2c3640"],
+	"deep_seal": ["#2a3442", "#c8d4e8"],
+	"deep_groove": ["#2e3a4a", "#9ec8f0"],
+	"deep_core": ["#3a4a5e", "#e8f0ff"],
 }
 
 

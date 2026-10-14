@@ -49,5 +49,6 @@
   "formation":      {"aura": {"radius": 1, "who": "allies", "mod": {"ac": 2}}},
   "raiser":         {"raise": {"range": 5, "uses": 1, "trial_uses": 1}},
   "flesh_master":   {"raise": {"range": 6, "uses": 1, "trial_uses": 1}},
+  "pale_king":      {"raise": {"range": 8, "uses": 1, "trial_uses": 1}},
   "zones_long":     {"note": "Посох Молчащих Сковывателю: зоны на раунд дольше. Зоны пока держатся до конца боя — приём только для описания."}
 }

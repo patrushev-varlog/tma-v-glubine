@@ -158,6 +158,14 @@ func load_from(slot: String) -> Array[Dictionary]:
 	return tail
 
 
+## Строка конца истории: после эпилога главы 5 — с названием концовки (тег # ending:).
+func end_text() -> String:
+	var ending := String(session.state.ending) if session != null else ""
+	if ending == "":
+		return tr("STORY_END")
+	return tr("STORY_END") + " " + UiKit.fmt("STORY_ENDING", {"name": tr("ENDING_" + ending)})
+
+
 # --- Бой --------------------------------------------------------------------------
 
 const BATTLE_SCENE := "res://scenes/battle_screen.tscn"

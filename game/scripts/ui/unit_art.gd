@@ -50,8 +50,9 @@ static func sprite_for(u: Combatant, hero := {}) -> String:
 	return String(SPRITE_ALIAS.get(u.kind, u.kind))
 
 
-## Враги без своего листа, у которых есть похожий: лучник у клети главы 1 — арбалетчик пролога.
-const SPRITE_ALIAS := {"archer": "crossbowman"}
+## Враги без своего листа, у которых есть похожий: лучник у клети главы 1 — арбалетчик пролога, поднятые узники
+## главы 5 — узники шахт.
+const SPRITE_ALIAS := {"archer": "crossbowman", "raised_prisoner": "prisoner"}
 
 
 ## Анимация, которая есть у листа: заклинание без своей анимации играется ударом и наоборот.
